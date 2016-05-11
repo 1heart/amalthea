@@ -66,7 +66,7 @@ D = [];
 for i = 1:k
   D = [D, sum(arrayfun(@(x) sqrt(sum((centroids(i,:) - x).^2)), X),2)];
 end
-sumD = sum(D)
+sumD = sum(D);
 
 end
 
