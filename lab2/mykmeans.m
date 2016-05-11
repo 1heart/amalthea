@@ -23,5 +23,50 @@ function [ idx,  C, sumD, D] = mykmeans( X,k, maxIterations)
 %   
 %   author: Ivan Bogun
 %   
+
+
+[m, n] = size(X);
+epsilon = 0.001;
+
+centroids = datasample(X, k, 'Replace', false);
+idx = zeros(m, 1);
+
+for iter = 1:maxIterations
+  labels = cell(k, 1);
+  for i = 1:k
+    labels{i} = [];
+  end
+  for i = 1:m
+    curr = X(i, :);
+    centroidDists = [];
+    for j = 1:k
+      centroidDists(j) = sum((curr - centroids(j,:)).^2);
+    end
+    [minVal, minIndex] = min(centroidDists);
+    labels{minIndex} = [labels{minIndex}, curr'];
+    idx(i) = minIndex;
+  end
+  newCentroids = [];
+  for i = 1:k
+    newCentroids = [newCentroids, mean(labels{i}, 2)];
+  end
+
+  newCentroids = newCentroids';
+
+  diff = sum((centroids - newCentroids).^2);
+  if (diff < epsilon)
+    break;
+  end
+
+  centroids = newCentroids;
+end
+
+C = centroids;
+D = [];
+for i = 1:k
+  D = [D, sum(arrayfun(@(x) sqrt(sum((centroids(i,:) - x).^2)), X),2)];
+end
+sumD = sum(D)
+
 end
 

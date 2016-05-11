@@ -5,7 +5,6 @@ hold on
 [m, n] = size(D);
 epsilon = 0.001;
 
-result = zeros(m, 1);
 centroids = datasample(D, k, 'Replace', false);
 disp(centroids(3))
 
