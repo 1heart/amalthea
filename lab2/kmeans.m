@@ -1,8 +1,7 @@
-function [result] = kmeans(D, k)
+function [groupLabel, centroids] = kmeans(D, k, maxIter)
 
 hold on
 
-maxIter = 100;
 [m, n] = size(D);
 epsilon = 0.001;
 
@@ -43,5 +42,7 @@ end
 gscatter(centroids(:, 1), centroids(:, 2), 1:k, 'kkk', 'osd');
 
 hold off
+
+groupLabel = labels;
 
 end
