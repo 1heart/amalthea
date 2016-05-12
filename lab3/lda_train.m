@@ -4,6 +4,41 @@ function [b_hat, c_hat] = lda_train(X, labels)
 % Labels is a vector holding the corresponding class labels (column vector)
 % -------------------------------------------------------------------------
 
+[n d] = size(X);
+
+uniqueL = unique(labels);
+numL = length(uniqueL);
+
+X_i = cell(numL, 1);
+for i = 1:numL
+  X_i{i} = X(labels == uniqueL(i), :);
+end
+
+means = cell(numL, 1);
+for i = 1:numL
+  means{i} = mean(X_i{i});
+end
+
+p = cell(numL, 1);
+for i = 1:numL
+  p{i} = sum(labels == uniqueL(i)) / n;
+end
+
+C_i = cell(numL, 1);
+for i = 1:numL
+  C_i{i} = cov(X_i{i});
+end
+
+C = zeros(d);
+for i = 1:numL
+  C = C + (p{i} * C_i{i});
+end
+
+invC = inv(C);
+
+b_hat = invC * (means{1}' - means{2}');
+c_hat = log(p{1} / p{2}) + 0.5 * (means{1} * invC * means{1}' - means{2} * invC * means{2}');
+
 % Get the number of samples and dimensions in X using size. Do not use
 % the length function because it is meant for vectors. Read to
 % documentation of length to familiarize yourselves with this. 
@@ -37,14 +72,14 @@ function [b_hat, c_hat] = lda_train(X, labels)
 % such as "==" symbol (ignore the quotation marks) you get a binary vector
 % the same length as the labels vector with 1's indicating the positions of 
 % the current label. 
-for i = 1 : numUnqLabels
+%for i = 1 : numUnqLabels
     
     % Current label. 
     
     
     % Get the indices corresponding to the current label. 
     
-end
+%end
 
 % Loop through the number of classes (number of unique labels) and compute
 % p_i and C_i for each class. To get p, if you used the find function to 
@@ -52,7 +87,7 @@ end
 % function to determine the number of samples with that labels. If you used
 % logical indexing then you can simply sum the index vector to get the
 % labels. 
-for i = 1 : numUnqLabels
+%for i = 1 : numUnqLabels
     
     % Get the data corresponding to label i. 
     
@@ -66,7 +101,7 @@ for i = 1 : numUnqLabels
     % Compute the mean of the data corresponding to the ith label and
     % store the mean vector. Make sure to store as a column vector. 
     
-end
+%end
 
 % Compute Chat = p_1*C_1 + p_2*C_2. 
 
