@@ -23,3 +23,16 @@ for i = 1:k
   figure, imshow(newImg);
 end
 
+
+threshold = .95;
+totalEigenvalue = sum(D);
+probabilitySoFar = 0;
+for i = 1:(rows * cols)
+  currProb = D(i) / totalEigenvalue;
+  probabilitySoFar = probabilitySoFar + currProb;
+  if probabilitySoFar > threshold
+    disp([ 'The first '  num2str(i)  ' eigenvalues account for ' num2str(probabilitySoFar) ' amount of the variance']);
+    break;
+  end
+end
+
