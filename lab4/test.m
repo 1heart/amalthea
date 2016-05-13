@@ -1,20 +1,21 @@
-list = dir('data/pict/');
+currDir = 'data/us/';
+list = dir(currDir);
 
-rows = 50;
-cols = 50;
+rows = 70;
+cols = 70;
 data = zeros(rows * cols, length(list) - 2);
 
 for i = 3:length(list)
-  imgPath = strcat('data/pict/', list(i).name);
+  imgPath = strcat(currDir, list(i).name);
   img = imread(imgPath);
+  img = img(:,:,1);
   I = imresize(double(img), [rows, cols]);
   I = double((I(:)));
-
   data(:, i - 2) = I;
 end
 data = data';
 [V, D] = myPCA(data);
-k = 3; % Number of eigenvectors to plot
+k = length(list); % Number of eigenvectors to plot
 for i = 1:k
   eigenvector = V(:, i);
   newImg = reshape(eigenvector, [rows cols]);
