@@ -21,5 +21,12 @@ function [ V,D ] = myPCA( X )
 
 % function 'cov' cannot be used here
 
+[normalizedX, meanFace] = normalizeData(X);
+[m n] = size(normalizedX);
+C = normalizedX' * normalizedX / m;
+[V, D] = eig(C);
+[V, D] = sortem(V, D);
+D = diag(D);
+
 end
- 
+

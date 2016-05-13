@@ -21,5 +21,14 @@ function [ normalizedX, meanFace ] = normalizeData(X)
 
 % your code here
 
+[m n] = size(X);
+
+meanFace = mean(X);
+
+normalizedX = X;
+normalizedX = bsxfun(@minus, normalizedX, meanFace);
+variances = sum(normalizedX.^2, 2) / n;
+normalizedX = bsxfun(@rdivide, normalizedX, sqrt(variances));
+
 end
 
