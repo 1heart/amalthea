@@ -20,6 +20,8 @@ end
 T.num = size(D, 1);
 T.children = [];
 T.mean = mean(D, 1);
+T.mean = sum(D,1);
+T.mean = T.mean / norm(T.mean);
 T.ids = ids;
 
 if n == 1

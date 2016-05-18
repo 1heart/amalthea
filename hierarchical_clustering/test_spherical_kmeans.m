@@ -7,7 +7,7 @@ kappa = 100; % concentration parameter
 numRuns = 1;
 [dataMatrix, meanMatrix] = random_spherical_data(numClusters, numPoints, kappa);
 
-T = create_mean_tree(dataMatrix);
+[best_x,best_f,mem,empty,loop]=SPKmeans(dataMatrix,numClusters,numRuns);
 
 % Graph transparent sphere
 [sx, sy, sz] = sphere;
@@ -16,8 +16,6 @@ hold on;
 
 % Graph data
 scatter3(dataMatrix(:,1),dataMatrix(:,2),dataMatrix(:,3),4,mem); % clustered points
-hold on;
 scatter3(meanMatrix(:,1),meanMatrix(:,2),meanMatrix(:,3),100,'k','x'); % true means
-hold on;
-draw_tree(dataMatrix, T);
+scatter3(best_x(:,1), best_x(:,2), best_x(:,3), 100, 'r', 'x'); % estimated means
 
