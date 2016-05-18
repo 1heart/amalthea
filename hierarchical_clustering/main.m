@@ -6,7 +6,7 @@ numPoints = 10;
 kappa = 100; % concentration parameter
 [dataMatrix, meanMatrix] = random_spherical_data(numClusters, numPoints, kappa);
 
-[best_x,best_f,mem,empty,loop]=SPKmeans(dataMatrix,numClusters,3, 'rand');
+[best_x,best_f,mem,empty,loop]=SPKmeans(dataMatrix,numClusters,3);
 
 % Graph transparent sphere
 [sx, sy, sz] = sphere;
