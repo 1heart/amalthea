@@ -264,10 +264,6 @@ sideways false
 status open
 
 \begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -371,6 +367,143 @@ The Lloyd's algorithm is a heuristic, so it does not guarantee a global
 
 \begin_layout Section*
 Spherical k-means clustering
+\end_layout
+
+\begin_layout Standard
+Spherical k-means clustering the same idea, but with points on a sphere.
+ We investigated a MATLAB implementation by Nguyen
+\begin_inset CommandInset citation
+LatexCommand cite
+key "nguyen2012clustering"
+
+\end_inset
+
+, which required a mean-and-norm-normalized dataset located on a hypersphere.
+ Important aspects of this implementation include:
+\end_layout
+
+\begin_layout Itemize
+When there exists an empty cluster, the largest cluster is split
+\end_layout
+
+\begin_layout Itemize
+Use the dot product as 
+\begin_inset Quotes eld
+\end_inset
+
+negative distance
+\begin_inset Quotes erd
+\end_inset
+
+, which leverages the fact that observations are unit vectors on the hypersphere
+\end_layout
+
+\begin_layout Itemize
+Use the normalized sum of observations as a centroid/mean, which leverages
+ the fact that observations are unit vectors on the hypersphere.
+ Note that this fails on pathological cases where the sum of observations
+ is zero.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Xuan Vinh Nguyen's spherical k-means clustering algorithm
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{algorithmic}[1]
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State{generate an initial set of $k$ means}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+While{not converged}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State{assign all data points to nearest Euclidean-distance mean}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+State{calculate new means to as the centroids of the observations in the
+ cluster}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+EndWhile
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{algorithmic} 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Our investigation
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "tech_report_1"
+options "plain"
+
+\end_inset
+
+
 \end_layout
 
 \end_body
