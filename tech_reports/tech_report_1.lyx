@@ -434,7 +434,11 @@ key "circstats"
 
 , and then applied the spherical k-means clustering and visualized the results
  on the unit three dimensional sphere, color coded for each cluster and
- with mean labeled as red 
+ with estimated means labeled as red 
+\begin_inset Formula $X$
+\end_inset
+
+'s and true means labeled as black 
 \begin_inset Formula $X$
 \end_inset
 
