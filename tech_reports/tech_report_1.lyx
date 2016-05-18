@@ -449,7 +449,7 @@ key "circstats"
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 
@@ -459,7 +459,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Plot of clusters and means on a 3-D sphere
+Plot of 70 clusters and means on a 3-D sphere
 \end_layout
 
 \end_inset
@@ -469,7 +469,7 @@ Plot of clusters and means on a 3-D sphere
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename sphere_points.png
+	filename sphere_points_70_clusters.png
 	width 100text%
 
 \end_inset
@@ -477,7 +477,36 @@ Plot of clusters and means on a 3-D sphere
 
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
 \begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Plot of 10 clusters and means on a 3-D sphere
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename sphere_points_10_clusters.png
+	width 100text%
+
+\end_inset
+
 
 \end_layout
 
