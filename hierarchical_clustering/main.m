@@ -4,9 +4,10 @@ addpath('../SPKmeans');
 numClusters = 15;
 numPoints = 10;
 kappa = 100; % concentration parameter
+numRuns = 1;
 [dataMatrix, meanMatrix] = random_spherical_data(numClusters, numPoints, kappa);
 
-[best_x,best_f,mem,empty,loop]=SPKmeans(dataMatrix,numClusters,3);
+[best_x,best_f,mem,empty,loop]=SPKmeans(dataMatrix,numClusters,numRuns);
 
 % Graph transparent sphere
 [sx, sy, sz] = sphere;
