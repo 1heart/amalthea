@@ -1,0 +1,3 @@
+# Ignore LyX backup and autosave files
+*.lyx~
+*.lyx#
