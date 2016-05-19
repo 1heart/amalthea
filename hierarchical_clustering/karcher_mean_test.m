@@ -1,7 +1,11 @@
-%D = [0 1 0  ; 1 0 0];
-D = rand(5,4);
+D = [1 0 0; 1 0 0]; % Same vectors
+%D = [1 2 3; 2 1 3]; % Random vectors
+%D = [0 1 0  ; 1 0 0]; % Orthogonal vectors
+%D = [-1 0 0  ; 1 0 0]; % Opposite vectors
+%D = rand(5,4); % Random vectors in higher dimensions
 
 
+% Normalize data
 for i = 1:size(D,1)
   D(i,:) = D(i,:)/norm(D(i,:));
 end
