@@ -10,21 +10,23 @@ iter = 0;
 
 while 1
   iter = iter + 1;
-  newGamma = zeros(1, d);
+  newG = zeros(1, d);
   for i = 1:n
-    newGamma = newGamma + log_map(M, D(i,:));
+    newG = newG + log_map(M, D(i,:));
   end
-  newGamma = newGamma * kappa / n;
+  newG = newG * kappa / n;
 
   if first
     first = 0;
-    gamma = newGamma;
+    G = newG;
   else
-    if norm(gamma - newGamma) < eps
+    if norm(G - newG) < eps
       break;
+    else
+      G = newG;
     end
   end
-  M = exp_map(M, gamma);
+  M = exp_map(M, G);
 end
 
 end
