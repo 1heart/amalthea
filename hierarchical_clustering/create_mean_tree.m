@@ -8,9 +8,6 @@ function T = create_mean_tree(D, ids)
 %     T.mean      = 1xd vector of the average of all of T's children's means
 %     T.ids       = array of indices of the observations, if a leaf node
 
-addpath('../CircStat2012a');
-addpath('../SPKmeans');
-
 [n d] = size(D);
 
 if nargin < 2

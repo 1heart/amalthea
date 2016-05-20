@@ -1,8 +1,5 @@
 function [dataMatrix, meanMatrix, memMatrix] = random_spherical_data(numClusters, numPoints, kappa)
 
-addpath('../CircStat2012a');
-addpath('../SPKmeans');
-
 % Kappa is "concentration parameter"
 
 dataMatrix = [];

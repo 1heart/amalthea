@@ -1,6 +1,3 @@
-addpath('../CircStat2012a');
-addpath('../SPKmeans');
-
 numClusters = 15;
 numPoints = 10;
 kappa = 100; % concentration parameter
