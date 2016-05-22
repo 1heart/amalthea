@@ -1,0 +1,41 @@
+\part*{Von Mises distribution}
+
+Intuitively, the Von Mises distribution\cite{wolfram_von_mises} is
+a simple approximation for the normal distribution on a circle (known
+as the \textit{wrapped normal distribution}). The Von Mises probability
+density function is defined by the following equation:
+
+\[
+P(x)=\frac{{e^{b\cos(x-a)}}}{2\pi I_{0}(b)}
+\]
+
+
+where $I_{0}(x)$ is the modified Bessel function of the first kind;
+the Von Mises cumulative density function has no closed form.
+
+The mean $\mu=a$ (intuitively, the angle that the distribution clustered
+around), and the circular variance $\sigma^{2}=1-\frac{{I_{1}(b)}}{I_{0}(b)}$
+(intuitively, $b$ is the ``concentration'' parameter). Therefore,
+as $b\rightarrow0$, the distribution becomes uniform; as $b\rightarrow\infty$,
+the distribution becomes normal with $\sigma^{2}=1/b$.
+
+
+\section*{Von Mises-Fisher distribution}
+
+THe Von-Mises Fisher distribution is the generalization of the Von
+Mises distribution to $n$-dimensional hyperspheres. It reduces to
+the Von-Mises distribution with $n=2$. The probability density function
+is defined by the following equation:
+
+\[
+f_{p}(\emph{\ensuremath{\boldsymbol{x}};\ensuremath{\boldsymbol{\mu}},\ensuremath{\kappa})}=C_{p}(\kappa)\exp(\kappa\boldsymbol{\mu}^{T}\boldsymbol{x})
+\]
+
+
+where
+
+\[
+C_{p}(\kappa)=\frac{\kappa^{p/2-1}}{(2\pi)^{p}I_{p/2-1}(\kappa)}
+\]
+ and intuitively is an approximation for the normal distribution on
+the hypersphere.

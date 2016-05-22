@@ -1,0 +1,15 @@
+\section*{Spherical k-means clustering}
+
+Spherical k-means clustering the same idea, but with points on a sphere.
+We investigated a MATLAB implementation by Nguyen\cite{nguyen2008gene,nguyen_spherical_clustering},
+which required a mean-and-norm-normalized dataset located on a hypersphere.
+Important aspects of this implementation include:
+\begin{itemize}
+\item When there exists an empty cluster, the largest cluster is split
+\item Use the dot product as ``negative distance'', which leverages the
+fact that observations are unit vectors on the hypersphere
+\item Use the normalized sum of observations as a centroid/mean, which leverages
+the fact that observations are unit vectors on the hypersphere. Note
+that this fails on pathological cases where the sum of observations
+is zero.
+\end{itemize}
