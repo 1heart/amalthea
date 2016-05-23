@@ -15,7 +15,6 @@ end
 
 C{l+1}.children = children;
 
-% This is a comment
 if size(means, 1) ~= 1
   C = meantree2_recurse(means, C, numChild);
 end
