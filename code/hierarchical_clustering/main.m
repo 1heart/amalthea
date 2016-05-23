@@ -4,7 +4,7 @@ kappa = 100; % concentration parameter
 numRuns = 1;
 [dataMatrix, meanMatrix, memMatrix] = random_spherical_data(numClusters, numPoints, kappa);
 
-T = create_mean_tree(dataMatrix);
+T = meantree(dataMatrix);
 
 graph = 0;
 

@@ -1,4 +1,4 @@
-function T = create_mean_tree(D, ids)
+function T = meantree(D, ids)
 % CREATE_MEAN_TREE
 %   Given D, an nxd matrix of observations,
 %   and L, an nx1 matrix of labels,
@@ -24,7 +24,7 @@ if n == 1
   return;
 end
 
-[means, loss_val, categories] = SPKmeans(D, 2, 1);
+[means, loss_val, categories] = SPKmeans(D, 2);
 
 for i = 1:2
   currIDs = find(categories == i);
