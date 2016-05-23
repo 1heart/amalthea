@@ -1,4 +1,4 @@
-function T = meantree2(D)
+function [T C] = meantree2(D)
 
 numChild = 2;
 [n d] = size(D);
