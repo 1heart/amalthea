@@ -16,7 +16,6 @@ for i = 1:size(childPointers,2)
   T.num = T.num + child.num;
   T.ids = [T.ids child.ids];
   T.children = [T.children child];
-  T.children
 end
 
 end
