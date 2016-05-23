@@ -1,38 +1,4 @@
-%% LyX 2.1.4 created this file.  For more info, see http://www.lyx.org/.
-%% Do not edit unless you really know what you are doing.
-\documentclass[english]{article}
-\usepackage[T1]{fontenc}
-\usepackage[latin9]{inputenc}
-\usepackage{float}
-\usepackage{graphicx}
-
-\makeatletter
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
-\floatstyle{ruled}
-\newfloat{algorithm}{tbp}{loa}
-\providecommand{\algorithmname}{Algorithm}
-\floatname{algorithm}{\protect\algorithmname}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
-\usepackage{algorithmicx, algpseudocode}
-
-\makeatother
-
-\usepackage{babel}
-\begin{document}
-
-\title{Hypersphere Mean Comparisons}
-
-
-\author{Zela Taino, Yixin Lin}
-
-
-\date{May 20, 2016}
-
-\maketitle
-
-\section*{Karcher Mean }
+\part*{Karcher Mean }
 
 Karcher means is a geometric mean of vairous matrices and an extension
 of the well known geometric mean of two matrices. It is also referred
@@ -81,7 +47,7 @@ x_{l}=\frac{\sum_{i\in X_{l}}\rho_{i}}{||\sum_{i\in X_{l}}\rho_{i}||},l=1\dots K
 is the normalized gravity center of the new cluster. 
 
 
-\section*{Our Implentation}
+\section*{Our Implementation}
 
 To find the best approach in calculating a cluster center, we put
 Karcher mean and Spherical K-mean to the test. We tested them in five
@@ -93,17 +59,17 @@ We found that Karcher mean and Spherical K-means produced the same
 results as long as the step size for Karcher mean was set to one.
 But both approaches failed in the case where the angles were the opposite. 
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{centering}
-\includegraphics[width=2in]{/Users/glizelataino/Downloads/fig1}\includegraphics[width=2in]{/Users/glizelataino/Downloads/fig2} 
+\includegraphics[width=2in]{img/fig1}\includegraphics[width=2in]{img/fig2} 
 \par\end{centering}
 
 \begin{centering}
-\includegraphics[width=2in]{/Users/glizelataino/Downloads/fig3}\includegraphics[width=2in]{/Users/glizelataino/Downloads/fig4}
+\includegraphics[width=2in]{img/fig3}\includegraphics[width=2in]{img/fig4}
 \par\end{centering}
 
 \begin{centering}
-\includegraphics[width=2in]{\string"/Users/glizelataino/Downloads/fig5 (1)\string".png}
+\includegraphics[width=2in]{img/fig5.png}
 \par\end{centering}
 
 \caption{Different test cases comparing accuracy of Karcher mean and Spherical
@@ -111,5 +77,3 @@ K-means.\label{fig:Different-test-cases}}
 
 
 \end{figure}
-
-\end{document}
