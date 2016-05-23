@@ -4,14 +4,14 @@ kappa = 100; % concentration parameter
 numRuns = 1;
 [dataMatrix, meanMatrix, memMatrix] = random_spherical_data(numClusters, numPoints, kappa);
 
-T = meantree(dataMatrix);
+T = meantree2(dataMatrix);
 
 graph = 0;
 
 if graph
 % Graph transparent sphere
   [sx, sy, sz] = sphere;
-  surface(sx,sy,sz,'FaceColor', 'none','EdgeColor',[0.8 0.8 0.8])
+  surface(sx,sy,sz,'FaceColor', 'none','EdgeColor',[0.8 0.8 0.8]);
   hold on;
 
 % Graph data
