@@ -1,11 +1,15 @@
+\documentclass[../tech_report_1.tex]{subfiles}
+\graphicspath{{img}{../img/}}
+\begin{document}
+
 \part*{Karcher Mean }
 
-Karcher means is a geometric mean of vairous matrices and an extension
+The Karcher mean is a geometric mean of various matrices and an extension
 of the well known geometric mean of two matrices. It is also referred
-to as the Riemannian geometric mean. In our investigastion, we used
+to as the Riemannian geometric mean. In our investigation, we used
 it as a way to compute the average distance between two points on
 a hypersphere while obeying the curvature of the manifold. The process
-is stated in Algorithm 1. In oder to do this we must incorporate an
+is stated in Algorithm 1. In order to do this we must incorporate an
 Logarithm map and Exponential map on the manifold. 
 
 
@@ -34,9 +38,9 @@ Karcher mean, as we have mentioned before, is calculated in a way
 to obey the curvature of the hypershere.
 
 
-\section*{Spherical K-means}
+\section*{Spherical mean}
 
-Unlike the Karcher mean, Sphereical K-means does not go along the
+Unlike the Karcher mean, the spherical mean does not go along the
 curvature of the hypersphere. In the assignment step of this algorithm,
 where we adjust the cluster centers, we find the mean by summing up
 all the vectors in a cluster and normalizing it back onto the manifold.
@@ -57,19 +61,19 @@ Figure \ref{fig:Different-test-cases}.
 
 We found that Karcher mean and Spherical K-means produced the same
 results as long as the step size for Karcher mean was set to one.
-But both approaches failed in the case where the angles were the opposite. 
+But both approaches failed in the case where the angles were opposite. 
 
 \begin{figure}[ht]
 \begin{centering}
-\includegraphics[width=2in]{img/fig1}\includegraphics[width=2in]{img/fig2} 
+\includegraphics[width=2in]{fig1}\includegraphics[width=2in]{fig2} 
 \par\end{centering}
 
 \begin{centering}
-\includegraphics[width=2in]{img/fig3}\includegraphics[width=2in]{img/fig4}
+\includegraphics[width=2in]{fig3}\includegraphics[width=2in]{fig4}
 \par\end{centering}
 
 \begin{centering}
-\includegraphics[width=2in]{img/fig5.png}
+\includegraphics[width=2in]{fig5.png}
 \par\end{centering}
 
 \caption{Different test cases comparing accuracy of Karcher mean and Spherical
@@ -77,3 +81,6 @@ K-means.\label{fig:Different-test-cases}}
 
 
 \end{figure}
+\bibliography{../tech_report_1.bib}
+\bibliographystyle{plain}
+\end{document}
