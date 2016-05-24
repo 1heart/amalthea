@@ -29,7 +29,7 @@ end
 for i = 1:2
   currIDs = find(categories == i);
   currD = D(currIDs, :);
-  T.children = [T.children create_mean_tree(currD, currIDs)];
+  T.children = [T.children meantree(currD, currIDs)];
 end
 
 end
