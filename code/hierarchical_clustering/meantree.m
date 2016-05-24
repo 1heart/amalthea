@@ -24,7 +24,7 @@ if n == 1
   return;
 end
 
-[means, loss_val, categories] = SPKmeans(D, 2);
+[means, loss_val, categories, empty, loop] = SPKmeans(D, 2, 1);
 
 for i = 1:2
   currIDs = find(categories == i);
