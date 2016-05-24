@@ -4,9 +4,10 @@ kappa = 100; % concentration parameter
 numRuns = 1;
 [dataMatrix, meanMatrix, memMatrix] = random_spherical_data(numClusters, numPoints, kappa);
 
+% T = meantree(dataMatrix);
 [T C] = meantree2(dataMatrix);
 
-graph = 1;
+graph = 0;
 
 if graph
 % Graph transparent sphere

@@ -4,7 +4,7 @@ function [ C ] = meantree2_recurse(D, C, numChild)
 l = size(C, 2);
 
 numClusters = floor(n / numChild);
-[means, loss_val, categories] = SPKmeans(D, numClusters);
+[means, loss_val, categories, empty, loop] = SPKmeans(D, numClusters, 1, 'seed');
 
 C{l+1}.means = means;
 
