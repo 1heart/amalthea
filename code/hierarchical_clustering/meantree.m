@@ -1,4 +1,4 @@
-function T = meantree(D, ids)
+function T = meantree(D, ids, branchingFactor)
 % CREATE_MEAN_TREE
 %   Given D, an nxd matrix of observations,
 %   and L, an nx1 matrix of labels,
@@ -12,6 +12,9 @@ function T = meantree(D, ids)
 
 if nargin < 2
   ids = 1:n;
+end
+if nargin < 3
+  branchingFactor = 2;
 end
 
 T.num = size(D, 1);
@@ -29,7 +32,7 @@ end
 for i = 1:2
   currIDs = find(categories == i);
   currD = D(currIDs, :);
-  T.children = [T.children meantree(currD, currIDs)];
+  T.children = [T.children meantree(currD, currIDs, ids)];
 end
 
 end
