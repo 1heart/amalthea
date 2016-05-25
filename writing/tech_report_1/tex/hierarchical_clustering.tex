@@ -18,18 +18,19 @@ found in \cite{ClusterAnalysis}.
 
 \section*{Divisive and Agglomerative}
 
-Divise clustering is also known as a ``top down'' method. This takes
+Divisive clustering is also known as the ``top down'' method. This takes
 in a data set as one large cluster. Then as it moves down the hierarchy,
-it recusively splits until it reaches the leaves of the tree, or each
-observation is its own singleton cluster. 
+it recusively splits until it reaches the leaves of the tree, i.e. each
+observation is its own singleton cluster.
 
 Agglomerative clustering can be thought to do the opposite of divisive
 clustering and is known as a ``bottom up'' strategy. It takes in
 a data set and it initially looks at each observation as its own singleton
-cluster. Then, based on its inkage criterion, it will merge recursively
-to form new clusters until all the data are in one large cluster.
-The dendrogram is used in both cases to record and visiualize each
-cluster merge and their distance to each other.
+cluster. Then, based on its linkage criterion, it will merge recursively
+to form new clusters until all the data is in one large cluster.
+
+A dendrogram can be used in both cases to record and visualize the hierarchical nature of the
+clusters and their distance to each other.
 
 
 \section*{Cluster Dissimilarity Measurements}
@@ -48,7 +49,7 @@ in relationship with specific points $x_{i=1\dots k}$ in those clusters.
 Single linkage takes the distance between the closest observations,
 or minimum distance, in each cluster and merges the those with the
 shortest distance. This works well for data sets that desire to cluster
-together long chained data points. The equation is defined as
+together long chained data points. Let $D(c_i,c_j)$ be the distance between two centroids for $i,j \in \{1, 2, ... k\}$, and $D(x_i, x_j)$ be the distance between two data points in $i, j \in \{ 1, 2, ... n \}$. Then single linkage defines the following relationship:
 \[
 D(c_{1},c_{2})=\underset{x_{1}\in c_{1},x_{2}\in c_{2}}{min}D(x_{1},x_{2})
 \]
@@ -61,7 +62,7 @@ Complete linkage is similar to single linkage. It takes the distance
 between the farthest observations, or the maximum distance, in each
 cluster. The clusters that have the shortest measured distance is
 merged together. This measurement is ideal for data that is sphereically
-organized relative to each other. The equation is defined as
+organized relative to each other. The relationship is defined as
 \[
 D(c_{1},c_{2})=\underset{x_{1}\in c_{1},x_{2}\in c_{2}}{max}D(x_{1},x_{2})
 \]
@@ -71,8 +72,8 @@ D(c_{1},c_{2})=\underset{x_{1}\in c_{1},x_{2}\in c_{2}}{max}D(x_{1},x_{2})
 \subsection*{Centroid Linkage}
 
 Using centroid linkage involves taking the average of all points in
-a cluster and assigning that value as the mean cenroid. Then we find
-the centroids with the shortest distances and merge them together.
+a cluster and assigning that value as the mean cenroid. Then
+the centroids with the shortest distances are merged together.
 Centroid linkage is defined as
 \[
 D(c_{1},c_{2})=D((\frac{1}{|c_{1}|}\sum_{x\in c_{1}}\overset{\rightarrow}{x}),(\frac{1}{|c_{2}|}\sum_{x\in c_{2}}\overset{\rightarrow}{x}))
@@ -82,7 +83,7 @@ D(c_{1},c_{2})=D((\frac{1}{|c_{1}|}\sum_{x\in c_{1}}\overset{\rightarrow}{x}),(\
 
 \section*{Our Implementation}
 
-We developed both hierarchical divisive and agglomerrative clustering
+We developed both hierarchical divisive and agglomerative clustering
 functions to test which would organize data the fastest. In our particular
 application, instead of flat clustering, we had to cluster over the
 curved surface of a sphere. In order to do this, we utilized the SPKmeans
@@ -102,24 +103,29 @@ data's average centroid.
 Complexity determines how well the algorithm performs in real time
 as the problem size increases. We tested with a relatively small,
 three dimensional data set of 150 points. This way, we can later expand
-it to work with large data sets that are multidemnsional. Since the
-SPKmeans is the function that takes the longest to perform, it is
-our leading function to determine complexity. In the situtations of
+it to work with large data sets that are multidimensional. In both 
 divisive and agglomerative, we input different cluster values into
 SPKmeans which determines how often the function gets called. In the
-divisive method, we asked SPKmeans to return two clusters everytime
-it is given a data set. This means the number of times we call SPKmeans
+divisive method, we asked SPKmeans to return two clusters.
+This means the number of times we call SPKmeans
 is based on how many nodes we have which is $m=2n-1$ where $n$ is
-the number of data points. For agglomertive, we asked SPKmeans to
+the number of data points. For the agglomerative case, we asked SPKmeans to
 return the $n/2$ clusters. This means means we had to call SPKmeans
-at every level which is $l=ceiling(log_{2}n)$.
+at every level which is $l=\lceil\log_{2}n\rceil$.
 
+\subsection*{Implementation details}
+
+In $k$-means, there is a choice of initial mean initialization. This affects the initial distribution of means and therefore potentially the number of iterations until convergence, but also may be expensive computationally. For instance, a good setting of the initial means will reduce the likelihood of empty clusters found, which is dealt with by splitting the largest cluster and is therefore computationally expensive.
+
+For the agglomerative algorithm, it makes sense to spend time initializing the means (we chose to maximize the distance between the initial means), since the number of calls to SPKMeans is small and the number of clusters for each call is high. For the divisive algorithm, it doesn't make sense to incur this expense when SPKMeans is called many times with only the branching-factor number of clusters (generally a small constant).
+
+This optimization substantially reduces the running time for both algorithms.
 
 \subsection*{Algorithm complexity analysis}
 
 Let $n$ be the number of data points, $k$ be the number of clusters (number of means), $d$ be the dimensionality of the data, and $i$ be the number of iterations until convergence. The runtime of the $k$-means algorithm (including spherical k-means) is $O(nkdi)$ (TODO: CITE).
 
-Let us assume that the cost of initializing the means and splitting empty clusters is negligible, i.e. $O(1)$. In practice, the two are related: we find that explicitly picking good starting means for the agglomerate algorithm (e.g. randomly, or by maximizing distance between the means) makes the probability of empty clusters small, whereas it becomes excessive and unnecessary for the divisive algorithm. TODO: We explain this in a later section.
+Let us assume that the cost of initializing the means and splitting empty clusters is negligible, i.e. $O(1)$. In practice, the two are related: we find that explicitly picking good starting means for the agglomerative algorithm (e.g. randomly, or by maximizing distance between the means) makes the probability of empty clusters small, whereas it becomes excessive and unnecessary for the divisive algorithm. TODO: We explain this in a later section.
 
 We will also assume that $d$ and $i$ are constants. Though in degenerate data sets $i$ can be an exponential function of $n$, in practice $i$ is a small constant on datasets with clustering structuring (CITE: WIKI?).
 
@@ -131,7 +137,7 @@ Let us also assume that we choose a branching factor of 2, i.e. a binary hierarc
 
 \end{theorem}
 
-\textbf{Proof.} Our agglomerate algorithm has a recurrence relation of the following form:
+\textbf{Proof.} Our agglomerative algorithm has a recurrence relation of the following form:
 
 $$ T_{aggl}(n) = T(\frac{n}{2}) + nkdi $$
 
