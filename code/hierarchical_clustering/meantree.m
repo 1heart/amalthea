@@ -33,6 +33,7 @@ branchingFactor = min(T.num, branchingFactor);
 for i = 1:branchingFactor
   currIDs = find(categories == i);
   currD = D(currIDs, :);
+  currIDs = ids(currIDs);
   T.children = [T.children meantree(currD, branchingFactor, currIDs)];
 end
 
