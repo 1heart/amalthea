@@ -1,4 +1,4 @@
-function T = meantree(D, ids, branchingFactor)
+function T = meantree(D, branchingFactor, ids)
 % CREATE_MEAN_TREE
 %   Given D, an nxd matrix of observations,
 %   and L, an nx1 matrix of labels,
@@ -11,10 +11,10 @@ function T = meantree(D, ids, branchingFactor)
 [n d] = size(D);
 
 if nargin < 2
-  ids = 1:n;
+  branchingFactor = 2;
 end
 if nargin < 3
-  branchingFactor = 2;
+  ids = 1:n;
 end
 
 T.num = size(D, 1);
@@ -27,12 +27,13 @@ if n == 1
   return;
 end
 
-[means, loss_val, categories, empty, loop] = SPKmeans(D, 2, 1);
+branchingFactor = min(T.num, branchingFactor);
+[means, loss_val, categories, empty, loop] = SPKmeans(D, branchingFactor, 1);
 
-for i = 1:2
+for i = 1:branchingFactor
   currIDs = find(categories == i);
   currD = D(currIDs, :);
-  T.children = [T.children meantree(currD, currIDs, ids)];
+  T.children = [T.children meantree(currD, branchingFactor, currIDs)];
 end
 
 end
