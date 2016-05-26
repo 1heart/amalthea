@@ -16,15 +16,17 @@ end
 Z = linkage(pairdists);
 
 % Build tree structure
+
+% Get initial nodes
 nodes = [];
 for i = 1:n
   nodes(i).num = 1;
   nodes(i).children = [];
   nodes(i).mean = D(i,:);
-  nodes(i).mean
   nodes(i).ids = [i];
 end
 
+% Merge nodes
 for i = 1:size(Z,1)
   curr = struct;
   curr.children = [nodes(Z(i,1)) nodes(Z(i,2))];
