@@ -100,10 +100,8 @@ linkage to form a new cluster with its own cluster centroid everytime.
 This process stops when there is a single point to represent the entire
 data's average centroid.
 
-Complexity determines how well the algorithm performs in real time
-as the problem size increases. We tested with a relatively small,
-three dimensional data set of 150 points. This way, we can later expand
-it to work with large data sets that are multidimensional. In both 
+We tested with a relatively small,
+three dimensional data set of 150 points. In both 
 divisive and agglomerative, we input different cluster values into
 SPKmeans which determines how often the function gets called. In the
 divisive method, we asked SPKmeans to return two clusters.
@@ -113,13 +111,16 @@ the number of data points. For the agglomerative case, we asked SPKmeans to
 return the $n/2$ clusters. This means means we had to call SPKmeans
 at every level which is $l=\lceil\log_{2}n\rceil$.
 
+
+As a benchmark, we also used the MATLAB \texttt{linkage} function to construct a pairwise-distance based tree (merging nodes together by single-linkage) and compared the results.
+
 \subsection*{Implementation details}
 
 In $k$-means, there is a choice of initial mean initialization. This affects the initial distribution of means and therefore potentially the number of iterations until convergence, but also may be expensive computationally. For instance, a good setting of the initial means will reduce the likelihood of empty clusters found, which is dealt with by splitting the largest cluster and is therefore computationally expensive.
 
 For the agglomerative algorithm, it makes sense to spend time initializing the means (we chose to maximize the distance between the initial means), since the number of calls to SPKMeans is small and the number of clusters for each call is high. For the divisive algorithm, it doesn't make sense to incur this expense when SPKMeans is called many times with only the branching-factor number of clusters (generally a small constant).
 
-This optimization substantially reduces the running time for both algorithms.
+This optimization (or lack thereof) substantially reduces the running time for both algorithms.
 
 \subsection*{Algorithm complexity analysis}
 
