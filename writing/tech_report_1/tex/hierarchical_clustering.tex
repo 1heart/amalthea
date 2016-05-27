@@ -87,7 +87,7 @@ We developed both hierarchical divisive and agglomerative clustering
 functions to test which would organize data the fastest. In our particular
 application, instead of flat clustering, we had to cluster over the
 curved surface of a sphere. In order to do this, we utilized the SPKmeans
-function \cite{SphericalKMeans}. We also chose our linkage criterion
+function \cite{nguyen_spherical_clustering}. We also chose our linkage criterion
 to be based on centroid linkage.
 
 Essentially, we developed the divisive clustering by following the
@@ -126,9 +126,9 @@ This optimization (or lack thereof) substantially reduces the running time for b
 
 Let $n$ be the number of data points, $k$ be the number of clusters (number of means), $d$ be the dimensionality of the data, and $i$ be the number of iterations until convergence. The runtime of the $k$-means algorithm (including spherical k-means) is $O(nkdi)$ (TODO: CITE).
 
-Let us assume that the cost of initializing the means and splitting empty clusters is negligible, i.e. $O(1)$. In practice, the two are related: we find that explicitly picking good starting means for the agglomerative algorithm (e.g. randomly, or by maximizing distance between the means) makes the probability of empty clusters small, whereas it becomes excessive and unnecessary for the divisive algorithm. TODO: We explain this in a later section.
+Let us assume that the cost of initializing the means and splitting empty clusters is negligible, i.e. $O(1)$. In practice, the two are related: we find that explicitly picking good starting means for the agglomerative algorithm (e.g. randomly, or by maximizing distance between the means) makes the probability of empty clusters small, whereas it becomes excessive and unnecessary for the divisive algorithm. See the \textbf{Implementation details} section for more discussion.
 
-We will also assume that $d$ and $i$ are constants. Though in degenerate data sets $i$ can be an exponential function of $n$, in practice $i$ is a small constant on datasets with clustering structuring (CITE: WIKI?).
+We will also assume that $d$ and $i$ are constants. Though in degenerate data sets $i$ can be an exponential function of $n$, in practice $i$ is a small constant on datasets with clustering structuring (TODO: CITE WIKI?).
 
 Let us also assume that we choose a branching factor of 2, i.e. a binary hierarchical tree structure. The following analysis does not depend on the branching factor, assuming it is constant.
 
@@ -144,7 +144,7 @@ $$ T_{aggl}(n) = T(\frac{n}{2}) + nkdi $$
 
 for some constant $c$, since we divide the problem size into two for every recursive call. But we choose $k=\frac{n}{2}$ each time, since the number of means we choose to cluster with is also half of $n$.
 
-We use the master theorem (TODO: CITE) to solve this recurrence relation:
+We use the master theorem\cite{thomas2001introduction} to solve this recurrence relation:
 
 \begin{table}[ht]
 \centering
@@ -188,7 +188,7 @@ $$ T_{div}(n) = 2T(\frac{n}{2}) + nkdi $$
 
 for some constant $c$, since we divide the problem size into two for every recursive call and we have two subproblems each time. But we choose $k=2$ each time, since the number of means we choose to cluster with is always the branching factor.
 
-We use the master theorem (TODO: CITE) to solve this recurrence relation:
+We use the master theorem\cite{thomas2001introduction} to solve this recurrence relation:
 
 \begin{table}[ht]
 \centering
