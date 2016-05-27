@@ -120,7 +120,7 @@ In $k$-means, there is a choice of initial mean initialization. This affects the
 
 For the agglomerative algorithm, it makes sense to spend time initializing the means (we chose to maximize the distance between the initial means), since the number of calls to SPKMeans is small and the number of clusters for each call is high. For the divisive algorithm, it doesn't make sense to incur this expense when SPKMeans is called many times with only the branching-factor number of clusters (generally a small constant).
 
-This optimization (or lack thereof) substantially reduces the running time for both algorithms.
+This optimization and lack thereof, respectively, reduces the running time for both algorithms substantially.
 
 \subsection*{Algorithm complexity analysis}
 
