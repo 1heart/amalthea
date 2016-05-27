@@ -7,7 +7,7 @@
 %dist = [ 0.1 0.4 0.2 0.7 0.5 0.3 0.8 0.9 0.6;
 %         0.4 0.1 0.6 0.5 0.2 0.7 0.8 0.9 0.3 ];
 
-function [precisionRecallObj] = PrecisionRecall(dist, trueCat)
+function [precisionRecallObj] = precision_recall(dist, trueCat)
 
 uniqueCat = unique(trueCat);
 shapes_cat = hist(trueCat, uniqueCat);
