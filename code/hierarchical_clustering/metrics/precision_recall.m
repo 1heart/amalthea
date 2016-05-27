@@ -12,6 +12,8 @@ function [precisionRecallObj] = precision_recall(dist, trueCat)
 uniqueCat = unique(trueCat);
 shapes_cat = hist(trueCat, uniqueCat);
 precision = zeros();
+av_precision = zeros();
+
 for j = 1:size(dist,1)
     queryShape = trueCat(j);
     [~, sortedInd] = sort(dist(j,:));
@@ -23,14 +25,16 @@ for j = 1:size(dist,1)
         p(i) = i/p_points(i);
         precision(j,i) = p(i);
     end
+    av_precision(j) = mean(precision(j,:));
 end
 recall = [1:shapes_cat]./shapes_cat;
 precision = mean(precision);
 
-eMeasure = 1 - (2.*((precision.^(-1))+(recall.^(-1))).^(-1));
+e_measure = 1 - (2.*((precision.^(-1))+(recall.^(-1))).^(-1));
+mean_av_precision = mean(av_precision);
 
-keySet = {'precision_vals', 'recall_vals', 'e_measure'};
-valueSet = {precision, recall, eMeasure};
+keySet = {'precision_vals', 'recall_vals', 'e_measure', 'mean_av_precision'};
+valueSet = {precision, recall, e_measure, mean_av_precision};
 precisionRecallObj = containers.Map(keySet, valueSet);
 
 
