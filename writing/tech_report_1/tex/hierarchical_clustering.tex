@@ -124,11 +124,11 @@ This optimization (or lack thereof) substantially reduces the running time for b
 
 \subsection*{Algorithm complexity analysis}
 
-Let $n$ be the number of data points, $k$ be the number of clusters (number of means), $d$ be the dimensionality of the data, and $i$ be the number of iterations until convergence. The runtime of the $k$-means algorithm (including spherical k-means) is $O(nkdi)$ (TODO: CITE).
+Let $n$ be the number of data points, $k$ be the number of clusters (number of means), $d$ be the dimensionality of the data, and $i$ be the number of iterations until convergence. The runtime of the $k$-means algorithm (including spherical k-means) is $O(nkdi)$.
 
 Let us assume that the cost of initializing the means and splitting empty clusters is negligible, i.e. $O(1)$. In practice, the two are related: we find that explicitly picking good starting means for the agglomerative algorithm (e.g. randomly, or by maximizing distance between the means) makes the probability of empty clusters small, whereas it becomes excessive and unnecessary for the divisive algorithm. See the \textbf{Implementation details} section for more discussion.
 
-We will also assume that $d$ and $i$ are constants. Though in degenerate data sets $i$ can be an exponential function of $n$, in practice $i$ is a small constant on datasets with clustering structuring (TODO: CITE WIKI?).
+We will also assume that $d$ and $i$ are constants. Though in degenerate data sets $i$ can be an exponential function of $n$, in practice $i$ is a small constant on datasets with clustering structuring.
 
 Let us also assume that we choose a branching factor of 2, i.e. a binary hierarchical tree structure. The following analysis does not depend on the branching factor, assuming it is constant.
 
