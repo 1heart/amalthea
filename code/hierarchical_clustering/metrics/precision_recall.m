@@ -24,15 +24,12 @@ for j = 1:size(dist,1)
         precision(j,i) = p(i);
     end
 end
-recall = [1:shapes_cat]./shapes_cat
-precision = mean(precision)
+recall = [1:shapes_cat]./shapes_cat;
+precision = mean(precision);
 
-precision_32 = precision(:,1:32);
-recall_32 = recall(:,1:32);
-eMeasure = 1 - (2/((1/precision_32)+(1/recall_32)));
+eMeasure = 1 - (2.*((precision.^(-1))+(recall.^(-1))).^(-1));
 
-
-keySet = {'Precision Values', 'Recall Values', 'E-Measure'};
+keySet = {'precision_vals', 'recall_vals', 'e_measure'};
 valueSet = {precision, recall, eMeasure};
 precisionRecallObj = containers.Map(keySet, valueSet);
 
