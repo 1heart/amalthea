@@ -1,5 +1,5 @@
 tree_constructors = {@meantree, @meantree2, @link_tree};
-metrics = {@precision_recall};
+metrics = {@metrics1, @metrics2};
 
 datasets = {};
 labels = {};
