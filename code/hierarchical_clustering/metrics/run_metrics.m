@@ -1,5 +1,12 @@
-tree_constructors = {@meantree, @meantree2, @link_tree};
-metrics = {@metrics1, @metrics2};
+tree_constructors = {
+  @meantree,
+  @meantree2,
+  @link_tree,
+};
+metrics = {
+  @metrics1,
+  @metrics2,
+};
 
 prefix = '/Users/yixin/amalthea/data/';
 datasetPaths = {
