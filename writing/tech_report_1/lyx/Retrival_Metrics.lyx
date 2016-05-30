@@ -1,0 +1,342 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Retrival Metrics
+\end_layout
+
+\begin_layout Author
+Yixin Lin, Glizela Taino
+\end_layout
+
+\begin_layout Date
+May 28, 2016
+\end_layout
+
+\begin_layout Abstract
+In order to test the retrival accuracy for our hierarchical clustered data
+ set, we had to coded a few metrics that are used in information retrieval
+ and more specifically used in the Shape Retrival Contest (SHREC) 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "SHRECEval"
+
+\end_inset
+
+ (MENTION THE DATA SETS USED).
+ Various evaluation methods are useful in grading different behavioral aspects
+ of shape retrieval and grades the algorithm based on the quality of the
+ ranked list.
+ The information retrieval metrics discussed in this paper are precision-recall,
+ F-measure and E-measure, average precision, mean average precision, discounted
+ cumlative gain, nearest neighbor, first tier, and second tier.
+\end_layout
+
+\begin_layout Section*
+Precision-Recall
+\end_layout
+
+\begin_layout Standard
+Precision is the ratio of relevant objects to the query that were retrieved.
+ Recall is the ratio of relevant retieved objects to the query out of all
+ possible amounts of relevant objects in the data base.
+ Intuitively, precision asks, 
+\begin_inset Quotes eld
+\end_inset
+
+how useful are the results?
+\begin_inset Quotes erd
+\end_inset
+
+ recall asks, 
+\begin_inset Quotes eld
+\end_inset
+
+did we retrieve all the possible corect results?
+\begin_inset Quotes erd
+\end_inset
+
+ Precision and recall can be defined as 
+\begin_inset Formula 
+\[
+P=\frac{A\cap B}{A}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+R=\frac{A\cap B}{B}
+\]
+
+\end_inset
+
+respectively, where 
+\begin_inset Formula $A$
+\end_inset
+
+ represents the set of relevant objects and 
+\begin_inset Formula $B$
+\end_inset
+
+ represents the set of all retrieved objects.
+ When a retrival has high precision, it means that the algorithm retrieves
+ mostly relevant objects.
+ When a retrieval has high recall, it means that the algorithm retrieves
+ most of the relevant objects possible.
+ Most of the time, precision and recall have an inverse relationship.
+ Meaning if you want high precision, you will miss a few of the relevant
+ objects or if you want high recall, you might include a few irrelavant
+ objects in your retrieval.
+ 
+\end_layout
+
+\begin_layout Subsection*
+Average Precision and Mean Average Precision
+\end_layout
+
+\begin_layout Standard
+Precision values describe an evaluation for a single retrieval.
+ Average precision (AP) represents the average precision score over every
+ retrieved result.
+ For example, if our retrieval results are 1, 1, 0, 0, 1, 1 that would make
+ our precision scores 1/1, 2/2, 0, 0, 3/5, 4/6 with an average precision
+ score of 0.54.
+ Note that this also places importance on the order of the retrieved results
+ and puts into account a precision score at specified rank 
+\begin_inset Formula $k$
+\end_inset
+
+ as it goes down all the number of retrieved documents 
+\begin_inset Formula $n$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Mean average precision (MAP) is an extention of average precision.
+ It takes the average of all average precsion scores over each query and
+ represents it into a single value.
+ This is useful in getting an over all evaluation of the retrievals preformance.
+ 
+\end_layout
+
+\begin_layout Subsection*
+Precision-Recall Curves
+\end_layout
+
+\begin_layout Standard
+It is useful to find the values of precision and recall, in order be able
+ to plot what is called a precision-recall curve (PR curve).
+ PR curves plot the precision value at fixed recall values and allows us
+ to visualize the inverse relationship between the two.
+ If a retrieval is perfect, the PR curve will be a constant line.
+ Average precision can also be plotted as a PR curve with average precision
+ over the interval of recall from 0 to 1.
+ 
+\end_layout
+
+\begin_layout Subsection*
+F-Measure and E-Measure
+\end_layout
+
+\begin_layout Standard
+F-measure, also known as F-score, is the weighted harmonic mean of precison
+ and recall.
+ It is used to compare precision and recall values in a single value.
+ F-measure can be defined as,
+\begin_inset Formula 
+\[
+F_{\alpha}=\frac{(1+\alpha)PR}{\alpha P+R}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ is the weighted measure.
+ When 
+\begin_inset Formula $\alpha$
+\end_inset
+
+is 0.5, it gives twice as much as importance on precision over recall.
+ But a regularly used F-measure is with a weight of 1, also known as the
+ balanced F-measure, weighing precision and recall equally.
+ This turns our equation of the F-measure into
+\begin_inset Formula 
+\[
+F=\frac{2PR}{P+R}
+\]
+
+\end_inset
+
+This is then used to develop the effectiveness measure (E-measure).
+ E-measure, is a single valued evaluation of a precision and recall performance
+ and can be defined as 
+\begin_inset Formula $E=1-F$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section*
+Discounted Cumlative Gain
+\end_layout
+
+\begin_layout Standard
+Discounted cumlative gain (DCG) is the idea that a relevant result is only
+ as valuable as it's ranked position.
+ That means that a user only investigates about the first few pages of retrieved
+ objects and users are less likely to go beyond the first page of objects.
+ With this in mind, discounted cumlative gain penalizes relevant objects
+ that are shown later in the retrieval.
+ To understand DCG, we have to understand the idea of cumlative gain.
+ Cumlative gain (CG) sums the retrieved results up to ranking 
+\begin_inset Formula $k$
+\end_inset
+
+ and can go as far as the last result 
+\begin_inset Formula $n$
+\end_inset
+
+.
+ CG looks at the ordered results as binary relevance values, meaning that
+ an object is either assigned the value 1 for relevant or 0 for irrelevant.
+ To incorporate the penalization of DCG on lower ranked relevant objects,
+ we reduce the relevance value logarithmically proportional to its rank.
+\begin_inset Formula 
+\[
+DCG_{k}=rel_{1}+\sum_{i=2}^{k}\frac{rel_{i}}{log_{2}i}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $k$
+\end_inset
+
+ represents rank position and 
+\begin_inset Formula $rel$
+\end_inset
+
+ represents relevance value of either 0 or 1.
+ In order to compare evaluation performances for various algorithms and
+ sizes of data bases or queries, we must normalize the data with an ideal
+ discounted cumlative gain (IDCGk).
+ An IDCGk is the best possible retrieval results to a specified rank where
+ the objects are sorted by relevance 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "DCG"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection*
+Nearest Neighbor, First Tier, and Second Tier
+\end_layout
+
+\begin_layout Standard
+Nearest neighbor, first tier, and second tier all follow the similar idea
+ that the objects that are ranked the highest will be the ones mostly considered.
+ Nearest neighbor evaluates the metric based on the first (
+\begin_inset Formula $k=1$
+\end_inset
+
+) ranked relevance value.
+ First tier and second tier grades on the amount of total possible relevant
+ results in a class (
+\begin_inset Formula $k=c$
+\end_inset
+
+) and on two times the amount of total possible relevant results in a class
+ (
+\begin_inset Formula $k=2c$
+\end_inset
+
+).
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "/Users/glizelataino/Documents/references"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
