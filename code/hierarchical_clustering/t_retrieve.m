@@ -10,7 +10,7 @@ if nargin < 3
   n = 1;
 end
 
-if T.num == 1
+if length(T.children) == 0
   ids = T.ids;
   dists = [ sphere_norm(T.mean, Q) ];
   return;

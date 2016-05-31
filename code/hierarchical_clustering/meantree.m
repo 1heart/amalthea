@@ -52,11 +52,12 @@ branchingFactor = min(T.num, branchingFactor);
 for i = 1:branchingFactor
   currIDs = find(categories == i);
 
-  if size(currIDs,2) == 0
-    % If there are no currIDs, stop (fixes infinite recursion bug)
+  if length(currIDs) == 0
+    continue;
+  end
+  if length(currIDs) == n
     break;
-  end;
-
+  end
 
   currD = D(currIDs, :);
   currIDs = ids(currIDs);
