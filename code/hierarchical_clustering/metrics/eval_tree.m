@@ -1,9 +1,9 @@
-function result = eval_tree(D, L, metrics, tree_constructor)
+function result = eval_tree(D, L, metrics, tree_constructor, DEBUG)
 % Takes in a nxd data matrix D, true labels L, a cell array of metric function handles, and a tree constructor
 % and returns a struct with fields equal to the results of the metrics
 
 [n d] = size(D);
-T = tree_constructor(D);
+T = tree_constructor(D, DEBUG);
 
 % Construct distance matrix
 distMatrix = zeros(n);

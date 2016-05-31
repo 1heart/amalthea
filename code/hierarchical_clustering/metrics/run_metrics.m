@@ -1,3 +1,5 @@
+DEBUG = 1;
+
 tree_constructors = {
   @meantree,
   @meantree2,
@@ -61,7 +63,7 @@ for i = 1:length(datasets)
   L = labels{i};
   metric_result = {};
   for j = 1:length(tree_constructors)
-    metric_result{j} = eval_tree(D, L, metrics, tree_constructors{j});
+    metric_result{j} = eval_tree(D, L, metrics, tree_constructors{j}, DEBUG);
   end
   metric_results{i} = metric_result;
 end

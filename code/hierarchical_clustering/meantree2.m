@@ -1,4 +1,4 @@
-function [T C] = meantree2(D)
+function [T C] = meantree2(D, DEBUG)
 % MEANTREE2
 % Hierarchical Agglomerative Clustering
 % INPUTS:
@@ -10,6 +10,9 @@ function [T C] = meantree2(D)
 %   T.mean      = 1xd vector of the average of all of T's children's means
 %   T.ids       = array of indices of the observations, if a leaf node
 
+if nargin < 2
+  DEBUG = 0;
+end
 
 numChild = 2;
 [n d] = size(D);
@@ -22,7 +25,7 @@ for i = 1:size(D,1)
   C{1}.children{i} = [];
 end
 
-C = meantree2_recurse(D, C, numChild);
+C = meantree2_recurse(D, C, numChild, DEBUG);
 
 T = meantree2_nodify(C, size(C,2), 1);
 

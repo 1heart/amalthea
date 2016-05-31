@@ -40,58 +40,49 @@ best_f=-inf;
 best_x=x;
 
 for run=1:n_run
-if nargin<4
-    if pa=='rand'
-        %random means initialization
-        chosen=zeros(1,n);%prevent choosing the old ones
-        for i=1:K
-            tt=int16(rand(1,1)*(n-1)+1);
-            while chosen(tt)==1 tt=int16(rand(1,1)*(n-1)+1);end;
-            chosen(tt)=1;
-            x(i,:)=a(tt,:);
-        end
-        
-    elseif pa=='seed'  %generate seed with max distance from each other
+if pa=='rand'
+    %random means initialization
+    chosen=zeros(1,n);%prevent choosing the old ones
+    for i=1:K
         tt=int16(rand(1,1)*(n-1)+1);
-        x(1,:)=a(tt,:);
-        for i=2:K
+        while chosen(tt)==1 tt=int16(rand(1,1)*(n-1)+1);end;
+        chosen(tt)=1;
+        x(i,:)=a(tt,:);
+    end
+elseif pa=='seed'  %generate seed with max distance from each other
+    tt=int16(rand(1,1)*(n-1)+1);
+    x(1,:)=a(tt,:);
+    for i=2:K
+        tt=int16(rand(1,1)*(n-1)+1);
+        nearest=-inf;
+        for j=1:i nearest=max(nearest,x(j,:)*a(tt,:)');end;
+        while nearest>0.8
             tt=int16(rand(1,1)*(n-1)+1);
             nearest=-inf;
             for j=1:i nearest=max(nearest,x(j,:)*a(tt,:)');end;
-            while nearest>0.8
-                tt=int16(rand(1,1)*(n-1)+1);
-                nearest=-inf;
-                for j=1:i nearest=max(nearest,x(j,:)*a(tt,:)');end;
-            end;
-            x(i,:)=a(tt,:);
-        end
-        
-    elseif pa=='part'
-        %random partitions initialization
-        t=rand(1,n);
-        t=int16(t*(K-1)+1);
-        x=zeros(K,dim);
-        for i=1:n
-            x(t(i),:)=x(t(i),:)+a(i,:);
-        end
-        for i=1:K
-            if x(i,:)>0 x(i,:)=x(i,:)/norm(x(i,:));
-            else
-                x(i,:)=a(int16(rand(1,1)*(n-1))+1,:);
-            end
-        end
-        
-    else
-        %fixed means initialization
-        for i=1:K
-            x(i,:)=a(i,:);
+        end;
+        x(i,:)=a(tt,:);
+    end
+elseif pa=='part'
+    %random partitions initialization
+    t=rand(1,n);
+    t=int16(t*(K-1)+1);
+    x=zeros(K,dim);
+    for i=1:n
+        x(t(i),:)=x(t(i),:)+a(i,:);
+    end
+    for i=1:K
+        if x(i,:)>0 x(i,:)=x(i,:)/norm(x(i,:));
+        else
+            x(i,:)=a(int16(rand(1,1)*(n-1))+1,:);
         end
     end
 else
-     fprintf('Starting from a predifined seed\n');
+    %fixed means initialization
+    for i=1:K
+        x(i,:)=a(i,:);
+    end
 end
-    
-
 
 membership=zeros(1,n);
 obj=[];f_old=0;
