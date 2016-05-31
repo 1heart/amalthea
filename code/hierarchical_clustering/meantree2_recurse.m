@@ -16,7 +16,7 @@ if DEBUG == 1
 end
 
 numClusters = floor(n / numChild);
-[means, loss_val, categories, empty, loop] = SPKmeans(D, numClusters, 1, 'seed');
+[means, loss_val, categories, empty, loop] = SPKmeans(D, numClusters, 1, 'rand');
 
 C{l+1}.means = means;
 
