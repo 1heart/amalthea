@@ -40,6 +40,9 @@ labels = {};
 % datasets{1} = [1 0 0; 0 1 0; 0 0 1;];
 % labels{1} = [1; 1; 2;];
 
+% datasets{1} = normr(rand(10,10));
+% labels{1} = [1 1 2 2 3 3 4 4 5 5]';
+
 for i = 1:length(datasetPaths)
   load(strcat(prefix, datasetPaths{i}));
 
