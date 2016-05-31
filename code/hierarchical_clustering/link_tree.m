@@ -25,6 +25,8 @@ for i = 1:n
   end
 end
 
+pairdists = real(pairdists);
+
 % Find linkage
 Z = linkage(pairdists);
 
