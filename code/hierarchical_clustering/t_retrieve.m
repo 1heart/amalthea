@@ -10,7 +10,8 @@ if nargin < 3
   n = 1;
 end
 
-if T.num == 1
+% If children is a single treenode, or there are no children
+if strcmp(class(T.children), class(struct)) || length(T.children) == 0
   ids = T.ids;
   dists = [ sphere_norm(T.mean, Q) ];
   return;
