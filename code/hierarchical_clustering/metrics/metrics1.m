@@ -1,43 +1,48 @@
-%   Goal is to plot a recall vs. precision graph. Lets start with one array
+%   Goal is to plot a recall vs. precision graph. Let's start with one array
 %   as the submitted results of our algorithm
-%trueCat = [ 1 2 1 3 2 3 1 3 2 ];
-%dist = [ 0.1 0.4 0.2 0.7 0.5 0.3 0.8 0.9 0.6 ];
-%queryClass = 1;
-%shCat = 3;
-%dist = [ 0.1 0.4 0.2 0.7 0.5 0.3 0.8 0.9 0.6;
-%         0.4 0.1 0.6 0.5 0.2 0.7 0.8 0.9 0.3 ];
 
-function [precisionRecallObj] = metrics1(dist, trueCat)
+function [precisionRecallObj] = metrics1(distanceMatrix, trueLabels)
 
-uniqueCat = unique(trueCat);
-shapes_cat = hist(trueCat, uniqueCat);
-precision = zeros();
-av_precision = zeros();
+[m n] = size(distanceMatrix);
 
-for j = 1:size(dist,1)
-    queryShape = trueCat(j);
-    [~, sortedInd] = sort(dist(j,:));
-    sortedCat = trueCat(sortedInd);
-
-    p_points = find(sortedCat == queryShape);
-
-    for i = 1:length(p_points)
-        p(i) = i/p_points(i);
-        precision(j,i) = p(i);
-    end
-    av_precision(j) = mean(precision(j,:));
+if m ~= n
+	error('Distance matrix is not square!');
 end
-recall = [1:shapes_cat]./shapes_cat;
-precision = mean(precision);
 
-e_measure = 1 - (2.*((precision.^(-1))+(recall.^(-1))).^(-1));
-mean_av_precision = mean(av_precision);
+uniqueCategories = unique(trueLabels);
+shapesPerCategory = hist(trueLabels, uniqueCategories);
+precision = nan(size(distanceMatrix));
+recall = nan(size(distanceMatrix));
+avgRecall = nan(n,1);
+avgPrecision = nan(n,1);
 
-keySet = {'precision_vals', 'recall_vals', 'e_measure', 'mean_av_precision'};
-valueSet = {precision, recall, e_measure, mean_av_precision};
+for i = 1:n
+    trueLabel = trueLabels(i);
+    [~, sortedInd] = sort(distanceMatrix(i,:));
+    sortedCat = trueLabels(sortedInd);
+
+    cumulativeCorrect = cumsum(sortedCat == trueLabel);
+    cumulativeCorrect
+    precision(i,:) = cumulativeCorrect./[1:n]';
+    recall(i,:) = cumulativeCorrect./shapesPerCategory(trueLabel);
+
+    avgPrecision(i) = mean(precision(i,:));
+end
+
+meanAveragePrecision = mean(avgPrecision);
+
+eMeasure32 = nan(n,1);
+if n >= 32
+	precision32 = precision(:,32);
+	recall32 = recall(:,32);
+	eMeasure32 = 1 - 2 / ((1/precision32) + (1/recall32));
+end
+
+avgEMeasure32 = mean(eMeasure32);
+
+keySet = {'precision', 'recall', 'e_measure_32', 'avg_e_measure_32', 'mean_avg_precision'};
+valueSet = {precision, recall, eMeasure32, avgEMeasure32, meanAveragePrecision};
 precisionRecallObj = containers.Map(keySet, valueSet);
-
-
 
 end
 
