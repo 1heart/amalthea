@@ -1,7 +1,7 @@
-function [] = circline(v1, v2, linespec)
+function [] = circline(v1, v2, color)
 
 if nargin < 3
-  linespec = '-r';
+  color = [0 0 0];
 end
 
 if size(v1,1) == 1 v1 = v1'; end;
@@ -14,6 +14,5 @@ x0 = 0; y0 = 0; z0 = 0;
  % Let t range through the inner angle between v1 and v2
  t = linspace(0,atan2(norm(cross(v1,v2)),dot(v1,v2))); 
  v = v1*cos(t)+v3*sin(t); % v traces great circle path, relative to center
- plot3(v(1,:)+x0,v(2,:)+y0,v(3,:)+z0, linespec) % Plot it in 3D
-
+ plot3(v(1,:)+x0,v(2,:)+y0,v(3,:)+z0, 'Color',color) % Plot it in 3D
 end
