@@ -1,4 +1,4 @@
-function metricObject = metrics(distMatrix, trueLabels, DISPLAY)
+function metricObject = metrics_shrec(distMatrix, trueLabels, DISPLAY)
 
 % Default to not displaying data
 if nargin < 3
