@@ -1,11 +1,14 @@
 DEBUG = 1;
+SAVE = 0;
+DISPLAY = 1;
 
 tree_constructors = {
   @meantree,
   @meantree2,
   @link_tree,
 };
-metrics = {
+use_metrics = {
+  @metrics_shrec,
   @metrics1,
   @metrics2,
 };
@@ -13,19 +16,27 @@ metrics = {
 prefix = '/Users/yixin/amalthea/data/';
 datasetPaths = {
   'Coefficients/Brown/db4r3/range_1_123/Brown_EV_PQA_1_2_3_3D_2r1__WT_db4_RL_3_p1.mat',
-  % 'Coefficients/Brown/db4r3/range_1_125/Brown_PQA_1_2_5_r1_3D_WT_db4_RL_3_p1.mat',
-  % 'Coefficients/MPEG7/db4r3/range_1_123/mpeg7Al_PQA_1_2_3_3D_2r1__WT_db4_RL_3.mat',
-  % 'Coefficients/MPEG7/db4r3/range_1_125/mpeg7Al_PQA_1_2_5_3D_2r1__WT_db4_RL_3.mat',
-  % 'Coefficients/SH11/db4r3/range_1_123/SHREC11_Or_PN_SSPts_GL_PQA_1_2_3_3D_2r1__WT_db4_RL_3.mat',
-  % 'Coefficients/SH11/db4r3/range_1_125/SHREC11_Or_PN_SSPts_GL_PQA_1_2_5_3D_2r1__WT_db4_RL_3.mat',
+  'Coefficients/Brown/db4r3/range_1_125/Brown_PQA_1_2_5_r1_3D_WT_db4_RL_3_p1.mat',
+  'Coefficients/MPEG7/db4r3/range_1_123/mpeg7Al_PQA_1_2_3_3D_2r1__WT_db4_RL_3.mat',
+  'Coefficients/MPEG7/db4r3/range_1_125/mpeg7Al_PQA_1_2_5_3D_2r1__WT_db4_RL_3.mat',
+  'Coefficients/SH11/db4r3/range_1_123/SHREC11_Or_PN_SSPts_GL_PQA_1_2_3_3D_2r1__WT_db4_RL_3.mat',
+  'Coefficients/SH11/db4r3/range_1_125/SHREC11_Or_PN_SSPts_GL_PQA_1_2_5_3D_2r1__WT_db4_RL_3.mat',
+};
+datasetNames = {
+  'brown_123',
+  'brown_125',
+  'mpeg7_123',
+  'mpeg7_125',
+  'shrec11_123',
+  'shrec11_125',
 };
 datasetDimensions= { % [numCategories, numShapes/category]
   [9, 11],
-  % [9, 11],
-  % [70, 20],
-  % [70, 20],
-  % [30, 20]
-  % [30, 20]
+  [9, 11],
+  [70, 20],
+  [70, 20],
+  [30, 20]
+  [30, 20]
 };
 
 if length(datasetPaths) ~= length(datasetDimensions)
@@ -36,6 +47,7 @@ end
 
 datasets = {};
 labels = {};
+names = {};
 
 % datasets{1} = [1 0 0; 0 1 0; 0 0 1;];
 % labels{1} = [1; 1; 2;];
@@ -55,6 +67,8 @@ for i = 1:length(datasetPaths)
   dimensions = datasetDimensions{i};
   numCategories = dimensions(1); numShapesPerCategory = dimensions(2);
   labels{i} = kron(1:numCategories, ones(1,numShapesPerCategory))';
+
+  names{i} = datasetNames{i};
 end
 
 %% Run metrics on datasets
@@ -66,9 +80,13 @@ for i = 1:length(datasets)
   L = labels{i};
   metric_result = {};
   for j = 1:length(tree_constructors)
-    metric_result{j} = eval_tree(D, L, metrics, tree_constructors{j}, DEBUG);
+    metric_result{j} = eval_tree(D, L, use_metrics, tree_constructors{j}, DEBUG, DISPLAY);
   end
   metric_results{i} = metric_result;
+  if SAVE
+    eval([names{i} ' = metric_results{' num2str(i) '};']);
+    save(strcat('results/', names{i}), names{i});
+  end
 end
 
 

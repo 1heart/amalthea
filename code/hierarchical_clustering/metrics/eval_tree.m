@@ -8,7 +8,9 @@ T = tree_constructor(D, DEBUG);
 % Construct distance matrix
 distMatrix = zeros(n);
 
+if DEBUG textprogressbar('Retrieving tree: '); end;
 for i = 1:n
+  if DEBUG textprogressbar(100 * i / n); end;
   [ids dists] = t_retrieve(T, D(i,:), n);
 
   % Construct a distance measure based on order:
