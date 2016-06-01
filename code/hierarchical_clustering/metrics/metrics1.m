@@ -1,7 +1,7 @@
 %   Goal is to plot a recall vs. precision graph. Let's start with one array
 %   as the submitted results of our algorithm
 
-function [precisionRecallObj] = metrics1(distanceMatrix, trueLabels)
+function [precisionRecallObj] = metrics1(distanceMatrix, trueLabels, DISPLAY)
 
 [m n] = size(distanceMatrix);
 
