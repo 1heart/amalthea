@@ -1,0 +1,23 @@
+\documentclass{article}
+\begin{document}
+
+$n=$ number of points
+
+$k=$ number of clusters
+
+$d=$ dimensionality of the data
+
+$i=$ number of iterations until convergence
+
+$k$-means complexity: $O(nkdi)$
+
+\textbf{Master theorem: } Solves $T(n) = aT(n/b) + f(n)$
+
+$$T_{aggl}(n) = T(\frac{n}{2}) + nkdi$$
+$$T_{aggl}(n) = T(\frac{n}{2}) + \frac{n^2di}{2}$$
+
+
+$$T_{div}(n) = 2T(\frac{n}{2}) + nkdi$$
+$$T_{div}(n) = 2T(\frac{n}{2}) + 2ndi$$
+
+\end{document}
