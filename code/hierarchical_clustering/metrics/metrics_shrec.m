@@ -1,6 +1,9 @@
-function metricObject = metrics_shrec(distMatrix, trueLabels, DISPLAY)
+function metricObject = metrics_shrec(distMatrix, trueLabels, DISPLAY, currColor)
 
 % Default to not displaying data
+if nargin < 4
+  currColor = 'b';
+end
 if nargin < 3
   DISPLAY = 0;
 end
@@ -49,10 +52,12 @@ if DISPLAY
   display(['Average Precision: ' num2str(Average_AP)]); 
   display(['DiscountedCumulativeGain: ' num2str(Average_DCG)]);
 
-  plot(Recall,Average_Precision_Curve,'-o');
+  % plot(Recall,Average_Precision_Curve,'-o');
+  plot(Recall,Average_Precision_Curve,strcat('-o',currColor));
   xlabel('Recall');
   ylabel('Precision');
   title('Precision-Recall Curve');
+  hold on;
 end
 
 % Construct resulting map
