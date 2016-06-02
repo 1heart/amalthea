@@ -1,4 +1,4 @@
-function  [metricObj] = metrics2(distMatrix, trueLabels)
+function  [metricObj] = metrics2(distMatrix, trueLabels, DISPLAY)
 [m, n] = size(distMatrix);
 if m ~= n
     error('Distance matrix is not square!');
