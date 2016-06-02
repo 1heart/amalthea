@@ -35,3 +35,20 @@ if graph
 
 end
 
+redraw = @() draw_tree(T);
+
+traversal = [];
+curr = T;
+while 1
+  traversal = [traversal curr];
+  if isequal(curr.children, []) break; end;
+  curr = randsample(curr.children, 1);
+end;
+
+for i = 2:length(traversal)
+  prev = traversal(i-1); curr = traversal(i);
+  circline(prev.mean, curr.mean, [1 0 0]);
+  disp(['starting level: ' num2str(i)]);
+  pause;
+end;
+
