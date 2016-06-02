@@ -45,18 +45,19 @@ DEBUG = 1;
 
 numClusters = 4;
 numPoints = 10;
-kappa = 10; % concentration parameter
+kappa = 1000; % concentration parameter
 numRuns = 1;
-means1 = [0; pi/2; pi; 3*pi/2;];
-means1 = [0; pi/6; pi/3; pi/2;];
+% means1 = [0; pi/2; pi; 3*pi/2;];
+dist = 25;
+means1 = [0*pi/dist 1*pi/dist 2*pi/dist 3*pi/dist];
 means2 = [0 0 0 0];
 [D, meanMatrix, trueLabels] = random_spherical_data(numClusters, numPoints, kappa, means1, means2);
 n = numClusters * numPoints;
 memMatrix = trueLabels;
 dataMatrix = D;
 
-T = link_tree(D, DEBUG);
-% T = meantree(D, DEBUG);
+% T = link_tree(D, DEBUG);
+T = meantree(D, DEBUG);
 
 distMatrix = nan(n);
 
