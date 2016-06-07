@@ -82,6 +82,10 @@ for i = 1:length(datasets)
   for j = 1:length(tree_constructors)
     metric_result{j} = eval_tree(D, L, use_metrics, tree_constructors{j}, DEBUG, DISPLAY);
   end
+  for j = 1:length(nontree_evals)
+    curr_evaluator = nontree_evals{j};
+    metric_result = [metric_result curr_evaluator(D, L, use_metrics, 0, 1)];
+  end
   metric_results{i} = metric_result;
   if SAVE
     eval([names{i} ' = metric_results{' num2str(i) '};']);
