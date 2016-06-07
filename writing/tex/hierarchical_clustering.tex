@@ -60,8 +60,8 @@ D(c_{1},c_{2})=\underset{x_{1}\in c_{1},x_{2}\in c_{2}}{min}D(x_{1},x_{2})
 
 Complete linkage is similar to single linkage. It takes the distance
 between the farthest observations, or the maximum distance, in each
-cluster. The clusters that have the shortest measured distance is
-merged together. This measurement is ideal for data that is sphereically
+cluster. The clusters that have the shortest measured distance are
+merged together. This measurement is ideal for data that is spherically
 organized relative to each other. The relationship is defined as
 \[
 D(c_{1},c_{2})=\underset{x_{1}\in c_{1},x_{2}\in c_{2}}{max}D(x_{1},x_{2})
@@ -144,7 +144,7 @@ $$ T_{aggl}(n) = T(\frac{n}{2}) + nkdi $$
 
 for some constant $c$, since we divide the problem size into two for every recursive call. But we choose $k=\frac{n}{2}$ each time, since the number of means we choose to cluster with is also half of $n$.
 
-We use the master theorem\cite{thomas2001introduction} to solve this recurrence relation:
+We use the master theorem \cite{thomas2001introduction} to solve this recurrence relation:
 
 \begin{table}[ht]
 \centering
@@ -188,7 +188,7 @@ $$ T_{div}(n) = 2T(\frac{n}{2}) + nkdi $$
 
 for some constant $c$, since we divide the problem size into two for every recursive call and we have two subproblems each time. But we choose $k=2$ each time, since the number of means we choose to cluster with is always the branching factor.
 
-We use the master theorem\cite{thomas2001introduction} to solve this recurrence relation:
+We use the master theorem \cite{thomas2001introduction} to solve this recurrence relation:
 
 \begin{table}[ht]
 \centering
@@ -207,7 +207,7 @@ $log_b(a)$ & 1 \\
 
 This satisfies case 2 of the master theorem:
 
-$$ f(n) \in \Theta(n^c\log^k_0n) \text{ s.t. } c = log_b(a) $$
+$$ f(n) \in \Theta(n^c\log_{k_{0}}n) \text{ s.t. } c = log_b(a) $$
 
 by letting $k_0=0$, since $f(n\log^0(n)) = f(n) \in \Theta(n) \text{ s.t. } c = 1 = log_b(a) = 1$.
 

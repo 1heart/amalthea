@@ -4,8 +4,8 @@
 
 \section*{Spherical k-means clustering}
 
-Spherical k-means clustering the same idea, but with points on a sphere.
-We investigated a MATLAB implementation by Nguyen\cite{nguyen2008gene,nguyen_spherical_clustering},
+Spherical k-means clustering is the same idea, however, the points are not on a flat euclidean space but rather on the hypersphere.
+We investigated a MATLAB implementation by Nguyen \cite{nguyen2008gene,nguyen_spherical_clustering},
 which required a mean-and-norm-normalized dataset located on a hypersphere.
 Important aspects of this implementation include:
 \begin{itemize}
@@ -22,10 +22,9 @@ is zero.
 
 In order to test how well the spherical k-means clustering algorithm
 worked, we constructed a random data set using the Von Mises distribution
-random sampling function from the MATLAB Circular Statistics Toolbox\cite{circstats}.
+random sampling function from the MATLAB Circular Statistics Toolbox \cite{circstats}.
 We constructed 70 clusters of 10 points each, using random points
-on the sphere as means and with $\kappa=100$, and then applied the
-spherical k-means clustering and visualized the results on the unit
+on the sphere as means and with step size $\kappa=100$, and then applied the spherical k-means clustering and visualized the results on the unit
 three dimensional sphere, color coded for each cluster and with estimated
 means labeled as red $X$'s and true means labeled as black $X$'s.
 
