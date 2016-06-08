@@ -12,7 +12,7 @@
 % 
 %	out1 		- Example output 1.
 %
-% Usage: Used in the affine invariance framework.
+% Usage: Used in hierarchical retrieval on the unit hypersphere.
 %
 % Authors(s):
 %   Mark Moyou - markmmoyou@gmail.com
