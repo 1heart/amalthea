@@ -1,6 +1,43 @@
+%--------------------------------------------------------------------------
+% Function:    random_spherical_data
+% Description: Draws a line on a sphere.
+% 
+% Inputs: 
+%
+% numClusters     - Number of clusters.
+%
+% numPoints       - Number of points per cluster.
+
+% numPoints       - Kappa (concentration parameter);
+%                     higher means closer clusters.
+
+% means1, means2  - Optional vector of means.
+%
+% 
+% Outputs
+% 
+% dataMatrix      - An nxd dataMatrix containing the random points.
+% meanMatrix      - A matrix containing the means of each of the clusters.
+% memMatrix       - An array of labels for each randomly generated datapoint.
+% 
+%
+% Usage: Used in hierarchical clustering on the unit hypersphere.
+%
+% Authors(s):
+%   Mark Moyou - markmmoyou@gmail.com
+% Yixin Lin - yixin1996@gmail.com
+%   Glizela Taino - glizelataino@gmail.com
+%
+% Date: Monday 6th June, 2016 (2:34pm)
+%
+% Affiliation: Florida Institute of Technology. Information
+%              Characterization and Exploitation Laborartory.
+%              http://research2.fit.edu/ice/
+% -------------------------------------------------------------------------
+
 function [dataMatrix, meanMatrix, memMatrix] = random_spherical_data(numClusters, numPoints, kappa, means1, means2)
 
-if nargin <= 4
+if nargin <= 3
   means1 = nan(numClusters); means2 = nan(numClusters);
   for i = 1:numClusters
     means1(i) = rand_angle();
@@ -9,19 +46,18 @@ if nargin <= 4
 end
 
 if length(means1) ~= numClusters || length(means2) ~= numClusters
-  error('Means vectors not the right length!');
+  error('Means vectors are not the right length!');
 end
 
-% Kappa is "concentration parameter"
-
-dataMatrix = [];
-meanMatrix = [];
-memMatrix = []; % membership matrix
+dataMatrix = []; meanMatrix = []; memMatrix = [];
 for i = 1:numClusters
     mean1 = means1(i); mean2 = means2(i);
+    % Create random angles using the von Mises distributions
     angles = [circ_vmrnd(mean1, kappa, numPoints) circ_vmrnd(mean2, kappa, numPoints)];
+    % Convert to Cartesian coordinates
     [x ,y, z] = sph2cart(angles(:,1), angles(:, 2), 1);
     [muX, muY, muZ] = sph2cart(mean1, mean2, 1);
+
     meanMatrix = [meanMatrix; muX, muY, muZ];
     dataMatrix = [dataMatrix; [x y z]];
     memMatrix = [memMatrix; (i + zeros(numPoints, 1))];

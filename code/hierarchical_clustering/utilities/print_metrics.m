@@ -1,18 +1,27 @@
+% -------------------------------------------------------------------------
+% Script: print_metrics
+% Author: 	Mark Moyou (mmoyou@my.fit.edu)
+% 			Yixin Lin (yixin1996@gmail.com)
+% 			Glizela Taino (glizentaino@gmail.com)
+% Affiliation: Florida Institute of Technology. Information
+%              Characterization and Exploitation Laborartory.
+%              http://research2.fit.edu/ice/
+% Description: This prints the metrics associated with a metric object
+% 				(defined in run_metrics.m)
+% Usage: This is used in hierarchical clustering on the unit hypersphere.
+% -------------------------------------------------------------------------
 prefix = 'results/';
 
 result_vars = {'brown_123'  'brown_125' 'mpeg7_123' 'mpeg7_125'  'shrec11_123'  'shrec11_125'};
 
-% metrics = {'avg_e_measure_32', 'mean_avg_precision', 'avg_ndcg', 'avg_nearest_neighbor', 'avg_first_tier', 'avg_second_tier'};
 metrics = {
-'avg_dcg',
-'avg_e_measure',
-'avg_f_measure',
-'avg_first_tier',
-'avg_nearest_neighbor',
-% 'avg_precision_curve',
-'avg_second_tier',
-'mean_avg_precision',
-% 'recall'
+	'avg_dcg',
+	'avg_e_measure',
+	'avg_f_measure',
+	'avg_first_tier',
+	'avg_nearest_neighbor',
+	'avg_second_tier',
+	'mean_avg_precision',
 };
 
 for j = 1:length(result_vars)
@@ -28,4 +37,3 @@ for j = 1:length(result_vars)
   end
 fprintf('\n');
 end
-

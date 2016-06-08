@@ -1,3 +1,26 @@
+%--------------------------------------------------------------------------
+% Function:    draw_tree
+% Description: Recurses through a hierarchical tree
+% and draws connection the unit hypersphere.
+% 
+% Inputs: 
+%
+%	T 		- A hierarchical tree (see meantree for specification)
+%
+% Usage: Used in hierarchical clustering on the unit hypersphere.
+%
+% Authors(s):
+%   Mark Moyou - markmmoyou@gmail.com
+%	Yixin Lin - yixin1996@gmail.com
+% 	Glizela Taino - glizelataino@gmail.com
+%
+% Date: Monday 6th June, 2016 (2:34pm)
+%
+% Affiliation: Florida Institute of Technology. Information
+%              Characterization and Exploitation Laborartory.
+%              http://research2.fit.edu/ice/
+% -------------------------------------------------------------------------
+
 function [] = draw_tree(T)
 
 n = length(T.ids);
