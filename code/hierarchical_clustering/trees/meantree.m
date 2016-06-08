@@ -1,6 +1,6 @@
 %--------------------------------------------------------------------------
 % Function:    meantree
-% Description: Constructs an divisive hierarchical tree.
+% Description: Constructs a divisive hierarchical tree.
 % 
 % Inputs: 
 %

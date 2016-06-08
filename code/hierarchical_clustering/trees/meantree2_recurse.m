@@ -1,3 +1,35 @@
+%--------------------------------------------------------------------------
+% Function:    meantree2_recurse
+% Description: Constructs an agglomerative hierarchical tree in a cell array.
+% 
+% Inputs: 
+%
+% D                 - An nxd matrix of data points.
+% C                 - The cell array being modified
+%                       (levels arranged in leaves to root).
+% numChild          - The number of nodes in the previous level
+%
+% DEBUG             - Boolean for printing debug statements (default = 0).
+% 
+% Outputs
+% 
+% C                 - The cell array after modification.
+%
+% Usage: Used in hierarchical tree clustering on the unit hypersphere.
+%
+% Authors(s):
+%   Mark Moyou - markmmoyou@gmail.com
+% Yixin Lin - yixin1996@gmail.com
+%   Glizela Taino - glizelataino@gmail.com
+%
+% Date: Monday 6th June, 2016 (2:34pm)
+%
+% Affiliation: Florida Institute of Technology. Information
+%              Characterization and Exploitation Laborartory.
+%              http://research2.fit.edu/ice/
+% -------------------------------------------------------------------------
+
+
 function [ C ] = meantree2_recurse(D, C, numChild, DEBUG)
 
 [n d] = size(D);
