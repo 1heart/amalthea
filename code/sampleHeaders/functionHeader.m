@@ -17,6 +17,8 @@
 %
 % Authors(s):
 %   Mark Moyou - markmmoyou@gmail.com
+%	Yixin Lin - yixin1996@gmail.com
+% 	Glizela Taino - glizelataino@gmail.com
 %
 % Date: Monday 6th June, 2016 (2:34pm)
 %
