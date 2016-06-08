@@ -4,7 +4,7 @@
 % 			Yixin Lin (yixin1996@gmail.com)
 % 			Glizela Taino (glizentaino@gmail.com)
 % Affiliation: Florida Institute of Technology. Information
-%              Characterization and Exploitation Laborartory.
+%              Characterization and Exploitation Laboratory.
 %              http://research2.fit.edu/ice/
 % Description: This demonstrates spherical k-means by randomly constructing
 % 	points from a von Mises distribution and comparing the resulting means.

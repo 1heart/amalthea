@@ -4,7 +4,7 @@
 % 			Yixin Lin (yixin1996@gmail.com)
 % 			Glizela Taino (glizentaino@gmail.com)
 % Affiliation: Florida Institute of Technology. Information
-%              Characterization and Exploitation Laborartory.
+%              Characterization and Exploitation Laboratory.
 %              http://research2.fit.edu/ice/
 % Description: This prints the metrics associated with a metric object
 % 				(defined in run_metrics.m)
