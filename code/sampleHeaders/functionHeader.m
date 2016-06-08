@@ -1,17 +1,16 @@
 %--------------------------------------------------------------------------
-% Function:    getDateString
-% Description: This function creates a string without spaces that contains
-%              the date and time.
+% Function:    circline
+% Description: Draws a line on a sphere.
 % 
 % Inputs: 
 %
-%   in1     - Example input 1. 
+%	in1 		- Example input 1.
 %
-%   in2     - Example input 2. 
+%	in2 		- Example input 2.
 % 
 % Outputs
 % 
-%   dateStr - String that contains the date and time without white spaces.
+%	out1 		- Example output 1.
 %
 % Usage: Used in the affine invariance framework.
 %
