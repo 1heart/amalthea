@@ -1,3 +1,17 @@
+% -------------------------------------------------------------------------
+% Script: spherical_k_means_demo
+% Author:   Mark Moyou (mmoyou@my.fit.edu)
+%       Yixin Lin (yixin1996@gmail.com)
+%       Glizela Taino (glizentaino@gmail.com)
+% Affiliation: Florida Institute of Technology. Information
+%              Characterization and Exploitation Laborartory.
+%              http://research2.fit.edu/ice/
+% Description: This illustrates a hierarchical-clustering tree by
+%   recursively drawing lines to the tree's children.
+%   This also traces a traversal to a leaf, pausing at every step.
+% Usage: Used in hierarchical clustering on the unit hypersphere.
+% -------------------------------------------------------------------------
+
 colors = [
 88 140 115;
 242 227 148;
@@ -39,13 +53,13 @@ redraw = @() draw_tree(T);
 
 traversal = [];
 curr = T;
-while 1
+while 1 % Traverse the tree
   traversal = [traversal curr];
-  if isequal(curr.children, []) break; end;
-  curr = randsample(curr.children, 1);
+  if isequal(curr.children, []) break; end; % If no more children, stop
+  curr = randsample(curr.children, 1); % Pick a child to traverse down
 end;
 
-for i = 2:length(traversal)
+for i = 2:length(traversal) % Print the traversal
   prev = traversal(i-1); curr = traversal(i);
   circline(prev.mean, curr.mean, [1 0 0]);
   disp(['starting level: ' num2str(i)]);

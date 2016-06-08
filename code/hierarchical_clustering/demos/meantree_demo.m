@@ -1,3 +1,16 @@
+% -------------------------------------------------------------------------
+% Script: spherical_k_means_demo
+% Author:   Mark Moyou (mmoyou@my.fit.edu)
+%       Yixin Lin (yixin1996@gmail.com)
+%       Glizela Taino (glizentaino@gmail.com)
+% Affiliation: Florida Institute of Technology. Information
+%              Characterization and Exploitation Laborartory.
+%              http://research2.fit.edu/ice/
+% Description: This illustrates a hierarchical-clustering tree by
+%   recursively drawing lines to the tree's children.
+% Usage: Used in hierarchical clustering on the unit hypersphere.
+% -------------------------------------------------------------------------
+
 numClusters = 15;
 numPoints = 10;
 kappa = 100; % concentration parameter
