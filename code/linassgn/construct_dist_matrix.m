@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% Function:    constructDistanceMatrix
+% Function:    construct_dist_matrix
 % Description: Constructs a distance matrix of every point
 % 	to every other point in a rectangular prism.
 % 
@@ -26,7 +26,7 @@
 %              http://research2.fit.edu/ice/
 % -------------------------------------------------------------------------
 
-function distMatrix = constructDistMatrix(numTranslates)
+function distMatrix = construct_dist_matrix(numTranslates)
 % Given 
 
 d = length(numTranslates); % Number of dimensions
