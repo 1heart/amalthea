@@ -1,3 +1,37 @@
+%--------------------------------------------------------------------------
+% Function:    sphere_dist_linassgn
+% Description: 	Takes the spherical distance between two points after
+% 					after linearly assigning one to match the other
+% 					as closely as possible.
+% 
+% Inputs: 
+%
+%	x,y 			- Vectors of points on the hypersphere
+% 
+%	distMatrix		- The Euclidean distance between the points that each
+% 						dimension of the hypersphere represents
+%
+% 	lambda 			- The weighting of the distance matrix on the final result
+%
+% Outputs
+% 
+%	d 		 		- The spherical distance between
+% 						the two points after linear assignment
+%
+% Usage: Used in hierarchical retrieval on the unit hypersphere.
+%
+% Authors(s):
+%   Mark Moyou - markmmoyou@gmail.com
+%	Yixin Lin - yixin1996@gmail.com
+% 	Glizela Taino - glizelataino@gmail.com
+%
+% Date: Monday 6th June, 2016 (2:34pm)
+%
+% Affiliation: Florida Institute of Technology. Information
+%              Characterization and Exploitation Laborartory.
+%              http://research2.fit.edu/ice/
+% -------------------------------------------------------------------------
+
 function d = sphere_dist_linassgn(x, y, distMatrix, lambda)
 
 if (~isvector(x) || ~isvector(y)) error('Not vector inputs!'); end;

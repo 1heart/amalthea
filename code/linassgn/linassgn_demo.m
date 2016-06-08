@@ -1,3 +1,15 @@
+% -------------------------------------------------------------------------
+% Script: linassgn_demo
+% Author: 	Mark Moyou (mmoyou@my.fit.edu)
+% 			Yixin Lin (yixin1996@gmail.com)
+% 			Glizela Taino (glizentaino@gmail.com)
+% Affiliation: Florida Institute of Technology. Information
+%              Characterization and Exploitation Laborartory.
+%              http://research2.fit.edu/ice/
+% Description: This shows how to get the distance matrices for each dataset.
+% Usage: Used in hierarchical clustering on the unit hypersphere.
+% -------------------------------------------------------------------------
+
 if ~exist('datasets') datasets = getDatasets; end;
 
 for i = 1:length(datasets)
