@@ -1,7 +1,38 @@
+%--------------------------------------------------------------------------
+% Function:    getDatasets
+% Description: Loads the coefficient datasets from saved .mat files.
+% 
+% Outputs
+% 
+% datasets    - A array of structs with fields
+%                 'name'        :   name of the dataset
+%                 'path'        : relative path from prefix to the dataset
+%                 'dimensions'  : dimensions of the data
+%                                   specified as [numCategories, numShapes/category]
+%                 'labels'      : dimensions of the data
+%                 'wName'       : the name of the wavelet
+%                 'sampleSupp'  : the sample support of the wavelet
+%                 'startLevel'  : the start level of the wavelet
+%
+% Usage: Used in hierarchical retrieval on the unit hypersphere.
+%
+% Authors(s):
+%   Mark Moyou - markmmoyou@gmail.com
+% Yixin Lin - yixin1996@gmail.com
+%   Glizela Taino - glizelataino@gmail.com
+%
+% Date: Monday 6th June, 2016 (2:34pm)
+%
+% Affiliation: Florida Institute of Technology. Information
+%              Characterization and Exploitation Laborartory.
+%              http://research2.fit.edu/ice/
+% -------------------------------------------------------------------------
+
 function [datasets] = getDatasets()
 
-% Dimensions are specified as [numCategories, numShapes/category]
 prefix = '/Users/yixin/amalthea/data/';
+
+% Dimensions are specified as [numCategories, numShapes/category]
 datasets = {
   struct( ...
     'path', ...
