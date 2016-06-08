@@ -1,3 +1,6 @@
+% Copied and modified from http://www.mathworks.com/matlabcentral/newsreader/view_thread/277881
+% Code by Roger Stafford
+
 function [] = circline(v1, v2, color)
 
 if nargin < 3
