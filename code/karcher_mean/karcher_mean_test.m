@@ -1,3 +1,16 @@
+% -------------------------------------------------------------------------
+% Script: karcher_mean_test
+% Author:   Mark Moyou (mmoyou@my.fit.edu)
+%       Yixin Lin (yixin1996@gmail.com)
+%       Glizela Taino (glizentaino@gmail.com)
+% Affiliation: Florida Institute of Technology. Information
+%              Characterization and Exploitation Laborartory.
+%              http://research2.fit.edu/ice/
+% Description: This tests the difference
+%   between the Karcher mean and another approximation.
+% Usage: Used in hierarchical clustering on the unit hypersphere.
+% -------------------------------------------------------------------------
+
 num_iter = 5;
 data = cell(num_iter,1);
 data_labels = cell(num_iter,1);
@@ -26,7 +39,7 @@ for iter = 1:num_iter
   other_mean = sum(D);
   other_mean = other_mean / norm(other_mean);
 
-  k_mean = karcher_mean(D, 1);
+  k_mean = karcher_mean(D);
 
   disp( ['Karcher mean: '])
   k_mean
