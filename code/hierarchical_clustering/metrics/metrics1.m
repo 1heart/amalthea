@@ -1,3 +1,5 @@
+% Deprecated
+
 %   Goal is to plot a recall vs. precision graph. Let's start with one array
 %   as the submitted results of our algorithm
 

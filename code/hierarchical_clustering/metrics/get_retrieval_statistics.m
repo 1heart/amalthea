@@ -1,3 +1,6 @@
+% SHREC15 evaluation code taken from
+% http://www.itl.nist.gov/iad/vug/sharp/contest/2015/Range/results.html
+
 function retSTATS = get_retrieval_statistics(matched_retrieved,class_size)
 
 num_retrieved = length(matched_retrieved);

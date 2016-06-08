@@ -1,4 +1,39 @@
-function result = eval_tree(D, L, currMetrics, tree_constructor, DEBUG, DISPLAY)
+%--------------------------------------------------------------------------
+% Function:    eval_tree
+% Description: Given a hierarchical tree constructor,
+%   construct the tree and run metrics on it
+% 
+% Inputs: 
+%
+% D                      - A nxd dataMatrix.
+%
+% L                      - The true labels that correspond to each data point in D.
+%
+% tree_constructor       - The function handle that constructs the tree.
+%
+% DEBUG                  - Boolean if printing out values
+%
+% DISPLAY                - Boolean for displaying the results of the metrics
+% 
+% Outputs
+% 
+% metricObject           - A map from 'metric' to a value.
+%
+% Usage: Used in hierarchical retrieval on the unit hypersphere.
+%
+% Authors(s):
+%   Mark Moyou - markmmoyou@gmail.com
+% Yixin Lin - yixin1996@gmail.com
+%   Glizela Taino - glizelataino@gmail.com
+%
+% Date: Monday 6th June, 2016 (2:34pm)
+%
+% Affiliation: Florida Institute of Technology. Information
+%              Characterization and Exploitation Laborartory.
+%              http://research2.fit.edu/ice/
+% -------------------------------------------------------------------------
+
+function metricObject = eval_tree(D, L, currMetrics, tree_constructor, DEBUG, DISPLAY)
 % Takes in a nxd data matrix D, true labels L, a cell array of metric function handles, and a tree constructor
 % and returns a struct with fields equal to the results of the currMetrics
 
@@ -22,12 +57,12 @@ for i = 1:n
 end
 if DEBUG textprogressbar(' done.'); end;
 
-% Run all the currMetrics on the distance matrix, and set the result's fields equal to the results of the metric
-result = containers.Map;
+% Run all the currMetrics on the distance matrix, and set the metricObject's fields equal to the results of the metric
+metricObject = containers.Map;
 for i = 1:length(currMetrics)
   currMetric = currMetrics{i};
   map = currMetric(distMatrix, L, DISPLAY);
-  result = [result; map];
+  metricObject = [metricObject; map];
 end
 
 end

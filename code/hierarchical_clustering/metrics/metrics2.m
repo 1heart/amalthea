@@ -1,3 +1,5 @@
+% Deprecated
+
 function  [metricObj] = metrics2(distMatrix, trueLabels, DISPLAY)
 [m, n] = size(distMatrix);
 if m ~= n

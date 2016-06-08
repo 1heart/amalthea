@@ -1,3 +1,34 @@
+%--------------------------------------------------------------------------
+% Function:    metrics_shrec
+% Description: Runs SHREC metrics.
+%   Adapted from MATLAB evaluation code from
+%   http://www.itl.nist.gov/iad/vug/sharp/contest/2015/Range/results.html
+% 
+% Inputs: 
+%
+% distMatrix       - A pairwise distance matrix
+%                     where d(i,j) == distance from point i to j
+%
+% trueLabels       - The true clusters each point is in.
+% 
+% Outputs
+% 
+% metricObject     - A map from 'metric' to a value.
+%
+% Usage: Used in hierarchical clustering on the unit hypersphere.
+%
+% Authors(s):
+%   Mark Moyou - markmmoyou@gmail.com
+% Yixin Lin - yixin1996@gmail.com
+%   Glizela Taino - glizelataino@gmail.com
+%
+% Date: Monday 6th June, 2016 (2:34pm)
+%
+% Affiliation: Florida Institute of Technology. Information
+%              Characterization and Exploitation Laborartory.
+%              http://research2.fit.edu/ice/
+% -------------------------------------------------------------------------
+
 function metricObject = metrics_shrec(distMatrix, trueLabels, DISPLAY, currColor)
 
 % Default to not displaying data
