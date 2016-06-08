@@ -1,6 +1,5 @@
 % -------------------------------------------------------------------------
 % Script: Testing3DWDE_Par (Par is parallel).
-% Date: Wednesday 16th March, 2016. 
 % Author: 	Mark Moyou (mmoyou@my.fit.edu)
 % 			Yixin Lin (yixin1996@gmail.com)
 % 			Glizela Taino (glizentaino@gmail.com)
