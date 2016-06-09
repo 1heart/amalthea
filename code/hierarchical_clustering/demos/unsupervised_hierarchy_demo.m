@@ -11,6 +11,8 @@
 % Usage: Used in hierarchical clustering on the unit hypersphere.
 % -------------------------------------------------------------------------
 
+DEBUG = 1;
+
 datasets = getDatasets({'shrec11_125'});
 
 D = datasets{1}.data;
