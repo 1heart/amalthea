@@ -28,12 +28,19 @@
 %              http://research2.fit.edu/ice/
 % -------------------------------------------------------------------------
 
-function [datasets] = getDatasets()
+function [datasets] = getDatasets(names, prefix)
 
-prefix = '/Users/yixin/amalthea/data/';
+if (nargin < 2) prefix = '/Users/yixin/amalthea/data/'; end;
+if (nargin < 1)
+  names = {
+    'brown_123', 'brown_125',
+    'mpeg7_123', 'mpeg7_125',
+    'shrec11_123', 'shrec11_125',
+  };
+end
 
 % Dimensions are specified as [numCategories, numShapes/category]
-datasets = {
+all_datasets = {
   struct( ...
     'path', ...
       'Coefficients/Brown/db4r3/range_1_123/Brown_EV_PQA_1_2_3_3D_2r1__WT_db4_RL_3_p1.mat', ...
@@ -57,7 +64,7 @@ datasets = {
   struct( ...
     'path', ...
       'Coefficients/SH11/db4r3/range_1_125/SHREC11_Or_PN_SSPts_GL_PQA_1_2_5_3D_2r1__WT_db4_RL_3.mat', ...
-    'name', 'shrec11_125', ...
+    'name', 'shrec11_123', ...
     'dimensions', [30 20]), ...
   struct( ...
     'path', ...
@@ -66,20 +73,32 @@ datasets = {
     'dimensions', [30 20]), ...
 };
 
-for i = 1:length(datasets)
-  load([prefix datasets{i}.path]);
-  n = size(wdeCell,1); d = size(wdeCell{1,1}, 1); D = nan(n,d);
-  for j = 1:n; D(j,:) = wdeCell{j,1}'; end;
-  datasets{i} = setfield(datasets{i}, 'data', D);
+datasets = {};
 
-  dimensions = datasets{i}.dimensions;
-  numCategories = dimensions(1); numShapesPerCategory = dimensions(2);
-  labels = kron(1:numCategories, ones(1,numShapesPerCategory))';
-  datasets{i} = setfield(datasets{i}, 'labels', labels);
+for i = 1:length(all_datasets)
+  curr = all_datasets{i};
+  isInNames = strcmp(names, curr.name);
+  if any(isInNames(:)) % if curr.name in names
+    load([prefix all_datasets{i}.path]);
+    n = size(wdeCell,1); d = size(wdeCell{1,1}, 1); D = nan(n,d);
+    for j = 1:n; D(j,:) = wdeCell{j,1}'; end;
 
-  datasets{i} = setfield(datasets{i}, 'sampleSupp', wdeCell{1,3}.sampleSupp);
-  datasets{i} = setfield(datasets{i}, 'wName', wdeCell{1,3}.wName);
-  datasets{i} = setfield(datasets{i}, 'startLevel', wdeCell{1,3}.startLevel);
+    curr = setfield(curr, 'data', D);
+
+    dimensions = curr.dimensions;
+    numCategories = dimensions(1); numShapesPerCategory = dimensions(2);
+    labels = kron(1:numCategories, ones(1,numShapesPerCategory))';
+    curr = setfield(curr, 'labels', labels);
+
+    curr = setfield(curr, 'sampleSupp', wdeCell{1,3}.sampleSupp);
+    curr = setfield(curr, 'wName', wdeCell{1,3}.wName);
+    curr = setfield(curr, 'startLevel', wdeCell{1,3}.startLevel);
+    datasets = [datasets curr];
+  end
+end
+
+if length(datasets) ~= length(names)
+  error('One of the names typed was not in the database!');
 end
 
 end
