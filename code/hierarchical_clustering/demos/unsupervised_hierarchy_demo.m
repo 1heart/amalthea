@@ -6,7 +6,7 @@
 % Affiliation: Florida Institute of Technology. Information
 %              Characterization and Exploitation Laboratory.
 %              http://research2.fit.edu/ice/
-% Description: This illustrates the uselessness of specificying different
+% Description: This illustrates the uselessness of specifying different
 %                 number of children at each level.
 % Usage: Used in hierarchical clustering on the unit hypersphere.
 % -------------------------------------------------------------------------
