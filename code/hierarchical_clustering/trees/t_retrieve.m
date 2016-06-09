@@ -1,3 +1,37 @@
+%--------------------------------------------------------------------------
+% Function:    t_retrieve
+% Description: Retrieves from a meantree by recursively concatenating
+%               the closer and farther subproblems.
+% 
+% Inputs: 
+%
+% T                 - A meantree as specified in meantree.
+%
+% Q                 - A query shape.
+%
+% n                 - The number of shapes to retrieve.
+%
+% Outputs
+% 
+% ids               - The ids of the data, ordered from closest to farthest.
+%
+% dists             - The distances to the corresponding data points.
+%
+% Usage: Used in hierarchical tree clustering on the unit hypersphere.
+%
+% Authors(s):
+%   Mark Moyou - markmmoyou@gmail.com
+% Yixin Lin - yixin1996@gmail.com
+%   Glizela Taino - glizelataino@gmail.com
+%
+% Date: Monday 6th June, 2016 (2:34pm)
+%
+% Affiliation: Florida Institute of Technology. Information
+%              Characterization and Exploitation Laboratory.
+%              http://research2.fit.edu/ice/
+% -------------------------------------------------------------------------
+
+
 function [ ids dists ] = t_retrieve(T, Q, n)
 % T_RETRIEVE
   % Given a tree T (see specification in meantree.m),
@@ -22,6 +56,7 @@ distsToChildren = arrayfun(@(x) sphere_norm(x.mean, Q), T.children);
 
 numTotal = 0;
 ids = []; dists = [];
+% Grab each child in order of closeness, recurse, and add to the result
 for i = 1:size(T.children, 2)
   currChild = T.children(sortedIDs(i));
   numTotal = numTotal + currChild.num;
