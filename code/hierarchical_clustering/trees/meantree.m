@@ -42,6 +42,18 @@ if nargin < 2; DEBUG = 0; end;
 if nargin < 3; branchingFactor = 2; end;
 if nargin < 4; ids = 1:n; end;
 
+if length(branchingFactor) > 1
+  % If you pass in a vector of form [2 b_1 b_2...],
+  % you can specify the branching at each level
+  % i.e. the first element is a pointer to the rest
+  % of the elements in the array, which is incremented at each level
+  ptr = branchingFactor(1);
+  branchingFactor(1) = ptr + 1;
+  currBF = branchingFactor(min(ptr, length(branchingFactor)));
+else
+  currBF = branchingFactor;
+end
+
 persistent numSoFar;
 persistent numTotal;
 
@@ -68,10 +80,10 @@ end;
 % If there's only one data point left (at leaf), return.
 if n == 1; return; end;
 
-branchingFactor = min(T.num, branchingFactor);
-[means, loss_val, categories, empty, loop] = SPKmeans(D, branchingFactor, 1, 'rand');
+currBF = min(T.num, currBF);
+[means, loss_val, categories, empty, loop] = SPKmeans(D, currBF, 1, 'rand');
 
-for i = 1:branchingFactor
+for i = 1:currBF
   currIDs = find(categories == i);
 
   % If there are no points in the cluster, skip it
