@@ -49,10 +49,12 @@ Linear assignment informally attempts to match up a set of objects with another 
 
 Let $\bm{c_1}, \bm{c_2}$ be the two coefficient vectors that we are taking the distance between. We attempt to match $\bm{c_1}$ with $\bm{c_2}$ using linear assignment, with a cost matrix
 
-$$ C = -(\bm{c_1} \otimes \bm{c_2}) + \lambda D$$
+\begin{equation} C = -(\bm{c_1} \otimes \bm{c_2}) + \lambda D\end{equation}
 
 where $\bm{c_1} \otimes \bm{c_2}$ is the outer product between the two coefficient vectors, $D$ is distance matrix with $d_{ij}=$ the Euclidean distance between the $i$th and $j$th regions that the coefficients correspond to, and $\lambda$ is some weight value that determines how important distance is to the cost.
 
 The distance matrix is constructed by reconstructing the 2- or 3-dimensional grid under which the coefficients were formed using MATLAB's \texttt{ndgrid} function, finding the points \texttt{pts}, and then computing the pairwise distance using MATLAB's \texttt{squareform(pdist(pts))}.
+
+% TODO: add results
 
 \end{document}

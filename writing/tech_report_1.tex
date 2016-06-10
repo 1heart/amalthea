@@ -39,14 +39,46 @@
 \subfile{tex/abstract}
 \subfile{tex/introduction}
 
-\subfile{tex/clustering}
-\subfile{tex/von_mises}
-\subfile{tex/k_means}
-\subfile{tex/spherical_k_means}
-\subfile{tex/hypersphere_means}
-\subfile{tex/hierarchical_clustering}
-\subfile{tex/linear_assignment}
-\subfile{tex/sliding_wavelets}
+\part{Shape classification and retrieval}
+  \subfile{tex/intro_to_shape}
+  \subfile{tex/shape_lit_review}
+  \subfile{tex/laplace_beltrami}
+  \subfile{tex/wavelet_density_estimation}
+
+\part{Clustering on a sphere}
+
+  % TODO: write intro for clustering on a sphere
+
+  \subfile{tex/von_mises}
+  \subfile{tex/k_means}
+  \subfile{tex/spherical_k_means}
+  \subfile{tex/hypersphere_means}
+
+\part{Hierarchical clustering}
+
+  % TODO: revise
+  For our lab, we want to develop the most efficient way to group data
+  based on a measure of dissimilarity. We explored the topic of
+  hierarchical clustering which is used in data mining and statistics.
+  It is visualized useing a dendogram to show the organization and relationship
+  among clusters. Hierarchical clustering can be implemented in two
+  ways: divisive and agglomerative. We will elaborate on these two variants
+  in this paper to compare the its algorithmic complexity, or how much
+  resources are needed when computed, and the different types of cluster
+  linkage criterion. Further information on cluster analysis can be
+  found in \cite{ClusterAnalysis}.
+
+  \subfile{tex/hierarchical_clustering}
+  \subfile{tex/hier_algo_analysis}
+  \subfile{tex/retrieval_mechanics}
+
+\part{Optimization of wavelet density estimation}
+  \subfile{tex/wavelet_optimization}
+
+\part{Shape L'Ane Rouge: sliding wavelets}
+  % TODO: write intro
+  \subfile{tex/sliding_wavelets}
+  \subfile{tex/linear_assignment}
 
 \newpage
 \bibliographystyle{plain}

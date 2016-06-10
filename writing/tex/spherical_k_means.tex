@@ -16,6 +16,7 @@ fact that observations are unit vectors on the hypersphere
 the fact that observations are unit vectors on the hypersphere. Note
 that this fails on pathological cases where the sum of observations
 is zero.
+For example, if you have two vectors that are opposite of each other, their sum is the zero vector.
 \end{itemize}
 
 \subsection{Our investigation}
@@ -28,20 +29,16 @@ on the sphere as means and with step size $\kappa=100$, and then applied the sph
 three dimensional sphere, color coded for each cluster and with estimated
 means labeled as red $X$'s and true means labeled as black $X$'s.
 
-\begin{figure}
 
-
+% TODO: fix graphics (reduce numer of clusters, put legend on the plot, figure caption, background off)
+\begin{figure}[H]
 \caption{Plot of 70 clusters and means on a 3-D sphere}
-
-
 \includegraphics[width=1\textwidth]{sphere_points_70_clusters}
 \end{figure}
 
 
-\begin{figure}
+\begin{figure}[H]
 \caption{Plot of 10 clusters and means on a 3-D sphere}
-
-
 \includegraphics[width=1\textwidth]{sphere_points_10_clusters}
 \end{figure}
 

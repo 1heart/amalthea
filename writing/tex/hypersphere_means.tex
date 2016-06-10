@@ -2,7 +2,11 @@
 \graphicspath{{img/}{../img/}}
 \begin{document}
 
-\section{Karcher Mean}
+\section{Hypersphere means}
+
+% TODO: add intro + motivation (why can't we take Euclidean mean)
+
+\subsection{Karcher Mean}
 
 The Karcher mean is a geometric mean of various matrices and an extension
 of the well known geometric mean of two matrices. It is also referred
@@ -12,8 +16,8 @@ a hypersphere while obeying the curvature of the manifold. The process
 is stated in Algorithm 1. In order to do this we must incorporate a
 Logarithm map and Exponential map on the manifold. 
 
-
-
+% Add graphics for log/exp map
+% Note that log/exp maps are unique to each manifold
 
 The Logarithm map is defined as a function that takes a point, $\rho_{2}$,
 on the manifold and maps its projection vector, $\gamma$, on the
@@ -37,7 +41,6 @@ where $\tilde{\rho}=\rho_{2}-\langle\rho_{2},\rho_{1}\rangle\rho_{1}$.
 Karcher mean, as we have mentioned before, is calculated in a way
 to obey the curvature of the hypershere.
 
-
 \subsection{Spherical mean}
 
 Unlike the Karcher mean, the spherical mean does not go along the
@@ -51,7 +54,7 @@ x_{l}=\frac{\sum_{i\in X_{l}}\rho_{i}}{||\sum_{i\in X_{l}}\rho_{i}||},l=1\dots K
 is the normalized gravity center of the new cluster. 
 
 
-\subsection{Our Implementation}
+\subsection{Practical comparison}
 
 To find the best approach in calculating a cluster center, we put
 Karcher mean and Spherical K-mean to the test. We tested them in five
@@ -62,6 +65,8 @@ Figure \ref{fig:Different-test-cases}.
 We found that Karcher mean and Spherical K-means produced the same
 results as long as the step size for Karcher mean was set to one.
 But both approaches failed in the case where the angles were opposite. 
+
+% Fix graphics, put them in a table, add figure caption
 
 \begin{figure}[ht]
 \begin{centering}
