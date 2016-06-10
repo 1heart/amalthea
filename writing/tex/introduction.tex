@@ -1,5 +1,13 @@
 \documentclass[../tech_report_1.tex]{subfiles}
 \graphicspath{{img/}{../img/}}
+
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
 \begin{document}
 \section{Introduction}
 In visually understanding the world around us, we have attributes such as color, texture, scale, ect. But to truly understand objects, all we fundamentally need is shape. Understanding shape is essential in understanding the world and it's meaning. Our goal is to allow computers to understand shape like humans naturally do. We want them to see through all the distortions and capture the essence of an object as an important piece of the quest to make machines more intelligent. The question of shape retrieval is: given a shape, how can we find the most similar shapes from our database? How can we understand these shapes using geometry alone, without any textual metadata or context? 
@@ -11,5 +19,7 @@ To understand how to best cluster on the multidimensional unit hypersphere's cur
 
 Once we had working code to cluster on the unit hypersphere and
 created a decision tree, we researched how our algorithm and retrieval list will be evaluated by the Shape Retrieval Contest (SHREC). Unfortunately, our evaluation scores for all the metrics weren't ideal. We feel this may be due to the highly condensed area of data points which the clustering fails to appropriately group.
+
+\blfootnote{AMALTHEA REU Technical Report No. 2016–5; available at \href{www.amalthea-reu.org}{www.amalthea-reu.org}. Please send your correspondence to Georgios C. Anagnostopoulos. Copyright \textcopyright \thickspace 2016 The AMALTHEA REU Program.}
 
 \end{document}
