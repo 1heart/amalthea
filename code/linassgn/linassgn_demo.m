@@ -15,6 +15,7 @@ if ~exist('datasets') datasets = getDatasets; end;
 for i = 1:length(datasets)
   curr = datasets{i};
   numTranslates = [];
+  % Get the number of translations for the scaling function of the start level for each dimension.
   for j = 1:size(curr.sampleSupp,1)
     numTranslates = [numTranslates diff(translationRange(curr.sampleSupp(j,:), curr.wName, curr.startLevel))+1];
   end
