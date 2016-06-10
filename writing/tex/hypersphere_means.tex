@@ -2,7 +2,7 @@
 \graphicspath{{img/}{../img/}}
 \begin{document}
 
-\part{Karcher Mean }
+\section{Karcher Mean}
 
 The Karcher mean is a geometric mean of various matrices and an extension
 of the well known geometric mean of two matrices. It is also referred
@@ -38,7 +38,7 @@ Karcher mean, as we have mentioned before, is calculated in a way
 to obey the curvature of the hypershere.
 
 
-\section{Spherical mean}
+\subsection{Spherical mean}
 
 Unlike the Karcher mean, the spherical mean does not go along the
 curvature of the hypersphere. In the assignment step of this algorithm,
@@ -51,7 +51,7 @@ x_{l}=\frac{\sum_{i\in X_{l}}\rho_{i}}{||\sum_{i\in X_{l}}\rho_{i}||},l=1\dots K
 is the normalized gravity center of the new cluster. 
 
 
-\section{Our Implementation}
+\subsection{Our Implementation}
 
 To find the best approach in calculating a cluster center, we put
 Karcher mean and Spherical K-mean to the test. We tested them in five
