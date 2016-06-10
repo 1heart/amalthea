@@ -3,7 +3,7 @@
 
 \begin{document}
 
-\part*{Hierarchical clustering}
+\part{Hierarchical clustering}
 
 For our lab, we want to develop the most efficient way to group data
 based based on a measure of dissimilarity. We explored the topic of
@@ -16,7 +16,7 @@ resources are needed when computed, and the different types of cluster
 linkage criterion. Further information on cluster analysis can be
 found in \cite{ClusterAnalysis}.
 
-\section*{Divisive and Agglomerative}
+\section{Divisive and Agglomerative}
 
 Divisive clustering is also known as the ``top down'' method. This takes
 in a data set as one large cluster. Then as it moves down the hierarchy,
@@ -33,7 +33,7 @@ A dendrogram can be used in both cases to record and visualize the hierarchical 
 clusters and their distance to each other.
 
 
-\section*{Cluster Dissimilarity Measurements}
+\section{Cluster Dissimilarity Measurements}
 
 In forming clusters, a measurement must be made to determine which
 clusters split or merge in regards to divisive or agglomerative clustering,
@@ -44,7 +44,7 @@ measuring distances between $k$ number of clusters $c_{i=1\dots k}$
 in relationship with specific points $x_{i=1\dots k}$ in those clusters.
 
 
-\subsection*{Single Linkage}
+\subsection{Single Linkage}
 
 Single linkage takes the distance between the closest observations,
 or minimum distance, in each cluster and merges the those with the
@@ -56,7 +56,7 @@ D(c_{1},c_{2})=\underset{x_{1}\in c_{1},x_{2}\in c_{2}}{min}D(x_{1},x_{2})
 
 
 
-\subsection*{Complete Linkage}
+\subsection{Complete Linkage}
 
 Complete linkage is similar to single linkage. It takes the distance
 between the farthest observations, or the maximum distance, in each
@@ -69,7 +69,7 @@ D(c_{1},c_{2})=\underset{x_{1}\in c_{1},x_{2}\in c_{2}}{max}D(x_{1},x_{2})
 
 
 
-\subsection*{Centroid Linkage}
+\subsection{Centroid Linkage}
 
 Using centroid linkage involves taking the average of all points in
 a cluster and assigning that value as the mean cenroid. Then
@@ -81,7 +81,7 @@ D(c_{1},c_{2})=D((\frac{1}{|c_{1}|}\sum_{x\in c_{1}}\overset{\rightarrow}{x}),(\
 
 
 
-\section*{Our Implementation}
+\section{Our Implementation}
 
 We developed both hierarchical divisive and agglomerative clustering
 functions to test which would organize data the fastest. In our particular
@@ -114,7 +114,7 @@ at every level which is $l=\lceil\log_{2}n\rceil$.
 
 As a benchmark, we also used the MATLAB \texttt{linkage} function to construct a pairwise-distance based tree (merging nodes together by single-linkage) and compared the results.
 
-\subsection*{Implementation details}
+\subsection{Implementation details}
 
 In $k$-means, there is a choice of initial mean initialization. This affects the initial distribution of means and therefore potentially the number of iterations until convergence, but also may be expensive computationally. For instance, a good setting of the initial means will reduce the likelihood of empty clusters found, which is dealt with by splitting the largest cluster and is therefore computationally expensive.
 
@@ -122,7 +122,7 @@ For the agglomerative algorithm, it makes sense to spend time initializing the m
 
 This optimization and lack thereof, respectively, reduces the running time for both algorithms substantially.
 
-\subsection*{Algorithm complexity analysis}
+\subsection{Algorithm complexity analysis}
 
 Let $n$ be the number of data points, $k$ be the number of clusters (number of means), $d$ be the dimensionality of the data, and $i$ be the number of iterations until convergence. The runtime of the $k$-means algorithm (including spherical k-means) is $O(nkdi)$.
 

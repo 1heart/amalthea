@@ -1,0 +1,9 @@
+\documentclass[../tech_report_1.tex]{subfiles}
+\graphicspath{{img/}{../img/}}
+\begin{document}
+\begin{abstract}
+
+This paper outlines our experiemental implementation in approaching shape retieval by exploring different ways to cluster on a unit hypersphere, testing algoritm complexity between divisive and agglomerative hierarchical clustering, and how it is used to execute a model to model retrieval. We create the feature representation of each shape in the data set with Laplace-Beltrami Operator signatures and their probability density coefficients which map onto the surface of a unit hypersphere. We take advantage of this geometry to recursively cluster the observations under various prototypes and create a hierarchy based on centroid linkage. This essentially builds a decision tree, so that, given a query, we preprocess it in the same way, map it onto the manifold, and perform a model to model comparison to decide which branches to traverse in order to get back the most relevant results from the data base. We illustrate the effectiveness of our approach by testing our retrieval results under metrics from the Shape Retrieval Contest (SHREC). Our results show \_\_\_\_\_\_\_\_. In conclusion \_\_\_\_\_\_\_\_.
+
+\end{abstract}
+\end{document}
