@@ -1,5 +1,5 @@
 % -------------------------------------------------------------------------
-% Script: linassgn_demo
+% Script: get_dists_for_datasets
 % Author: 	Mark Moyou (mmoyou@my.fit.edu)
 % 			Yixin Lin (yixin1996@gmail.com)
 % 			Glizela Taino (glizentaino@gmail.com)
