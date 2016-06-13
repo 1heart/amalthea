@@ -56,6 +56,6 @@ for res_level = 1:size(multires_indices, 1)
   x_new = [x_new; x(rowsol)];
 end
 
-d = max(sphere_norm(x_new, y), sphere_norm(-x_new, y)); % Take the distance between y and the modified x
+d = min(sphere_norm(x_new, y), sphere_norm(-x_new, y)); % Take the distance between y and the modified x
 
 end
