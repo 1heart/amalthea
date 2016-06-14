@@ -11,7 +11,7 @@
 % Usage: Used in hierarchical clustering on the unit hypersphere.
 % -------------------------------------------------------------------------
 
-DISP = 1;
+DISP = 1; % Display results boolean
 lambdas = [0 1e-12 1e-8 1e-6 1e-4 0.01 0.1];
 
 % Circle square demo
