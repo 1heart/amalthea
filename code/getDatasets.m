@@ -33,9 +33,9 @@ function [datasets] = getDatasets(names, prefix)
 if (nargin < 2) prefix = '/Users/yixin/amalthea/data/'; end;
 if (nargin < 1)
   names = {
-    'brown_123', 'brown_125',
-    'mpeg7_123', 'mpeg7_125',
-    'shrec11_123', 'shrec11_125',
+    'brown_123', 'brown_125', ...
+    'mpeg7_123', 'mpeg7_125', ...
+    'shrec11_123', 'shrec11_125', ...
   };
 end
 
