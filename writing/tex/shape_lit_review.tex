@@ -6,6 +6,14 @@
 
 Shape analysis, classification, and retrieval has been developed quite extensively, especially in last decade, in part due to a rise in the number of available models and techniques to process them. In order to effectively exploit this rise in usable shapes, the development of a comparison and retrieval system is necessary, prominently in the 3D model search engine developed at Princeton\cite{funkhouser2003search}, as well as at the National Research Council of Canada\cite{paquet2000description}, the National Taiwan University\cite{shen20033d}, and others\cite{suzuki2001search,tangelder2003polyhedral,vranic2003improvement}.
 
-There is a broad swath of literature dedicated to 3D retrieval shape retrieval, with many different methods with their particular strengths and weaknesses. All of these must be evaluated with respect to several salient attributtes: foremost, robustness and discrimination, but also efficiency, necessity of preprocessing, ability to partially match, and strictness of requirements for data (e.g. mesh versus point cloud, closed meshes, etc.). Evaluating robustness and performance can be done with several standard datasets 
+There is a broad swath of literature dedicated to 3D retrieval shape retrieval, with many different methods with their particular strengths and weaknesses. All of these must be evaluated with respect to several salient attributtes: foremost, robustness and discrimination, but also efficiency, necessity of preprocessing, ability to partially match, and strictness of requirements for data (e.g. mesh versus point cloud, closed meshes, etc.). Evaluating robustness and performance can be done with several standard datasets, including Princeton's Shape Benchmark\cite{shilane2004princeton} and the MPEG-7 dataset\cite{jeannin1999description,bober2001mpeg}.
+
+\subsection{Global features}
+
+One category of papers that aid in 3D retrieval are those which use global features, i.e. features which look at the whole shape.
+
+For example, Zhang and Chen\cite{zhang2001efficient} proposes an algorithm to extract global features like volume, moments, and Fourier transform coefficients from a mesh representation. It does this by simply summing up the features on each of the elementary shapes that form this mesh. Though efficient, it uses nonsophisticated features and requires a mesh shape representation. They then extend\cite{zhang2001indexing} this with a clever trick with manual annotation, which selects the least-known shape (based on their feature representation) and chooses that as the next annotation.
+
+
 
 \end{document}
