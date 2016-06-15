@@ -30,4 +30,8 @@ Spatial features distinguish themselves by somehow capturing and using the spati
 
 One early approach in spatial features is proposed by Ankerst et al.\cite{ankerst19993d}, who simply use 3D shape histograms. This was applied to molecular surfaces by taking a histogram of the points in concentric shells (and subdividing those shells into sectors) around a 3D shape's centroid.
 
+Kazhdan et al.\cite{kazhdan2003rotation} propose an approach that can transform any rotation dependent shape descriptors to rotation independent one through the use of spherical harmonics. They esssentially calculate spherical harmonics on concentric spheres of the shape and then use frequency analysis to construct a descriptor indexed only by radius and frequency. This is invariant to rotations.
+
+Another highly cited paper is the the work by Novotni and Klein\cite{novotni20033d}, which uses 3D Zernike descriptors instead of spherical harmonics to obtain rotational invariance. This is an improvement over spherical harmonics because spherical harmonics cannot detect internal rotations of the object.
+
 \end{document}
