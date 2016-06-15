@@ -24,4 +24,10 @@ One famous and highly cited innovation in using global feature for shape retriev
 
 Shape distributions are quite good at interclass differentiation (i.e. between classes of shapes), though not as good at intraclass differentiation\cite{tangelder2008survey} (i.e. between shapes which belong to the same broad class but still require distinction) because they require finer representations.
 
+\subsection{Spatial features}
+
+Spatial features distinguish themselves by somehow capturing and using the spatial location of the 3D model for use in comparisons. In general, they requires pose normalization to be effective since they aren't rotationally invariant.
+
+One early approach in spatial features is proposed by Ankerst et al.\cite{ankerst19993d}, who simply use 3D shape histograms. This was applied to molecular surfaces by taking a histogram of the points in concentric shells (and subdividing those shells into sectors) around a 3D shape's centroid.
+
 \end{document}
