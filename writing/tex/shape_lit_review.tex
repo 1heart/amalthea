@@ -18,4 +18,6 @@ Other global features are explored by Corney et al.\cite{corney2002coarse}, who 
 
 In the same vein of speedy similarity measures, Kolonias et al.\cite{kolonias2005fast} propose the use of the following shape descriptors: the aspect ratio, a binary 3D shape mask, and (more complex) the edge paths of the models. The set of paths that outline the shape of the 3D object is extracted using a proposed algorithm which extracts those geometric properites from an input VRML file. These sets are compared between 3D objects by first checking the similarity of angles and lengths, and then finding some metrics on corresponding paths.
 
+A method which is only superficially similar to ours is that of Horn\cite{horn1984extended}, who represent the shapes of surfaces by mapping each polygon of the 3D shape to the corresponding unit normal point on the Gaussian (unit) sphere, weighted by the surface area. This extended Gaussian image uniquely defines a convex polyhedron, up to a translation. This is extended by Kang and Ikeuchi\cite{kang1991determining}, which simply stops discarding the distance to the origin of the polygon by encoding it onto the imaginary part of the complex sphere.
+
 \end{document}
