@@ -48,7 +48,7 @@ for i = 1:length(datasets)
   end
   for j = 1:length(nontree_evals) % Run the nontree evaluation
     curr_evaluator = nontree_evals{j};
-    metric_result = [metric_result curr_evaluator(curr.data, curr.labels, use_metrics, 0, 1)];
+    metric_result{length(metric_result) + 1} = curr_evaluator(curr.data, curr.labels, use_metrics, 0, 1);
   end
   metric_results{i} = metric_result;
   if SAVE % Save the results if necessary
