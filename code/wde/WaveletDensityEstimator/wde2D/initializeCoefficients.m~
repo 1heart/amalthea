@@ -287,7 +287,7 @@ switch(lower(initType{1}))
              c = (1/numSamps)*[scalValsSum';mothValsSum'];
          end
         coeffs = c/norm(c);   
-        disp('');
+        
         
         
         
