@@ -14,6 +14,6 @@ One category of papers that aid in 3D retrieval are those which use global featu
 
 For example, Zhang and Chen\cite{zhang2001efficient} proposes an algorithm to extract global features like volume, moments, and Fourier transform coefficients from a mesh representation. It does this by simply summing up the features on each of the elementary shapes that form this mesh. Though efficient, it uses nonsophisticated features and requires a mesh shape representation. They then extend\cite{zhang2001indexing} this with a clever trick with manual annotation, which selects the least-known shape (based on their feature representation) and chooses that as the next annotation.
 
-
+Other global features are explored by Corney et al\cite{corney2002coarse}, who create an online (Internet-based) 3D shape search engine named ShapeSifter. Their coarse filters, which are used to filter and classify before more fine distinctions and distances are made, are based on a novel application of convex hulls. The three indices they use to do a preliminary filtering of candidate 3D shapes include \textit{hull crumpliness} (the ratio of the object's surface area to the surface area of its convex hull), \textit{hull packing} (the percent of the convex hull volume not occupied by the original object), \textit{hull compactness} (the ratio of the convex hull's surface area cubed over the convex hull's volume squared). Though extremely quick, this work is at best a rough first approximation that require the use of more differentiating methods.
 
 \end{document}
