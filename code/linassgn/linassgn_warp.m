@@ -42,8 +42,10 @@ for i = 1:k
   C = -(x * y') + lambda * distMatrix; % Construct cost matrix
   [rowsol, cost] = lapjv(C); % Get best linear assignment from x to y
   x_new = x(rowsol); % Find reconstructed shape
-  if (~isvector(source)) img = reshape(x_new, [m n]); end;
-  new_xs = [new_xs img];
+  if (~isvector(source)) x_new = reshape(x_new, [m n]); end;
+  new_xs = [new_xs x_new];
 end
+
+if (k == 1) new_xs = new_xs{1}; end;
 
 end
