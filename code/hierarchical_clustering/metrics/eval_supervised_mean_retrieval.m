@@ -30,7 +30,9 @@
 %              http://research2.fit.edu/ice/
 % -------------------------------------------------------------------------
 
-function result = eval_supervised_mean_retrieval(D, L, currMetrics, DEBUG, DISPLAY)
+function result = eval_supervised_mean_retrieval(D, L, currMetrics, DEBUG, DISPLAY, distfunc)
+
+if (nargin < 6) distfunc = @sphere_norm; end;
 
 [n d] = size(D);
 uniqueLabels = unique(L);
@@ -49,7 +51,7 @@ for i = 1:n
   % Keep track of minimum distance and the closest mean
   minDist = inf; closestMean= 0;
   for j = 1:numLabels % Find the closest mean (label)
-    distToMean = sphere_norm(D(i,:), means(j,:));
+    distToMean = distfunc(D(i,:), means(j,:));
     if distToMean < minDist
       minDist = distToMean;
       closestMean = j;
@@ -61,7 +63,7 @@ end
 meanDists = zeros(numLabels); % Find the pairwise distances between means
 for i = 1:numLabels
   for j = i+1:numLabels
-    meanDists(i,j) = sphere_norm(means(i,:), means(j,:));
+    meanDists(i,j) = distfunc(means(i,:), means(j,:));
     meanDists(j,i) = meanDists(i,j);
   end
 end
