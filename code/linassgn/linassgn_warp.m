@@ -30,10 +30,10 @@
 
 function [new_xs] = linassgn_warp(source, target, distMatrix, lambdas, DISP)
 
-if ~isequal(size(source), size(target)) error('Two images not equal!'); end;
+if ~isequal(size(source), size(target)) error('Two images not equal sizes!'); end;
 if ~isvector(lambdas) error('Lambda not a vector!'); end;
 if size(distMatrix,1) ~= size(distMatrix,2) error('Distance matrix not square!'); end;
-if (nargin < 5) DISP = 1; end;
+if (nargin < 5) DISP = 0; end;
 if (DISP) figure; end;
 
 [m n] = size(source); k = length(lambdas);
