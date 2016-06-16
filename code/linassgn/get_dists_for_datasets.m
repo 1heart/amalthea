@@ -10,7 +10,7 @@
 % Usage: Used in hierarchical clustering on the unit hypersphere.
 % -------------------------------------------------------------------------
 
-if ~exist('datasets') datasets = getDatasets; end;
+if ~exist('datasets') error('Datasets does not exist!'); end;
 
 for i = 1:length(datasets)
   curr = datasets{i};
@@ -21,5 +21,5 @@ for i = 1:length(datasets)
   end
 
   datasets{i} = setfield(datasets{i}, 'numTranslates', numTranslates);
-  datasets{i} = setfield(datasets{i}, 'distMatrix', construct_dist_matrix(numTranslates));
+  datasets{i} = setfield(datasets{i}, 'distMatrix', {construct_dist_matrix(numTranslates)});
 end

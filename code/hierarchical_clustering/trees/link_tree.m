@@ -49,7 +49,7 @@ end;
 pairdists = zeros(n,n);
 for i = 1:n
   for j = i+1:n
-    curr = sphere_norm(D(i,:), D(j,:));
+    curr = sphere_dist(D(i,:), D(j,:));
     pairdists(i,j) = curr; pairdists(j,i) = curr;
     if DEBUG
       ops = ops + 1;

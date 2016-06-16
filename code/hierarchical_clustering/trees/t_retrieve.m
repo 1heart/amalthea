@@ -47,11 +47,11 @@ end
 % If children is a single treenode, or there are no children
 if length(T.children) == 0
   ids = T.ids;
-  dists = [ sphere_norm(T.mean, Q) ];
+  dists = [ sphere_dist(T.mean, Q) ];
   return;
 end
 
-distsToChildren = arrayfun(@(x) sphere_norm(x.mean, Q), T.children);
+distsToChildren = arrayfun(@(x) sphere_dist(x.mean, Q), T.children);
 [sortedDists, sortedIDs] = sort(distsToChildren);
 
 numTotal = 0;

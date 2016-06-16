@@ -1,5 +1,5 @@
 %--------------------------------------------------------------------------
-% Function:    sphere_norm
+% Function:    sphere_dist
 % Description: Finds the distance (angle) between two vectors on a unit hypersphere.
 % 
 % Inputs: 
@@ -24,6 +24,6 @@
 %              http://research2.fit.edu/ice/
 % -------------------------------------------------------------------------
 
-function [theta] = sphere_norm(x,y)
+function [theta] = sphere_dist(x,y)
 theta = acos(dot(x,y));
 end

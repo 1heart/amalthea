@@ -30,7 +30,9 @@
 %              http://research2.fit.edu/ice/
 % -------------------------------------------------------------------------
 
-function result = eval_supervised_mean_retrieval(D, L, currMetrics, DEBUG, DISPLAY)
+function result = eval_supervised_mean_retrieval(D, L, currMetrics, DEBUG, DISPLAY, distfunc)
+
+if (nargin < 6) distfunc = @sphere_dist; end;
 
 [n d] = size(D);
 uniqueLabels = unique(L);
@@ -45,11 +47,14 @@ for i = 1:numLabels
 end
 
 closestMeans = nan(n,1); % Find the closest mean for each point
+totalIter = n * numLabels;
+if (DEBUG) disp('Beginning to find the closest means for each point.'); disp('0%'); end;
 for i = 1:n
   % Keep track of minimum distance and the closest mean
   minDist = inf; closestMean= 0;
   for j = 1:numLabels % Find the closest mean (label)
-    distToMean = sphere_norm(D(i,:), means(j,:));
+    distToMean = distfunc(D(i,:), means(j,:));
+    if (DEBUG) disp([num2str(((i-1) * numLabels + j)/totalIter*100) '%']); end;
     if distToMean < minDist
       minDist = distToMean;
       closestMean = j;
@@ -57,14 +62,22 @@ for i = 1:n
   end
   closestMeans(i) = closestMean;
 end
+if (DEBUG) disp('Finished.'); end;
 
-meanDists = zeros(numLabels); % Find the pairwise distances between means
+meanDists = nan(numLabels); % Find the pairwise distances between means
+for i = 1:numLabels
+  meanDists(i,i) = 0;
+end
+totalIter = (numLabels - 1) * numLabels;
+if (DEBUG) disp('Beginning to find the pairwise distances between means.'); disp('0%'); end;
 for i = 1:numLabels
   for j = i+1:numLabels
-    meanDists(i,j) = sphere_norm(means(i,:), means(j,:));
+    meanDists(i,j) = distfunc(means(i,:), means(j,:));
+    if (DEBUG) disp([num2str(((i-1) * numLabels + j)/totalIter*100) '%']); end;
     meanDists(j,i) = meanDists(i,j);
   end
 end
+if (DEBUG) disp('Finished.'); end;
 
 % Find the distance matrix between each point
 %   by using the distance between their closest means

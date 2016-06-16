@@ -8,7 +8,6 @@
 %	distMatrix		- A cell array of the Euclidean distance between pairs of points.
 %
 % 	lambdas 			- The weightings of the distance matrix on the final results, e.g. [0 0.0001 0.001 0.01 0.1]
-% 	DISP  - A boolean to return the results or not.
 %
 % Outputs
 %
@@ -28,13 +27,11 @@
 %              http://research2.fit.edu/ice/
 % -------------------------------------------------------------------------
 
-function [new_xs] = linassgn_warp(source, target, distMatrix, lambdas, DISP)
+function [new_xs] = linassgn_warp(source, target, distMatrix, lambdas)
 
-if ~isequal(size(source), size(target)) error('Two images not equal!'); end;
+if ~isequal(size(source), size(target)) error('Two images not equal sizes!'); end;
 if ~isvector(lambdas) error('Lambda not a vector!'); end;
 if size(distMatrix,1) ~= size(distMatrix,2) error('Distance matrix not square!'); end;
-if (nargin < 5) DISP = 1; end;
-if (DISP) figure; end;
 
 [m n] = size(source); k = length(lambdas);
 x = source(:); y = target(:);
@@ -45,23 +42,10 @@ for i = 1:k
   C = -(x * y') + lambda * distMatrix; % Construct cost matrix
   [rowsol, cost] = lapjv(C); % Get best linear assignment from x to y
   x_new = x(rowsol); % Find reconstructed shape
-  img = reshape(x_new, [m n]);
-  new_xs = [new_xs img];
-
-  if DISP
-    subplot(2, k, i);
-    imshow(img);
-    title(['Lambda = ' num2str(lambda)]);
-  end
+  if (~isvector(source)) x_new = reshape(x_new, [m n]); end;
+  new_xs = [new_xs x_new];
 end
 
-if DISP
-  subplot(2, k, k + 1);
-  imshow(source);
-  title('Source');
-  subplot(2, k, k + 2);
-  imshow(target);
-  title('Target');
-end
+if (k == 1) new_xs = new_xs{1}; end;
 
 end
