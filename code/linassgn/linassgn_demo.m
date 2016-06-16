@@ -12,7 +12,7 @@
 % -------------------------------------------------------------------------
 
 DISP = 1; % Display results boolean
-lambdas = [0 1e-12 1e-8 1e-6 1e-4 0.01 0.1];
+lambdas = [0 1e-8 1e-4 1e-1];
 
 % Circle square demo
 % m = 36; n = 36;
@@ -36,7 +36,7 @@ distMatrix = construct_dist_matrix([m n]);
 
 imgs = { ...
   apple01, ...
-  apple02, ...
+  % apple02, ...
   bird01, ...
 };
 
@@ -48,7 +48,29 @@ end
 
 for i = 1:length(imgs)
   for j = i+1:length(imgs)
-    linassgn_warp(imgs{i}, imgs{j}, distMatrix, lambdas, DISP);
+    source = imgs{i}; target = imgs{j};
+    warped_imgs = linassgn_warp(source, target, distMatrix, lambdas);
+
+    if DISP
+      for k = 1:length(lambdas)
+        subplot(2, length(lambdas), k);
+        curr = warped_imgs{k};
+        imshow(curr);
+        sphdist = sphere_norm(curr(:)/norm(curr(:)), target(:)/norm(target(:)));
+        title(['Lambda = ' num2str(lambdas(k))]);
+        xlabel(['sphere dist=' num2str(sphdist)]);
+      end
+      subplot(2, k, k + 1);
+      imshow(source);
+      title('Source');
+      subplot(2, k, k + 2);
+      imshow(target);
+      title('Target');
+      curr = source(:);
+      sphdist = sphere_norm(curr(:)/norm(curr(:)), target(:)/norm(target(:)));
+      xlabel(['sphere dist=' num2str(sphdist)]);
+    end
+
   end
 end
 
