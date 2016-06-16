@@ -21,5 +21,5 @@ for i = 1:length(datasets)
   end
 
   datasets{i} = setfield(datasets{i}, 'numTranslates', numTranslates);
-  datasets{i} = setfield(datasets{i}, 'distMatrix', construct_dist_matrix(numTranslates));
+  datasets{i} = setfield(datasets{i}, 'distMatrix', {construct_dist_matrix(numTranslates)});
 end
