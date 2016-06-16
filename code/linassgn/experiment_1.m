@@ -16,7 +16,7 @@ if ~exist('datasets')
   lambda = 1e-4;
 end;
 
-std_dist = @sphere_norm;
+std_dist = @sphere_dist;
 
 for i = 1:length(datasets)
   D = datasets{i}.data;

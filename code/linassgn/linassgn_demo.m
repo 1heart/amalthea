@@ -56,7 +56,7 @@ for i = 1:length(imgs)
         subplot(2, length(lambdas), k);
         curr = warped_imgs{k};
         imshow(curr);
-        sphdist = sphere_norm(curr(:)/norm(curr(:)), target(:)/norm(target(:)));
+        sphdist = sphere_dist(curr(:)/norm(curr(:)), target(:)/norm(target(:)));
         title(['Lambda = ' num2str(lambdas(k))]);
         xlabel(['sphere dist=' num2str(sphdist)]);
       end
@@ -67,7 +67,7 @@ for i = 1:length(imgs)
       imshow(target);
       title('Target');
       curr = source(:);
-      sphdist = sphere_norm(curr(:)/norm(curr(:)), target(:)/norm(target(:)));
+      sphdist = sphere_dist(curr(:)/norm(curr(:)), target(:)/norm(target(:)));
       xlabel(['sphere dist=' num2str(sphdist)]);
     end
 

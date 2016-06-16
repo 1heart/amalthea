@@ -53,6 +53,6 @@ for res_level = 1:size(multires_i, 1)
   x_new_reverse = [x_new_reverse; linassgn_warp(x_curr, y_curr, distMatrix{res_level}, lambda)];
 end
 
-d = min(sphere_norm(x_new, y), sphere_norm(x_new_reverse, y)); % Take the distance between y and the modified x
+d = min(sphere_dist(x_new, y), sphere_dist(x_new_reverse, y)); % Take the distance between y and the modified x
 
 end

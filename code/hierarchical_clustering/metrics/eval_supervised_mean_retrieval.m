@@ -32,7 +32,7 @@
 
 function result = eval_supervised_mean_retrieval(D, L, currMetrics, DEBUG, DISPLAY, distfunc)
 
-if (nargin < 6) distfunc = @sphere_norm; end;
+if (nargin < 6) distfunc = @sphere_dist; end;
 
 [n d] = size(D);
 uniqueLabels = unique(L);
