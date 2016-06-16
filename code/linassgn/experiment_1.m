@@ -9,8 +9,13 @@
 % Description: This runs experiments that compare sphere distance vs. sphere_dist_linassgn on supervised data.
 % Usage: Used in hierarchical clustering on the unit hypersphere.
 % -------------------------------------------------------------------------
+
+SAVE = 1;
+DEBUG = 1;
+DISPLAY = 1;
+dataset_names = { 'brown_123', 'brown_125'};
+
 if ~exist('datasets')
-  dataset_names = { 'brown_123', 'brown_125'};
   datasets = getDatasets(dataset_names);
   get_dists_for_datasets;
   lambda = 1e-4;
@@ -22,9 +27,9 @@ for i = 1:length(datasets)
   D = datasets{i}.data;
   L = datasets{i}.labels;
   linassgn_dist = @(x,y) sphere_dist_linassgn(x, y, datasets{i}.distMatrix, lambda);
-  % std_result = eval_supervised_mean_retrieval(D,L, {@metrics_shrec}, 1, 1, std_dist);
-  % save(['results/' datasets{i}.name '_std_result'], 'std_result');
-  linassgn_result = eval_supervised_mean_retrieval(D,L, @metrics_shrec, 1, 1, linassgn_dist);
-  save(['results/' datasets{i}.name '_linassgn_result'], 'linassgn_result');
+  std_result = eval_supervised_mean_retrieval(D,L, {@metrics_shrec}, DEBUG, DISPLAY, std_dist);
+  if (SAVE) save(['results/' datasets{i}.name '_std_result'], 'std_result'); end;
+  % linassgn_result = eval_supervised_mean_retrieval(D,L, @metrics_shrec, DEBUG, DISPLAY, linassgn_dist);
+  % if (SAVE) save(['results/' datasets{i}.name '_linassgn_result'], 'linassgn_result'); end;
 end
 
