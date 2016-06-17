@@ -8,16 +8,16 @@
 %   samps             - Nx1 vector of 1D samples to use for density 
 %                       estimation.
 %   startLevel        - starting level for the the father wavelet
-%                       (i.e. scaling function).  
+%                       (i.e. scaling function).
 %   stopLevel         - last level for mother wavelet scaling.  The start
 %                       level is same as the father wavelet's.
 %   sampleSupport     - 2x1 vector containing the sample support.
-%   wName             - 3 to 4 charater code name of wavelet for density 
+%   wName             - 3 to 4 charater code name of wavelet for density
 %                       approximation.
 %   scalingOnly       - flag indicating if we only want to use scaling
 %                       functions for the density estimation.
 %   initType          - Type of initialization:
-%                       priority - weights coarser level coefficients 
+%                       priority - weights coarser level coefficients
 %                                  more.
 %                       eig - solves eigen value problem for by treating
 %                             ml as arithmetic mean. (NOT WORKING)
@@ -41,8 +41,8 @@
 %   Adrian M. Peter
 %
 % Reference:
-% A. Peter and A. Rangarajan, “Maximum likelihood wavelet density estimation 
-% with applications to image and shape matching,” IEEE Trans. Image Proc., 
+% A. Peter and A. Rangarajan, “Maximum likelihood wavelet density estimation
+% with applications to image and shape matching,” IEEE Trans. Image Proc.,
 % vol. 17, no. 4, pp. 458–468, April 2008.
 %--------------------------------------------------------------------------
 
@@ -51,8 +51,8 @@
 %
 %     This file is part of the WDE package.
 %
-%     The source code is provided under the terms of the GNU General 
-%     Public License as published by the Free Software Foundation version 2 
+%     The source code is provided under the terms of the GNU General
+%     Public License as published by the Free Software Foundation version 2
 %     of the License.
 %
 %     WDE package is distributed in the hope that it will be useful,
@@ -66,12 +66,12 @@
 %     USA
 %--------------------------------------------------------------------------
 function [coeffs coeffsIdx] = initializeCoefficients(samps, startLevel, stopLevel,...
-                                                     sampleSupport, wName,...
-                                                     scalingOnly, initType, varargin)
+    sampleSupport, wName,...
+    scalingOnly, initType, varargin)
 
 coeffsIdx = coefficientIndex(startLevel, stopLevel,...
-                             sampleSupport, wName,...
-                             scalingOnly);
+    sampleSupport, wName,...
+    scalingOnly);
 switch(lower(initType{1}))
     case 'level'
         % For 2D multires. analysis for each translation pair (k1,k2) we also get
@@ -79,22 +79,22 @@ switch(lower(initType{1}))
         % the number of coefficients by a factor of 3 for each pair translation
         % values.  This is only on the wavelet summation not on the scaling.
         numBasisPerTransPair = 3;
-
+        
         % Get the number of translations for the scaling function of the start
         % level.  For 2D we need to get translations in both x & y directions.
         numTransX = diff(translationRange(sampleSupport(1,:), wName, startLevel))+1;
         numTransY = diff(translationRange(sampleSupport(2,:), wName, startLevel))+1;
-
+        
         % Assign equal weights to the scaling coefficients.
         c = (1/2^startLevel)*(ones(numTransX*numTransY,1));
-
+        
         % Determine if we need to count up or down
         if(startLevel <= stopLevel)
             inc = 1;
         else
             inc = -1;
         end
-
+        
         % Assign wavelet coefficients
         if(~scalingOnly)
             for j = startLevel :inc:stopLevel
@@ -142,7 +142,7 @@ switch(lower(initType{1}))
             samps =  cell2mat(varargin(1));
         end
         % Get histogram of the samples and the corresponding sqrt of
-        % density value for each sample.        
+        % density value for each sample.
         if(isempty(cell2mat(varargin(2))))
             % Use Freedman-Diaconis rule to calculate the optimal bin width.
             h1 = 2*iqr(samps(:,1))*length(samps(:,1))^(-1/3);
@@ -156,10 +156,10 @@ switch(lower(initType{1}))
         
         [binCounts,idx] = hist3c(samps,bins);
         % Normalize the bins and take sqrt.
-        sqrtP         = sqrt(binCounts./sum(binCounts(:)));        
+        sqrtP         = sqrt(binCounts./sum(binCounts(:)));
         sqrtPEachSamp = sqrtP(sub2ind(size(sqrtP),idx(:,1),idx(:,2)));
         numSamps      = length(samps);
-       
+        
         % Translation range for the starting level scaling function.
         scalingTransRX    = translationRange(sampleSupport(1,:), wName, startLevel);
         scalingShiftValsX = [scalingTransRX(1):scalingTransRX(2)];
@@ -168,106 +168,79 @@ switch(lower(initType{1}))
         
         %%%%
         % Set up correct basis functions.
-        translations = length(scalingShiftValsX);
+        translations_x = length(scalingShiftValsX);
+        translations_y = length(scalingShiftValsY);
         [father, mother] = basisFunctions(wName);
-        tic
-        scalValsSum = zeros(translations);
-        mothValsSum = 0;
+
+        scalValsSum = zeros(translations_x,translations_y);
         
-        % Calculate the coefficient estimates based on the histogram
-        %parfor s = 1 : numSamps
-         for s = 1 : numSamps   
-            %%%% Remove this is only to allow parallelization to work.
-            wavBasis = []; 
+
+
+        % OPTIMIZATION: Loop along translations
+        for j = 1 : translations_y
             
-            sampX = samps(s,1); sampY = samps(s,2);
-            % Compute father value for all scaled and translated samples.
-            x         = 2^startLevel*sampX - scalingShiftValsX;
-            y         = 2^startLevel*sampY - scalingShiftValsY;
-            
-            % find where to find the wavelet support
-            xIndex = find(x <= 7 & x >= 0);
-            yIndex = find( y <= 7 & y >= 0);
-                  
-            scalVals  = 2^startLevel*kron(father(x(xIndex)),father(y(yIndex)));
-%             scalingBasis = scalVals./sqrtPEachSamp(s);
-            %scalingSum   = sum(scalingBasis);
-            
-            % Divide the basis by the sqrt hist.
-            %scalingBasis = scalVals./sqrtPEachSamp(s);
-            scalingBasis = scalVals;
-            scalingBasis = reshape(scalingBasis, [length(yIndex),length(xIndex)]);
-            scalValsSum(yIndex,xIndex) = scalValsSum(yIndex,xIndex) + scalingBasis;
-            
-            % Incorporate the mother basis if necessary.
-            if(~scalingOnly)
-                mothVals = [];
-                % Loop over all the levels to evaluate the wavelet basis.
-                for j = startLevel :inc:stopLevel
-                    transRX    = translationRange(sampleSupport(1,:), wName, j);
-                    shiftValsX = [transRX(1):transRX(2)];
-                    transRY    = translationRange(sampleSupport(2,:), wName, j);
-                    shiftValsY = [transRY(1):transRY(2)];
- 
-                    x          = 2^j*sampX - shiftValsX;
-                    y          = 2^j*sampY - shiftValsY;
-
-                    translations = length(shiftValsX);
-                    mothValsSum1 = zeros(translations);
-                    mothValsSum2 = zeros(translations);
-                    mothValsSum3 = zeros(translations);
-
-                    % find where to find the wavelet support
-                    xIndex = find(x <= 7 & x >= 0);
-                    yIndex = find( y <= 7 & y >= 0);
-
-                    % Need to 3 different combinations for 2D wavelets. The entire
-                    % grid of translations is put in a 1xM vector for each of
-                    % combinations.  The kron is traversing the grid from the lower
-                    % left to the upper right order.  This is the same ordering as
-                    % what you would get from doing [xx, yy] = meshgrid(-5:5,-4:4);
-                    % followed by putting points in a matrix pts = [xx(:) yy(:)];
-              
-                    mothVals1  = 2^j*kron(father(x(xIndex)),mother(y(yIndex)));
-                    mothVals2  = 2^j*kron(mother(x(xIndex)),father(y(yIndex)));
-                    mothVals3  = 2^j*kron(mother(x(xIndex)),mother(y(yIndex)));                
-
-                    mothVals1 = reshape(mothVals1, [length(yIndex),length(xIndex)]);
-                    mothVals2 = reshape(mothVals2, [length(yIndex),length(xIndex)]);
-                    mothVals3 = reshape(mothVals3, [length(yIndex),length(xIndex)]);
-
-                    mothValsSum1(yIndex,xIndex) = mothValsSum1(yIndex,xIndex) + mothVals1;
-                    mothValsSum2(yIndex,xIndex) = mothValsSum2(yIndex,xIndex) + mothVals2;
-                    mothValsSum3(yIndex,xIndex) = mothValsSum3(yIndex,xIndex) + mothVals3;
-
-                    mothValsSum1 = reshape(mothValsSum1,[1,numel(mothValsSum1)]);
-                    mothValsSum2 = reshape(mothValsSum2,[1,numel(mothValsSum2)]);
-                    mothValsSum3 = reshape(mothValsSum3,[1,numel(mothValsSum3)]);
-
-                    mothVals   = [mothVals mothValsSum1 mothValsSum2 mothValsSum3];
-                end 
+            parfor i = 1 : translations_x
+                x = 2^startLevel * samps(:,1)' - scalingShiftValsX(i);
+                y = 2^startLevel * samps(:,2)' - scalingShiftValsY(j);
                 
-                % Multiply by the weights.
-                wavBasis = mothVals./sqrtPEachSamp(s); 
-                mothValsSum = mothValsSum + wavBasis;               
-            end % if(~scalingOnly)
+                valid_xIndex = find(x >= 0 & x <= 7);
+                valid_yIndex = find(y >= 0 & y <= 7);
+                
+                % Relevant points under translation i,j
+                valid_coord = intersect(valid_xIndex, valid_yIndex);
+                x = x(valid_coord);
+                y = y(valid_coord);
+                
+                if(isempty(valid_coord))
+                    scalingBasis = 0;
+                else
+                    fatherWav = 2^startLevel * (father(x) .* father(y));
+                    scalingBasis = fatherWav ./ sqrtPEachSamp(valid_coord)';
+                    scalingBasis = sum(scalingBasis);
+                end
+                scalValsSum(i,j) = scalingBasis;
+            end
             
-%             scalValsSum = scalValsSum + scalingBasis;
-
-        end % for s = 1 : numSamps
-        toc
+        end
+        scalValsSum = scalValsSum';
+      
+        
+%         
+%         % Calculate the coefficient estimates based on the histogram
+%         %parfor s = 1 : numSamps
+%         for s = 1 : numSamps
+%             %%%% Remove this is only to allow parallelization to work.
+%             
+%             sampX = samps(s,1); sampY = samps(s,2);
+%             % Compute father value for all scaled and translated samples.
+%             x         = 2^startLevel*sampX - scalingShiftValsX;
+%             y         = 2^startLevel*sampY - scalingShiftValsY;
+%             
+%             % find where to find the wavelet support
+%             xIndex = find(x <= 7 & x >= 0);
+%             yIndex = find( y <= 7 & y >= 0);
+%             
+%             scalVals  = 2^startLevel*kron(father(x(xIndex)),father(y(yIndex)));
+%             %             scalingBasis = scalVals./sqrtPEachSamp(s);
+%             %scalingSum   = sum(scalingBasis);
+%             
+%             % Divide the basis by the sqrt hist.
+%             scalingBasis = scalVals./sqrtPEachSamp(s);
+%             %scalingBasis = scalVals;
+%             scalingBasis = reshape(scalingBasis, [length(yIndex),length(xIndex)]);
+%             scalValsSum(yIndex,xIndex) = scalValsSum(yIndex,xIndex) + scalingBasis;
+%             
+%         end % for s = 1 : numSamps
+%         toc
+%         
         scalValsSum = reshape(scalValsSum,[1,numel(scalValsSum)]);
         
-%         c = (1/numSamps)*[scalValsSum'];
-        c = (1/numSamps)*scalValsSum;
-%         cTemp = (1/numSamps)*sum(scalValsSum,1)';
-%         norm(c - cTemp)
-
-         if(~scalingOnly)
-             c = (1/numSamps)*[scalValsSum';mothValsSum'];
-         end
-        coeffs = c/norm(c);   
-        disp('');
+        %         c = (1/numSamps)*[scalValsSum'];
+        c = (1/numSamps)*scalValsSum';
+        %         cTemp = (1/numSamps)*sum(scalValsSum,1)';
+        %         norm(c - cTemp)
+        
+        coeffs = c/norm(c);
         
         
         
@@ -285,7 +258,7 @@ switch(lower(initType{1}))
         wFamName   = initDensityDir(strIdx(2)+1:strIdx(3)-1);
         % Load the another families coefficients.
         load([initDensityDir 'mdlTest_' densityNames '_j0Lv_' num2str(startLevel) ...
-              '_OS_' num2str(scalingOnly) '_' wavFamName],'coeffs');
+            '_OS_' num2str(scalingOnly) '_' wavFamName],'coeffs');
         db1Coeffs = coeffs(:,end);
         clear coeffs;
         
@@ -304,16 +277,16 @@ switch(lower(initType{1}))
         % Get the centroid position of the basis for the current level.
         basisCenterDb1 = basisEndPtDb1/2;
         basisCenter = basisEndPt/2;
-    
+        
         % Now get the position of all the basis for all the translation values.
         basisLocsXDb1 = [transXDb1(1):transXDb1(2)]'*(1/2^startLevel)+basisCenterDb1;
         basisLocsYDb1 = [transYDb1(1):transYDb1(2)]'*(1/2^startLevel)+basisCenterDb1;
         basisLocsX = [transX(1):transX(2)]'*(1/2^startLevel)+basisCenter;
         basisLocsY = [transY(1):transY(2)]'*(1/2^startLevel)+basisCenter;
-                     
+        
         % Interpolate to coefficients for this family.
         c = interp2(basisLocsXDb1,basisLocsYDb1,db1Coeffs',basisLocsX,basisLocsY,'spline');
-        coeffs = c/norm(c);        
+        coeffs = c/norm(c);
     case 'eig'
         %goodSampsIdx  = find((samps(:,1)>0) & (samps(:,2)>0));
         numSamps      = size(samps,1); %length(goodSampsIdx);%
@@ -328,39 +301,39 @@ switch(lower(initType{1}))
         scalingShiftValsX = [scalingTransRX(1):scalingTransRX(2)];
         scalingTransRY    = translationRange(sampleSupport(2,:), wName, startLevel);
         scalingShiftValsY = [scalingTransRY(1):scalingTransRY(2)];
-
-
+        
+        
         % Set up correct basis functions.
         [father, mother] = basisFunctions(wName);
-
+        
         scalingSum        = 0;
         waveletSum        = 0;
-
+        
         % Determine if we need to count up or down.
         if(startLevel <= stopLevel)
             inc = 1;
         else
             inc = -1;
         end
- 
+        
         % Calculate the loglikelihood.
         for s = 1 : numSamps
             % Get (x,y) value of the sample.
             %samps(goodSampsIdx(s),1); sampY = samps(goodSampsIdx(s),2);
             sampX = samps(s,1); sampY = samps(s,2);
-
-            % Compute father value for all scaled and translated samples 
+            
+            % Compute father value for all scaled and translated samples
             % over our entire 2D sampling grid.
             x         = 2^startLevel*sampX - scalingShiftValsX;
             y         = 2^startLevel*sampY - scalingShiftValsY;
-
+            
             % Using kronecker prodcut to get combination of all shift values.
             % Will result in:
             % f(x1)*f(y1),f(x1)f(y2),f(x1)f(y3),...f(x2)f(y1),...f(xN)f(yM)
             % Also note we don't need the (1/2) factor in normalization because we
             % are multiplying 2 basis functions together so the factor cancels.
             scalVals  = 2^startLevel*kron(father(x),father(y));
-
+            
             % Incorporate the mother basis if necessary.
             if(~scalingOnly)
                 mothVals = [];
@@ -372,7 +345,7 @@ switch(lower(initType{1}))
                     shiftValsY = [transRY(1):transRY(2)];
                     x          = 2^j*sampX - shiftValsX;
                     y          = 2^j*sampY - shiftValsY;
-
+                    
                     % Need to 3 different combinations for 2D wavelets. The entire
                     % grid of translations is put in a 1xM vector for each of
                     % combinations.  The kron is traversing the grid from the lower
@@ -382,11 +355,11 @@ switch(lower(initType{1}))
                     mothVals1  = 2^j*kron(father(x),mother(y));
                     mothVals2  = 2^j*kron(mother(x),father(y));
                     mothVals3  = 2^j*kron(mother(x),mother(y));
-
+                    
                     mothVals   = [mothVals mothVals1 mothVals2 mothVals3];
-                end 
+                end
             end % if(~scalingOnly)
-
+            
             if(~scalingOnly)
                 outerProd = outerProd + [scalVals mothVals]'*([scalVals mothVals]);
             else

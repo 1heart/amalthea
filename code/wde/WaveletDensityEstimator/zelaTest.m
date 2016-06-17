@@ -74,16 +74,22 @@ close all;
             y = y(valid_coord);
             
             if(isempty(valid_coord))
-                fatherWav = 0;
+                scalingBasisOpt = 0;
             else
                 fatherWav = 2^startLevel * (father(x) .* father(y));
-                fatherWav = sum(fatherWav);
+                scalingBasisOpt = fatherWav ./ sqrtPEachSamp(valid_coord)';
+                scalingBasisOpt = sum(scalingBasisOpt);
             end
-            sumGrid(i,j) = fatherWav;
+            sumGrid(i,j) = scalingBasisOpt;
         end
         
     end
     sumGrid = sumGrid';
+    sumGrid = reshape(sumGrid,[1,numel(sumGrid)]);
+    
+    c_opt = (1/numSamps)*sumGrid';
+    coeffs_opt = c/norm(c);
+    
     toc
     surf(sumGrid);
 

@@ -123,7 +123,7 @@ stInitCoeff = tic; %%%%
                                             samps, bins);
                                         
 stopInitCoeff = toc(stInitCoeff);
-disp(stopInitCoeff);
+disp(['Time in initializeCoefficients: ', num2str(stopInitCoeff)]);
                                         
 % Initialize a positive definite matrix to approximate the 
 % Hessian of the Lagrangian.                    
@@ -145,14 +145,12 @@ gradTol = 1e-4;
 direction = 99999;
 
 stNegLog = tic;
-tic
 % Get initial value of the negative loglikelihood cost function
 [currCost, currGrad] = negativeLogLikelihood(samps, wName, scalingStartLevel,...
                                              waveletStopLevel, coeffs, coeffsIdx, ...
                                              scalingOnly, sampleSupport);
-                                         toc
 stopNegLog = toc(stNegLog);
-disp(stopNegLog);
+disp(['Time in negativeLogLikelihood: ', num2str(stopNegLog)]);
 
 nllTrack     = currCost;
 coeffPlotFig = 2;
