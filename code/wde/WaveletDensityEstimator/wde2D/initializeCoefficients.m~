@@ -170,52 +170,36 @@ switch(lower(initType{1}))
         % Set up correct basis functions.
         translations = length(scalingShiftValsX);
         [father, mother] = basisFunctions(wName);
+        tic
         scalValsSum = zeros(translations);
         mothValsSum = 0;
         
         % Calculate the coefficient estimates based on the histogram
         %parfor s = 1 : numSamps
-        totalConversionTime = 0;
-        totalIndexTime = 0;
-        totalKronTime = 0;
-        totalReshapeTime = 0;
          for s = 1 : numSamps   
             %%%% Remove this is only to allow parallelization to work.
             wavBasis = []; 
             
             sampX = samps(s,1); sampY = samps(s,2);
             % Compute father value for all scaled and translated samples.
-            conversionTimeStart = tic;
             x         = 2^startLevel*sampX - scalingShiftValsX;
             y         = 2^startLevel*sampY - scalingShiftValsY;
-            conversionTime = toc(conversionTimeStart);
-            totalConversionTime = totalConversionTime + conversionTime;
             
             % find where to find the wavelet support
-            indexTimeStart = tic;
             xIndex = find(x <= 7 & x >= 0);
             yIndex = find( y <= 7 & y >= 0);
-            indexTime = toc(indexTimeStart);
-            totalIndexTime = totalIndexTime + indexTime;
-            
-            kronTimeStart = tic;
+                  
             scalVals  = 2^startLevel*kron(father(x(xIndex)),father(y(yIndex)));
-            kronTime = toc(kronTimeStart);
-            totalKronTime = totalKronTime + kronTime;
 %             scalingBasis = scalVals./sqrtPEachSamp(s);
             %scalingSum   = sum(scalingBasis);
             
-            reshapeTimeStart = tic;
             % Divide the basis by the sqrt hist.
-            scalingBasis = scalVals./sqrtPEachSamp(s);
+            %scalingBasis = scalVals./sqrtPEachSamp(s);
+            scalingBasis = scalVals;
             scalingBasis = reshape(scalingBasis, [length(yIndex),length(xIndex)]);
             scalValsSum(yIndex,xIndex) = scalValsSum(yIndex,xIndex) + scalingBasis;
-            reshapeTime = toc(reshapeTimeStart);
-            totalReshapeTime = totalReshapeTime + reshapeTime;
             
-         
             % Incorporate the mother basis if necessary.
-       
             if(~scalingOnly)
                 mothVals = [];
                 % Loop over all the levels to evaluate the wavelet basis.
@@ -267,27 +251,21 @@ switch(lower(initType{1}))
                 wavBasis = mothVals./sqrtPEachSamp(s); 
                 mothValsSum = mothValsSum + wavBasis;               
             end % if(~scalingOnly)
-            
-%             scalValsSum = scalValsSum + scalingBasis;
 
         end % for s = 1 : numSamps
-        disp(['Total Conversion Time: ',num2str(totalConversionTime)]);
-        disp(['Total Index Time: ',num2str(totalIndexTime)]);
-        disp(['Total Kron Time: ',num2str(totalKronTime)]);
-        disp(['Total Reshape Time: ',num2str(totalReshapeTime)]);
+        toc
         scalValsSum = reshape(scalValsSum,[1,numel(scalValsSum)]);
         
 %         c = (1/numSamps)*[scalValsSum'];
         c = (1/numSamps)*scalValsSum;
 %         cTemp = (1/numSamps)*sum(scalValsSum,1)';
 %         norm(c - cTemp)
-       
-        
+
          if(~scalingOnly)
              c = (1/numSamps)*[scalValsSum';mothValsSum'];
          end
         coeffs = c/norm(c);   
-        
+        disp('');
         
         
         
