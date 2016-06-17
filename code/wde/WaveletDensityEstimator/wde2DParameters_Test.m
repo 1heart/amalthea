@@ -29,7 +29,7 @@ wdeSet.wdePlotting = 0; % Plotting the density.
 
 wdeSet.delta          = .05;
 
-domVal = 1;
+domVal = 2.5;
 wdeSet.xMin           = -domVal;
 wdeSet.xMax           = domVal;
 wdeSet.yMin           = -domVal;

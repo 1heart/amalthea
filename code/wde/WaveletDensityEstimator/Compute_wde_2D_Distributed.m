@@ -85,7 +85,7 @@ h = waitbar(0,'Computing coefficients and densities per category.');
 
 % Loop through the shapes, resize them approriately, and estimate the
 % coeffients and densities and store them. 
-for i = 1 : 1
+for i = 1 : numShapes
     % Progress updates
     waitbar(i/numShapes, h);
     disp(['Running shape ', num2str(i)]);
