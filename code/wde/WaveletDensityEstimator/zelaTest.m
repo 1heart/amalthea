@@ -57,6 +57,7 @@ close all;
     
     k_x = scalingShiftValsX;
     k_y = scalingShiftValsY;
+    tic
     sumGrid = zeros(translations);
     for j = 1 : translations
         
@@ -71,13 +72,10 @@ close all;
             valid_coord = intersect(valid_xIndex, valid_yIndex);
             x = x(valid_coord);
             y = y(valid_coord);
-            relevantSamp_x = samps(valid_coord, 1);
-            relevantSamp_y = samps(valid_coord,2);
             
             if(isempty(valid_coord))
                 fatherWav = 0;
             else
-                % fatherWav_3,(-3,-3)
                 fatherWav = 2^startLevel * (father(x) .* father(y));
                 fatherWav = sum(fatherWav);
             end
@@ -86,8 +84,8 @@ close all;
         
     end
     sumGrid = sumGrid';
+    toc
     surf(sumGrid);
-
 
 
 
