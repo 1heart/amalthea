@@ -121,6 +121,8 @@ switch(lower(initType{1}))
         coeffs = c/norm(c);
         
         
+
+        
         
     case 'hist'
         % Determine if we need to count up or down
@@ -159,53 +161,68 @@ switch(lower(initType{1}))
         scalingTransRY    = translationRange(sampleSupport(2,:), wName, startLevel);
         scalingShiftValsY = [scalingTransRY(1):scalingTransRY(2)];
         
-        %%%%
         % Set up correct basis functions.
-        tic
-        translations_x = length(scalingShiftValsX);
-        translations_y = length(scalingShiftValsY);
         [father, mother] = basisFunctions(wName);
         waveSupp = waveSupport(wName);
-        scalValsSum = zeros(translations_x,translations_y);
-   
-        % OPTIMIZATION: Loop along translations
-        for j = 1 : translations_y
+
+        % Set up scaling basis grid for each translate
+        translations_x = length(scalingShiftValsX);
+        translations_y = length(scalingShiftValsY);
+        scalingBasisGrid = zeros(translations_x,translations_y);
+        
+        % OPTIMIZATION THREE: Single loop along translations
+        % Gives back new sample points (x,y) along each translate K
+        x = bsxfun(@minus, (2^startLevel)*samps(:,1), scalingShiftValsX);
+        y = bsxfun(@minus, (2^startLevel)*samps(:,2), scalingShiftValsY);
+        
+        % For each translate, sample values (x,y) that live under wavelet's support --> 1
+        valid_x = (x >= waveSupp(1) & x <= waveSupp(2));
+        valid_y = (y >= waveSupp(1) & y <= waveSupp(2));
+        
+        % Loop along translations in x
+        for i = 1 : translations_x
             
-            for i = 1 : translations_x
-                x = 2^startLevel * samps(:,1)' - scalingShiftValsX(i);
-                y = 2^startLevel * samps(:,2)' - scalingShiftValsY(j);
-                
-                valid_xIndex = find(x >= waveSupp(1) & x <= waveSupp(2));
-                valid_yIndex = find(y >= waveSupp(1) & y <= waveSupp(2));
-                
-                % Relevant points under translation i,j
-                valid_coord = intersect(valid_xIndex, valid_yIndex);
-                x = x(valid_coord);
-                y = y(valid_coord);
-                
-                if(isempty(valid_coord))
-                    scalingBasis = 0;
-                else
-                    fatherWav = 2^startLevel * (father(x) .* father(y));
-                    scalingBasis = fatherWav ./ sqrtPEachSamp(valid_coord)';
-                    scalingBasis = sum(scalingBasis);
-                end
-                scalValsSum(i,j) = scalingBasis;
-            end
+            % Find where points x and y exist together or intersect --> 1
+            intersections = bsxfun(@times, valid_x(:,i), valid_y);
             
-        end
-        scalValsSum = scalValsSum';
+            % Sample indices are represented by rows.
+            % Relevant y translations are represented by columns
+            [sampleIndex, translateIndex] = find(intersections == 1);
+            
+            % Calculate father wavelet for relevant points that fall under current x translation
+            x_at_translate = x(sampleIndex,i);
+            father_x = father(x_at_translate);
+
+            % Calculate father wavelet for relevant points that fall under all y translations
+            y_at_translate = y(logical(intersections));
+            father_y = father(y_at_translate);
+            
+            % Calculate the father wavelet for all relevant points that fall under current translations
+            fatherWav = bsxfun(@times, 2^startLevel * father_x, father_y);
+            fatherWav = fatherWav ./ sqrtPEachSamp(sampleIndex);
+            
+            % Add together scaling basis' that fall under the same y translations
+            fatherWav_per_translation = accumarray(translateIndex, fatherWav);
+            relevantTrans = find(fatherWav_per_translation ~= 0);
+            
+            % Assign scaling basis to correspoding x translation and y translations
+            scalingBasisGrid(i,relevantTrans) = fatherWav_per_translation(relevantTrans);
+
+        end % for i = 1 : translations_x
         
-        scalValsSum = reshape(scalValsSum,[1,numel(scalValsSum)]);
-        
-        c = (1/numSamps)*scalValsSum';
-        
+        % Calculate coefficients
+        scalingBasisGrid = scalingBasisGrid';
+        scalingBasisGrid = reshape(scalingBasisGrid,[1,numel(scalingBasisGrid)]);
+        c = (1/numSamps)*scalingBasisGrid';
         coeffs = c/norm(c);
-        toc
-        disp('');
         
         
         
+        
+        
+    
+    
+    
         
     case 'histWDE'
         initDensityDir = char(varargin{1});
