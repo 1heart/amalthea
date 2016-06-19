@@ -122,13 +122,6 @@ switch(lower(initType{1}))
         
         
         
-        
-        
-        
-        
-        
-        
-        
     case 'hist'
         % Determine if we need to count up or down
         if(startLevel <= stopLevel)
@@ -168,23 +161,22 @@ switch(lower(initType{1}))
         
         %%%%
         % Set up correct basis functions.
+        tic
         translations_x = length(scalingShiftValsX);
         translations_y = length(scalingShiftValsY);
         [father, mother] = basisFunctions(wName);
-
+        waveSupp = waveSupport(wName);
         scalValsSum = zeros(translations_x,translations_y);
-        
-
-
+   
         % OPTIMIZATION: Loop along translations
         for j = 1 : translations_y
             
-            parfor i = 1 : translations_x
+            for i = 1 : translations_x
                 x = 2^startLevel * samps(:,1)' - scalingShiftValsX(i);
                 y = 2^startLevel * samps(:,2)' - scalingShiftValsY(j);
                 
-                valid_xIndex = find(x >= 0 & x <= 7);
-                valid_yIndex = find(y >= 0 & y <= 7);
+                valid_xIndex = find(x >= waveSupp(1) & x <= waveSupp(2));
+                valid_yIndex = find(y >= waveSupp(1) & y <= waveSupp(2));
                 
                 % Relevant points under translation i,j
                 valid_coord = intersect(valid_xIndex, valid_yIndex);
@@ -203,50 +195,14 @@ switch(lower(initType{1}))
             
         end
         scalValsSum = scalValsSum';
-      
         
-%         
-%         % Calculate the coefficient estimates based on the histogram
-%         %parfor s = 1 : numSamps
-%         for s = 1 : numSamps
-%             %%%% Remove this is only to allow parallelization to work.
-%             
-%             sampX = samps(s,1); sampY = samps(s,2);
-%             % Compute father value for all scaled and translated samples.
-%             x         = 2^startLevel*sampX - scalingShiftValsX;
-%             y         = 2^startLevel*sampY - scalingShiftValsY;
-%             
-%             % find where to find the wavelet support
-%             xIndex = find(x <= 7 & x >= 0);
-%             yIndex = find( y <= 7 & y >= 0);
-%             
-%             scalVals  = 2^startLevel*kron(father(x(xIndex)),father(y(yIndex)));
-%             %             scalingBasis = scalVals./sqrtPEachSamp(s);
-%             %scalingSum   = sum(scalingBasis);
-%             
-%             % Divide the basis by the sqrt hist.
-%             scalingBasis = scalVals./sqrtPEachSamp(s);
-%             %scalingBasis = scalVals;
-%             scalingBasis = reshape(scalingBasis, [length(yIndex),length(xIndex)]);
-%             scalValsSum(yIndex,xIndex) = scalValsSum(yIndex,xIndex) + scalingBasis;
-%             
-%         end % for s = 1 : numSamps
-%         toc
-%         
         scalValsSum = reshape(scalValsSum,[1,numel(scalValsSum)]);
         
-        %         c = (1/numSamps)*[scalValsSum'];
         c = (1/numSamps)*scalValsSum';
-        %         cTemp = (1/numSamps)*sum(scalValsSum,1)';
-        %         norm(c - cTemp)
         
         coeffs = c/norm(c);
-        
-        
-        
-        
-        
-        
+        toc
+        disp('');
         
         
         

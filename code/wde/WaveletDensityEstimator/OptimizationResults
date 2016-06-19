@@ -1,0 +1,14 @@
+OPTIMIZATION ONE
+Double loop over translations rather than sample points
+Time Elapsed: 0.3392
+Equivalent to true coefficient results: 1
+
+OPTIMIZATION TWO
+Multiple seperate loops over translations
+Time Elapsed: 0.32593
+Equivalent to true coefficient results: 1
+
+OPTIMIZATION THREE
+Loop over translates with a single loop
+Time Elapsed: 0.056089
+Equivalent to true coefficient results: 1
