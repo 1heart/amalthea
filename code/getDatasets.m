@@ -30,7 +30,7 @@
 
 function [datasets] = getDatasets(names, prefix)
 
-if (nargin < 2) prefix = '/Users/yixin/amalthea/data/'; end;
+if (nargin < 2) prefix = '~/amalthea/data/'; end;
 if (nargin < 1)
   names = {
     'brown_123', 'brown_125', ...
