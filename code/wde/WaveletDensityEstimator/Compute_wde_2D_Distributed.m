@@ -108,15 +108,8 @@ for i = 1 : 1
             
 end
 
-
-
-
-
-
-
-
 stopStartTimeOverall = toc(startTimeOverall);
-disp(stopStartTimeOverall);
+disp(['Time looping over shapes: ', num2str(stopStartTimeOverall)]);
 
 F = findall(0,'type','figure','tag','TMWWaitbar'); delete(F);
 

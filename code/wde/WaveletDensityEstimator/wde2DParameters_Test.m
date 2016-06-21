@@ -23,13 +23,13 @@ wdeSet.wName       = 'sym4'; %
 
 wdeSet.startLevel  = 3; %jo resolution
 wdeSet.stopLevel   = 4; %j resolution
-wdeSet.onlyScaling = 0;
+wdeSet.onlyScaling = 1;
 wdeSet.iterations  =  12;
 wdeSet.wdePlotting = 0; % Plotting the density.
 
 wdeSet.delta          = .05;
 
-domVal = 1;
+domVal = 6.5;
 wdeSet.xMin           = -domVal;
 wdeSet.xMax           = domVal;
 wdeSet.yMin           = -domVal;
