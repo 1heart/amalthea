@@ -1,5 +1,7 @@
-load('test');
-load('trueVars');
+load('trueWorkSpace');
+load('trueVar');
+load('initialized');
+load('neg');
 %clc;
 
 k_x = scalingShiftValsX;
@@ -138,6 +140,7 @@ sumGrid = zeros(translations_x,translations_y);
 % %   Loop over translates with a single parfor loop  
 % %   ----------------------------------------------------------------------
 
+    waveSupp = [0 7];
     optThree_time_start = tic;
     % Gives back all x values for each translate
     x2 = bsxfun(@minus, (2^startLevel)*samps(:,1), k_x);
@@ -146,6 +149,10 @@ sumGrid = zeros(translations_x,translations_y);
     % Along each translate find values between 0 and 7 --> 1
     valid_x = (x2 >= waveSupp(1) & x2 <= waveSupp(2));
     valid_y = (y2 >= waveSupp(1) & y2 <= waveSupp(2));
+
+    savedFatherWav = zeros(numSamps, 1);
+
+    %I want to save cooresponding points with each translate
     
     for i = 1 : translations_x
        
@@ -160,13 +167,20 @@ sumGrid = zeros(translations_x,translations_y);
         phi_y = father(y);
         
         fatherWav = bsxfun(@times, 2^startLevel * phi_x, phi_y);
-        fatherWav = fatherWav ./ sqrtPEachSamp(pointInd);
+        fatherAlpha = fatherWav ./ sqrtPEachSamp(pointInd);
 
-        fatherWav_per_trans = accumarray(transYInd, fatherWav);
-        fatherWav_per_trans = sparse(fatherWav_per_trans);
-        relevantTrans = find(fatherWav_per_trans ~= 0);
+        fatherAlpha_per_trans = accumarray(transYInd, fatherAlpha);
+        trans_index = unique(transYInd);
 
-        sumGrid(i,relevantTrans) = fatherWav_per_trans(relevantTrans);
+        fatherWav_per_trans = accumarray(pointInd, fatherWav);
+
+        sumGrid(i,trans_index) = fatherAlpha_per_trans(trans_index);
+        
+        
+        
+        
+        
+        savedFatherWav(unique(pointInd)) = fatherWav_per_trans(unique(pointInd));
     end
     
     sumGrid = sumGrid';
@@ -177,7 +191,7 @@ sumGrid = zeros(translations_x,translations_y);
     
     % Output of results
     optThree_time_stop = toc(optThree_time_start);
-    accurate = isequal(coeffs_opt, coeffs);
+    accurate = isequal(coeffs_opt, coeffsInitialized);
     disp('OPTIMIZATION THREE');
     disp('Loop over translates with a single loop');
     disp(['Time Elapsed: ', num2str(optThree_time_stop)]);
@@ -185,7 +199,20 @@ sumGrid = zeros(translations_x,translations_y);
     
     % Display coefficient graph
     coeffs_opt = reshape(coeffs_opt, translations_x, translations_y);
-    surf(coeffs_opt);
+    surf(coeffs_opt)
+    
+    %testGrid = reshape(testGrid,24,24);
+    
+    fatherWaveGridAccurate = isequal(savedFatherWav, savedScalVals);
+    disp(['Father basis grids are equal: ', num2str(fatherWaveGridAccurate)]);
+    
+    coeffs_father = coeffs_opt .* savedFatherWav;
+    fatherTimesCoeffsAccurate = isequal(coeffs_father,multipliedScal);
+    disp(['Alpha * phi accuracy is equal: ', num2str(fatherTimesCoeffsAccurate)]);
+    
+    coeffsInitialized = reshape(coeffsInitialized,24,24);
+    
+    isequal(coeffsInitialized,coeffsNeg)
     
 %--------------------------------------------------------------------------
     
@@ -193,7 +220,11 @@ sumGrid = zeros(translations_x,translations_y);
   
 
 
+scalingBasis = coeffs_opt % times each point under the wavelet at kk;
+scalingBasis = log(sum(scalingBasis)^2);
+scalingBasis = sum(scalingBasis);
 
 
+disp();
 
 

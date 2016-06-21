@@ -216,12 +216,10 @@ switch(lower(initType{1}))
         scalingBasisGrid = reshape(scalingBasisGrid,[1,numel(scalingBasisGrid)]);
         c = (1/numSamps)*scalingBasisGrid';
         coeffs = c/norm(c);
+       disp('');
         
         
         
-        
-        
-    
     
     
         
