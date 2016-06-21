@@ -142,24 +142,30 @@ for i = 1 : translations_x
     
     [sampleIndex_sorted, sampleIndex_order] = sort(sampleIndex);
 
-    for j = relevant_yTrans : relevant_yTrans(end)
+%     TODO: investigate optimizations
+    for j = relevant_yTrans'
         relevant_yTransIndex = find(yTranslateIndex == j);
         fatherWav(relevant_yTransIndex) = fatherWav(relevant_yTransIndex) .* coeffs(j,i);
     end
     
-    newFatherWav = fatherWav(sampleIndex_order,:);
-    newyTranlateIndex = yTranslateIndex(sampleIndex_order,:);
-    [n, m] = size(scalVals_eachPoint);
-    linearIndex = sub2ind([n,m], sampleIndex_sorted, newyTranlateIndex);
-    scalVals_eachPoint(linearIndex) = newFatherWav;
+    linearIndex = sub2ind(size(scalVals_eachPoint), sampleIndex, (i-1) * 24 + yTranslateIndex);
+    scalVals_eachPoint(linearIndex) = fatherWav;
+
+%     newFatherWav = fatherWav(sampleIndex_order,:);
+%     newyTranlateIndex = yTranslateIndex(sampleIndex_order,:);
+%     [n, m] = size(scalVals_eachPoint);
+%     linearIndex = sub2ind([n,m], sampleIndex_sorted, newyTranlateIndex);
+%     scalVals_eachPoint(linearIndex) = newFatherWav;
     
-    fatherWav_eachPoint = accumarray(sampleIndex, fatherWav);
-    loglikelihood(relevant_points) = loglikelihood(relevant_points)+ fatherWav_eachPoint(relevant_points);
+% TODO: do this after the for loop
+     fatherWav_eachPoint = accumarray(sampleIndex, fatherWav);
+     loglikelihood(relevant_points) = loglikelihood(relevant_points)+ fatherWav_eachPoint(relevant_points);
     
     % Assign scaling basis to correspoding x translation and y translations
     %scalingBasisGrid(i,translateIndex) = fatherWav_per_translation(translateIndex);
     
 end % for i = 1 : translations_x
+
 scalingBasisPerSample = bsxfun(@rdivide, scalVals_eachPoint, loglikelihood);
 scalValsSum = sum(scalingBasisPerSample,1);
 loglikelihood = log(loglikelihood.^2);

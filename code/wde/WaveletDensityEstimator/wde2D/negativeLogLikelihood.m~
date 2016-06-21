@@ -115,8 +115,7 @@ y = bsxfun(@minus, (2^startLevel)*samps(:,2), scalingShiftValsY);
 valid_x = (x >= waveSupp(1) & x <= waveSupp(2));
 valid_y = (y >= waveSupp(1) & y <= waveSupp(2));
 
-
-testGrid = zeros(numSamps, translations_y);
+scalVals_eachPoint = zeros(4007,576);
 tic
 % Loop along translations in x
 for i = 1 : translations_x
@@ -141,15 +140,11 @@ for i = 1 : translations_x
     % Calculate the father wavelet for all relevant points that fall under current translations
     fatherWav = bsxfun(@times, 2^startLevel * father_x, father_y);
     
-    scalVals_eachPoint = zeros(4007,576);
-    
     [sampleIndex_sorted, sampleIndex_order] = sort(sampleIndex);
 
-    for j = relevant_yTrans : relevant_yTrans(end)
+    for j = relevant_yTrans
         relevant_yTransIndex = find(yTranslateIndex == j);
-        fatherWav_points_relevantTrans = fatherWav(relevant_yTransIndex) .* coeffs(j,i);
-         = fatherWav_points_relevantTrans;
-        
+        fatherWav(relevant_yTransIndex) = fatherWav(relevant_yTransIndex) .* coeffs(j,i);
     end
     
     newFatherWav = fatherWav(sampleIndex_order,:);
