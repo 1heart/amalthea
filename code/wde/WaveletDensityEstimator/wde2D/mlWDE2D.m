@@ -140,6 +140,10 @@ else
     maxIter = cell2mat(varargin(3));
 end
 
+ours = @negativeLogLikelihood;
+theirs = @negativeLogLikelihoodTrue;
+curr = ours;
+
 iter    = 0;
 gradTol = 1e-4;
 direction = 99999;
