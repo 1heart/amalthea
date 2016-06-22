@@ -89,6 +89,8 @@ scalingShiftValsY = scalingTransRY(1):scalingTransRY(2);
 [father, mother] = basisFunctions(wName);
 waveSupp = waveSupport(wName);
 
+loglikelihood = zeros(numSamps,1);
+
 % Determine if we need to count up or down.
 if(startLevel <= stopLevel)
     inc = 1;
@@ -101,6 +103,8 @@ numXTranslations = length(scalingShiftValsX);
 numYTranslations = length(scalingShiftValsY);
 numTranslations = numXTranslations * numYTranslations;
 
+coeffs = reshape(coeffs', numXTranslations, numYTranslations);
+
 % OPTIMIZATION THREE: Single loop along translations
 % Gives back new sample points (x,y) along each translate K
 x = bsxfun(@minus, (2^startLevel)*samps(:,1), scalingShiftValsX);
@@ -111,7 +115,6 @@ valid_x = (x >= waveSupp(1) & x <= waveSupp(2));
 valid_y = (y >= waveSupp(1) & y <= waveSupp(2));
 
 scalValsPerPoint = zeros(numSamps,numTranslations);
-loglikelihood = zeros(numSamps,1);
 % Loop along translations in x
 for i = 1 : numXTranslations
     % Find where points x and y exist together or intersect --> 1
@@ -138,11 +141,11 @@ for i = 1 : numXTranslations
     
 end % for i = 1 : translations_x
 
-fatherValsPerPoint = bsxfun(@times, scalValsPerPoint, coeffs');
-fatherValsPerPoint = sum(fatherValsPerPoint,2);
-scalingBasisPerSample = bsxfun(@rdivide, scalValsPerPoint, fatherValsPerPoint);
+timesCoeff = bsxfun(@times, scalValsPerPoint, coeffs');
+sum_scalValsPerPoint = sum(timesCoeff,2);
+scalingBasisPerSample = bsxfun(@rdivide, scalValsPerPoint, sum_scalValsPerPoint);
 scalValsSum = sum(scalingBasisPerSample,1);
-loglikelihood = log(fatherValsPerPoint.^2);
+loglikelihood = log(sum_scalValsPerPoint.^2);
 
 currCost = -(1/numSamps)*sum(loglikelihood);
 

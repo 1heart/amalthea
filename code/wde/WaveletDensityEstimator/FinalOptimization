@@ -1,9 +1,9 @@
-ORIGINAL
+OPTIMIZED
 Compute_wde_2D_Distributed
 
 Running shape 1
-Time in initializeCoefficients: 0.065499
-Time in negativeLogLikelihood: 0.12197
+Time in initializeCoefficients: 0.057354
+Time in negativeLogLikelihood: 0.07693
 Iteration 1: nll = 0.38451
               Gradient Norm = 2.1293
               Direction = 0.1827
@@ -36,5 +36,5 @@ Iteration 8: nll = 0.3238
               Gradient Norm = 2
               Direction = 8.5263e-05
               lambda    = 1
-Program execution took: 1.1164 seconds.
-Time looping over shapes: 4.8458
+Program execution took: 0.84141 seconds.
+Time looping over shapes: 4.1173
