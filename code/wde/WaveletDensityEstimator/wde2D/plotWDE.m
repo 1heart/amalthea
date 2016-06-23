@@ -141,9 +141,13 @@ end
 if(wdePlotting)
     figure;
     surf(xGrid,yGrid,sqrtP); shading flat;
-    title(['${\sqrt{p(x)}}$ WDE'],'Fontsize', 14,'Interpreter', 'latex');
+    colormap gray;
+    axis off;
+    %title(['${\sqrt{p(x)}}$ WDE'],'Fontsize', 14,'Interpreter', 'latex');
     figure;
     surf(xGrid,yGrid,sqrtP.^2); shading flat;
-    title(['p(x) WDE'],'Fontsize', 14);
+    colormap gray;
+    axis off;
+    %title(['p(x) WDE'],'Fontsize', 14);
 end
 

@@ -98,6 +98,7 @@ for i = 1 : 1
     %Plots shape
     if (plotOrigShape == 1)
         plot2DShape(currSh, 'k.');
+        set(d, 'Markersize', 10);
     end
 
     % Compute the coefficients and densities. 
