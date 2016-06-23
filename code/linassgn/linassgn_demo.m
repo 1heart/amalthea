@@ -44,6 +44,7 @@ for i = 1:length(imgs)
   curr = imgs{i};
   currMax = max(curr);
   imgs{i} = reshape(curr, [m n]) / currMax;
+  imgs{i} = flipud(fliplr(imgs{i}));
 end
 
 for i = 1:length(imgs)
