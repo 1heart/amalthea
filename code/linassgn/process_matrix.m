@@ -1,10 +1,8 @@
 function [M] = process_matrix(M)
 
 M = M - min(M(:));
-M = M ./ max(M(:));
-M = M * 1e4;
-M = round(M);
+M = round(M * 1e8./ max(M(:)));
 
-histogram(M)
+% histogram(M)
 
 end
