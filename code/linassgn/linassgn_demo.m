@@ -13,6 +13,7 @@
 
 DISP = 1; % Display results boolean
 lambdas = [0 1e-8 1e-4 1e-1];
+viewangles = [180 80];
 
 % Circle square demo
 % m = 36; n = 36;
@@ -56,16 +57,20 @@ for i = 1:length(imgs)
       for k = 1:length(lambdas)
         subplot(2, length(lambdas), k);
         curr = warped_imgs{k};
-        imshow(curr);
+        curr = reshape(curr, [m n]);
+        surf(curr); shading interp; colormap pink; % TODO: change this
+        view(viewangles);
         sphdist = sphere_dist(curr(:)/norm(curr(:)), target(:)/norm(target(:)));
         title(['Lambda = ' num2str(lambdas(k))]);
         xlabel(['sphere dist=' num2str(sphdist)]);
       end
       subplot(2, k, k + 1);
-      imshow(source);
+      surf(source); shading interp; colormap pink; % TODO: change this
+      view(viewangles);
       title('Source');
       subplot(2, k, k + 2);
-      imshow(target);
+      surf(target); shading interp; colormap pink; % TODO: change this
+      view(viewangles);
       title('Target');
       curr = source(:);
       sphdist = sphere_dist(curr(:)/norm(curr(:)), target(:)/norm(target(:)));
