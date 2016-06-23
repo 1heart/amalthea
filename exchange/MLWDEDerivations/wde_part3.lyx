@@ -1,0 +1,1167 @@
+#LyX 1.4.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 245
+\begin_document
+\begin_header
+\textclass article
+\language english
+\inputencoding auto
+\fontscheme default
+\graphics default
+\paperfontsize default
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Non-negative Wavelet Density Estimation
+\newline
+Part III: Lagrange Parameter Method
+\end_layout
+
+\begin_layout Author
+Adrian M.
+ Peter 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+textdagger
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+To Do List
+\end_layout
+
+\begin_layout Itemize
+Implement surrguate optimization.
+ If 
+\begin_inset Formula $c_{\alpha}\phi_{\alpha}$
+\end_inset
+
+ is negative, flip the sign.
+ Using Fessler algo.
+ we will have a constant for each sample and it will change per iteration.
+ 
+\end_layout
+
+\begin_layout Itemize
+Will initializing with a histogram (as many bins as coefficients) make the
+ algorithm faster?
+\end_layout
+
+\begin_layout Itemize
+Write an dynamical algorithm that tries to iteratively satisfy the following
+ for all the coefficents
+\begin_inset Formula \[
+\alpha_{j_{0},k}^{\tau+1}=\sum_{i=1}^{N}\frac{\phi_{j_{0},k}(x_{i})}{\left[\sum_{j_{0},k}\alpha_{j_{0},k}^{\tau}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}^{\tau}\psi_{j,k}(x_{i})\right]}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Do our coefficients coverge to this results when using project or implicit
+ gradient descent?
+\end_layout
+
+\begin_layout Itemize
+May want to analytically figure out step size parameter.
+ We could to a taylor series expansion around the step size and see if we
+ can analytically set it up in terms of the negative log likelihood cost
+ function.
+\end_layout
+
+\begin_layout Itemize
+Come up to speed on how everybody else is doing WDE.
+\end_layout
+
+\begin_layout Itemize
+Try implementing Lagrange multiplier method of enforcing coefficient constraints.
+\end_layout
+
+\begin_layout Itemize
+Rederive Part II equations using 
+\begin_inset Formula $r(c_{\alpha})=\frac{c_{\alpha}}{\sqrt{\sum_{\beta}c_{\beta}^{2}}},or\, r_{\alpha}$
+\end_inset
+
+.
+ Basically we are letting 
+\begin_inset Formula $r$
+\end_inset
+
+ be the constrained version of our coefficients.
+ We can formulate our cost function as 
+\begin_inset Formula $\sum_{\gamma}r_{\gamma}\phi_{\gamma}(x)$
+\end_inset
+
+, then differentiate this w.r.t.
+ the unconstrained coefficient 
+\begin_inset Formula $c_{\alpha}$
+\end_inset
+
+.
+ This should give simpler notation and a general form.
+ Will have to repalce the above with our wavelet notation.
+ Try to establish a connection between this and the Lagrange parameter equations.
+ Can compute the score of this 
+\begin_inset Formula $r$
+\end_inset
+
+ version (diff w.r.t.
+ 
+\begin_inset Formula $c$
+\end_inset
+
+ and then take expected value).
+ In the resulting equation replace 
+\begin_inset Formula $c$
+\end_inset
+
+ with 
+\begin_inset Formula $r$
+\end_inset
+
+ and see what we get.
+\end_layout
+
+\begin_layout Itemize
+Notice the Hessian is of the form 
+\begin_inset Formula $c\left(\mathbf{I}-\mathbf{v^{T}v}\right)$
+\end_inset
+
+ where 
+\begin_inset Formula $\mathbf{v}$
+\end_inset
+
+ is vector of our wavelet coefficietns (see Part II expected value of Hessian).
+ The extra term comes projecting into the constrained subspace.
+ If we multiply 
+\begin_inset Formula $c\left(\mathbf{I}-\mathbf{v^{T}v}\right)$
+\end_inset
+
+ by any vector in our tangent space in the direction of the coefficient
+ vector it goes to zero.
+ But if orthogonal we get that vector back so we are always moving in directions
+ orthogonal to our gradient which implies we are on sphere.
+ This is exactly what we want.
+ Make sure you understand this.
+\end_layout
+
+\begin_layout Itemize
+For journal paper, we may want to model the paper by Figero on wavelets
+ and EM.
+ The application for the journal paper may be affine point matching.
+\end_layout
+
+\begin_layout Section*
+Observations
+\end_layout
+
+\begin_layout Itemize
+Can use that fact that in our update equations 
+\begin_inset Formula $\left(x^{\tau+1}\right)^{T}\left(x^{\tau+1}\right)=1$
+\end_inset
+
+ this implies 
+\begin_inset Formula $\left(x^{\tau}+d^{\tau}\right)^{T}\left(x^{\tau}+d^{\tau}\right)=1$
+\end_inset
+
+; this can be used to derive expressions for step size, check algorithm,
+ etc.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\lambda$
+\end_inset
+
+ should equal 1 at the solution point.
+ Can calculate this by setting gradient of Lagrangian equal to zero, multiply
+ by 
+\begin_inset Formula $c_{\alpha}$
+\end_inset
+
+ on both sides and then sum over 
+\begin_inset Formula $\alpha$
+\end_inset
+
+.
+ Check this trick on full wavelet coefficient version.
+\end_layout
+
+\begin_layout Section
+Univariate 
+\begin_inset Formula $\sqrt{p(x)}$
+\end_inset
+
+ Estimation 
+\end_layout
+
+\begin_layout Standard
+Represent 
+\begin_inset Formula $\sqrt{p(x)}$
+\end_inset
+
+ , 
+\begin_inset Formula $x\in\mathbb{R}$
+\end_inset
+
+, as a expansion of wavelet basis
+\begin_inset Formula \begin{equation}
+\sqrt{p(x)}=\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x)+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x)\label{eq:sqrtPWaveExpansion1D}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\alpha_{j_{0},k}\mbox{ and }\beta_{j,k}$
+\end_inset
+
+ are the father (aka scaling) and mother (aka wavelet) basis function coefficien
+ts and the 
+\begin_inset Formula $j$
+\end_inset
+
+-index represents the current level and 
+\begin_inset Formula $k$
+\end_inset
+
+-index the integer translation value.
+ In Part II, we incoporated constraint that the sum of squares of the coefficien
+ts was equal to 1 into the cost function.
+ Here in Part III, we will impose this constraint using a Lagrange parameter.
+ The constrained negative log likelihood objective over the samples is given
+ by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{equation}
+\begin{array}{cc}
+-\frac{1}{N}\log\prod_{i=1}^{N}\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]^{2}\\
++\lambda\left\{ \left[\sum_{j_{0},k}\alpha_{j_{0},k}^{2}+\sum_{j\ge j_{0},k}\beta_{j,k}^{2}\right]-1\right\} \\
+=-\frac{1}{N}\sum_{i=1}^{N}\log\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]^{2}\\
++\lambda\left\{ \left[\sum_{j_{0},k}\alpha_{j_{0},k}^{2}+\sum_{j\ge j_{0},k}\beta_{j,k}^{2}\right]-1\right\} \\
+=\mathcal{L}(X,\alpha_{j_{0},k},\beta_{j,k},\lambda)\end{array}\label{eq:negativeLL1D}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\mathcal{L}(X,\alpha_{j_{0},k},\beta_{j,k},\lambda)=nll(X,\alpha_{j_{0},k},\beta_{j,k})+\lambda h(\alpha_{j_{0},k},\beta_{j,k})$
+\end_inset
+
+, i.e.
+ the Lagrangian 
+\begin_inset Formula $\mathcal{L}$
+\end_inset
+
+ is equal to the negative log likelihood 
+\begin_inset Formula $nll$
+\end_inset
+
+ plus Lagrange parameter 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ times the sum to one constraint 
+\begin_inset Formula $h$
+\end_inset
+
+.
+ We must now minimize this over all the coefficients (i.e.
+ for each level 
+\begin_inset Formula $j$
+\end_inset
+
+ and translation 
+\begin_inset Formula $k$
+\end_inset
+
+) and the Lagrange parameter.
+ 
+\end_layout
+
+\begin_layout Standard
+The partial w.r.t father coefficients is given by
+\begin_inset Formula \[
+\frac{\partial\mathcal{L}}{\partial\alpha_{j_{0},l}}=-\frac{2}{N}\sum_{i=1}^{N}\frac{\phi_{j_{0},l}(x_{i})}{\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]}+2\lambda\alpha_{j_{0},l}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Similarly, the partial w.r.t the mother coefficients is 
+\begin_inset Formula \[
+\frac{\partial\mathcal{L}}{\partial\beta_{h,l}}=-\frac{2}{N}\sum_{i=1}^{N}\frac{\psi_{h,l}(x_{i})}{\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]}+2\lambda\beta_{h,l}.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The ordering of these partials in the gradient vector is given in Part I.
+ The Hessian can be computed by first calculating the second partial given
+ by
+\begin_inset Formula \[
+\begin{array}{c}
+\begin{array}{cc}
+\frac{\partial^{2}\mathcal{L}}{\partial\alpha_{j_{0},l}\partial\alpha_{j_{0},m}}= & \frac{2}{N}\sum_{i=1}^{N}\frac{\phi_{j_{0},l}(x_{i})\phi_{j_{0},m}(x_{i})}{\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]^{2}}+2\lambda\delta(l,m)\end{array}\end{array}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Similarly the second partial w.r.t a mother coefficient is
+\begin_inset Formula \[
+\begin{array}{c}
+\frac{\partial^{2}\mathcal{L}}{\partial\beta_{h,l}\partial\beta_{p,m}}=\frac{2}{N}\sum_{i=1}^{N}\frac{\psi_{h,l}(x_{i})\psi_{p,m}(x_{i})}{\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]^{2}}+2\lambda\delta(h=p,l=m)\end{array}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+When the coefficient partials mix we get
+\begin_inset Formula \[
+\begin{array}{c}
+\frac{\partial^{2}\mathcal{L}}{\partial\alpha_{j_{0},l}\partial\beta_{p,m}}=\frac{2}{N}\sum_{i=1}^{N}\frac{\phi_{j_{0},l}(x_{i})\psi_{p,m}(x_{i})}{\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]^{2}}\end{array}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These can be arranged in a square matrix to get the Hessian.
+\end_layout
+
+\begin_layout Subsection
+Hessian of the Lagrangian
+\end_layout
+
+\begin_layout Standard
+The Hessian of the Lagrangian 
+\begin_inset Formula $H_{\mathcal{L}}$
+\end_inset
+
+ should be equal to 
+\begin_inset Formula $H_{nll}+\lambda H_{h}$
+\end_inset
+
+ where 
+\begin_inset Formula $H_{nll}$
+\end_inset
+
+ is the Hessian of the negative log likelihood and 
+\begin_inset Formula $H_{h}$
+\end_inset
+
+ is the Hessian of the constraints.
+ We already know 
+\begin_inset Formula $H_{nll}$
+\end_inset
+
+ (see Part I); computing 
+\begin_inset Formula $H_{h}$
+\end_inset
+
+ is straightforward.
+ Recall 
+\begin_inset Formula $h(\alpha_{j_{0},k},\beta_{j,k})=\left[\sum_{j_{0},k}\alpha_{j_{0},k}^{2}+\sum_{j\ge j_{0},k}\beta_{j,k}^{2}\right]-1$
+\end_inset
+
+, so 
+\begin_inset Formula \[
+\begin{array}{ccc}
+\frac{\partial h}{\partial\alpha_{j_{0},l}}=2\alpha_{j_{0},l} &  & \frac{\partial h}{\partial\beta_{h,l}}=2\beta_{h,l}\end{array}\]
+
+\end_inset
+
+and
+\begin_inset Formula \[
+\begin{array}{ccc}
+\frac{\partial^{2}h}{\partial\alpha_{j_{0},l}\partial\alpha_{j_{0},m}}=2\delta(l,m) &  & \frac{\partial^{2}h}{\partial\beta_{h,l}\partial\beta_{p,m}}=2\delta(h=p,l=m)\\
+\frac{\partial^{2}\mathcal{L}}{\partial\alpha_{j_{0},l}\partial\beta_{p,m}}=0 &  & \frac{\partial^{2}\mathcal{L}}{\partial\beta_{p,m}\partial\alpha_{j_{0},l}}=0.\end{array}\]
+
+\end_inset
+
+As expected, this is equivalent to results derived in the pervious section.
+\end_layout
+
+\begin_layout Subsection
+Optimization with Newton Methods
+\end_layout
+
+\begin_layout Standard
+We will apply Newton type methods to solve the constrained minimization
+ problem
+\begin_inset Formula \[
+\begin{array}{cc}
+\min & nll(X,\alpha_{j_{0},k},\beta_{j,k})\\
+\mbox{subject to} & h(\alpha_{j_{0},k},\beta_{j,k})=\left[\sum_{j_{0},k}\alpha_{j_{0},k}^{2}+\sum_{j\ge j_{0},k}\beta_{j,k}^{2}\right]-1=0.\end{array}\]
+
+\end_inset
+
+The Lagrangian for this problem is given by
+\begin_inset Formula \[
+\mathcal{L}(X,\alpha_{j_{0},k},\beta_{j,k},\lambda)=nll(X,\alpha_{j_{0},k},\beta_{j,k})+\lambda h(\alpha_{j_{0},k},\beta_{j,k})\]
+
+\end_inset
+
+where
+\begin_inset Formula \[
+nll(X,\alpha_{j_{0},k},\beta_{j,k})=-\frac{1}{N}\sum_{i=1}^{N}\log\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]^{2}.\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Modified Newton - Structured
+\end_layout
+
+\begin_layout Standard
+These methods focus on approximating the Hessian of the Lagrangian 
+\begin_inset Formula $H_{\mathcal{L}}$
+\end_inset
+
+ by a matrix 
+\begin_inset Formula $B^{\tau}$
+\end_inset
+
+.
+ The term 
+\begin_inset Quotes eld
+\end_inset
+
+structured
+\begin_inset Quotes erd
+\end_inset
+
+ derives from the fact that only second-order information in the original
+ system of equations is approximated; the first-order information is kept
+ intact.
+ The basic equations for Newton's method can be written
+\begin_inset Formula \begin{eqnarray*}
+\begin{array}{c}
+\left[\begin{array}{c}
+x^{\tau+1}\\
+\lambda^{\tau+1}\end{array}\right]\\
+(n+1)\times1\end{array} & = & \begin{array}{c}
+\left[\begin{array}{c}
+x^{\tau}\\
+\lambda^{\tau}\end{array}\right]\\
+(n+1)\times1\end{array}\begin{array}{c}
+-\\
+\\\\\end{array}\begin{array}{c}
+\alpha^{\tau}\left[\begin{array}{cc}
+H_{\mathcal{L}}^{\tau} & A^{\tau}\\
+\left(A^{\tau}\right)^{T} & 0\end{array}\right]^{-1}\\
+(n+1)\times(n+1)\end{array}\begin{array}{c}
+\left[\begin{array}{c}
+l^{\tau}\\
+h^{\tau}\end{array}\right]\\
+(n+1)\times1\end{array},\end{eqnarray*}
+
+\end_inset
+
+where 
+\begin_inset Formula $A^{\tau}=\nabla h(x^{\tau})$
+\end_inset
+
+, 
+\begin_inset Formula $l^{\tau}=\left[\nabla nll(x^{\tau})+\lambda^{\tau}\nabla h(x^{\tau})\right]$
+\end_inset
+
+, 
+\begin_inset Formula $h^{\tau}=h(x^{\tau})$
+\end_inset
+
+, 
+\begin_inset Formula $x^{\tau}=(\alpha_{j_{0},k}^{\tau},\beta_{j,k}^{\tau})$
+\end_inset
+
+ and 
+\begin_inset Formula $n$
+\end_inset
+
+ is the total number of wavelet coefficients, i.e.
+ length of 
+\begin_inset Formula $x$
+\end_inset
+
+.
+ Replacing 
+\begin_inset Formula $H_{\mathcal{L}}$
+\end_inset
+
+ by 
+\begin_inset Formula $B^{\tau}$
+\end_inset
+
+ we get
+\begin_inset Formula \[
+\left[\begin{array}{c}
+x^{\tau+1}\\
+\lambda^{\tau+1}\end{array}\right]=\left[\begin{array}{c}
+x^{\tau}\\
+\lambda^{\tau}\end{array}\right]-\alpha^{\tau}\left[\begin{array}{cc}
+B^{\tau} & A^{\tau}\\
+\left(A^{\tau}\right)^{T} & 0\end{array}\right]^{-1}\left[\begin{array}{c}
+l^{\tau}\\
+h^{\tau}\end{array}\right],\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The method is implemented by solving the system
+\begin_inset Formula \begin{equation}
+\begin{array}{cc}
+B^{\tau}d^{\tau}+A^{\tau}y^{\tau} & =-l^{\tau}\\
+\left(A^{\tau}\right)^{T}d^{\tau} & =-h^{\tau}\end{array}\label{eq:lagrangeModifiedNewUpdate1}\end{equation}
+
+\end_inset
+
+for 
+\begin_inset Formula $d^{\tau}$
+\end_inset
+
+ and 
+\begin_inset Formula $y^{\tau}$
+\end_inset
+
+ and then setting 
+\begin_inset Formula $x^{\tau+1}=x^{\tau}+\alpha^{\tau}d^{\tau}$
+\end_inset
+
+, 
+\begin_inset Formula $\lambda^{\tau+1}=\lambda^{\tau}+\alpha^{\tau}y^{\tau}$
+\end_inset
+
+ for some value of 
+\begin_inset Formula $\alpha^{\tau}$
+\end_inset
+
+.
+ For simplicity we will let 
+\begin_inset Formula $\alpha^{\tau}=1$
+\end_inset
+
+.
+ We can applying the transformation adding and subtracting 
+\begin_inset Formula $\lambda^{\tau}\nabla h(x^{\tau})$
+\end_inset
+
+ to the top equation to rewrite the above equations as
+\begin_inset Formula \begin{equation}
+\begin{array}{cc}
+B^{\tau}d^{\tau}+A^{\tau}\lambda^{\tau+1} & =-\nabla nll(x^{\tau})\\
+\left(A^{\tau}\right)^{T}d^{\tau} & =-h^{\tau}.\end{array}\label{eq:lagrangeModifiedNewUpdate2}\end{equation}
+
+\end_inset
+
+ Then 
+\begin_inset Formula $x^{\tau+1}=x^{\tau}+d^{\tau}$
+\end_inset
+
+ and 
+\begin_inset Formula $\lambda^{\tau+1}$
+\end_inset
+
+ is directly found as a solution to the system.
+\end_layout
+
+\begin_layout Standard
+There are various ways to choose the approximation 
+\begin_inset Formula $B^{\tau}$
+\end_inset
+
+.
+ We will try the following methods: 
+\end_layout
+
+\begin_layout Enumerate
+Use a fixed, constant matrix througout the iterative process.
+ I will try using the diagonal of the Hessian at the expected solution point
+ 
+\begin_inset Formula $4I$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+A second is to base 
+\begin_inset Formula $B_{k}$
+\end_inset
+
+ on some readily accessible information in 
+\begin_inset Formula $H_{\mathcal{L}}(x^{\tau},\lambda^{\tau})$
+\end_inset
+
+, such as setting 
+\begin_inset Formula $B^{\tau}$
+\end_inset
+
+equal to the diagonal of 
+\begin_inset Formula $H_{\mathcal{L}}(x^{\tau},\lambda^{\tau})$
+\end_inset
+
+.
+ This changes 
+\begin_inset Formula $B^{\tau}$
+\end_inset
+
+ as we go along.
+ It doesn't modify 
+\begin_inset Formula $B^{\tau+1}$
+\end_inset
+
+ based on 
+\begin_inset Formula $B^{\tau}$
+\end_inset
+
+ as we will see in quasi-Newton methods.
+\end_layout
+
+\begin_layout Standard
+One important advantage of the structured mehtod is that 
+\begin_inset Formula $B^{\tau}$
+\end_inset
+
+ can be taken to be positive definite even though 
+\begin_inset Formula $H_{\mathcal{L}}^{\tau}$
+\end_inset
+
+ is not (for our probelm 
+\begin_inset Formula $H_{\mathcal{L}}^{\tau}$
+\end_inset
+
+ is positive throughout).
+ If this is done, we can write the explicit solution.
+ We start by isolating 
+\begin_inset Formula $d^{\tau}$
+\end_inset
+
+ in (
+\begin_inset LatexCommand \ref{eq:lagrangeModifiedNewUpdate1}
+
+\end_inset
+
+)
+\begin_inset Formula \[
+\begin{array}{cc}
+d^{\tau} & =-\left(B^{\tau}\right)^{-1}l^{\tau}-\left(B^{\tau}\right)^{-1}A^{\tau}y^{\tau}\end{array}\]
+
+\end_inset
+
+and plug into the second equation
+\begin_inset Formula \[
+\begin{array}{cc}
+\left(A^{\tau}\right)^{T}\left[-\left(B^{\tau}\right)^{-1}l^{\tau}-\left(B^{\tau}\right)^{-1}A^{\tau}y^{\tau}\right] & =-h^{\tau}\end{array}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\left[-\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}l^{\tau}-\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}y^{\tau}\right]=-h^{\tau}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+y^{\tau}=\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}h^{\tau}-\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}l^{\tau}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+y^{\tau}=\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}\left[h^{\tau}-\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}l^{\tau}\right].\]
+
+\end_inset
+
+ Next we substitute this in back into the top equation to a solution for
+ 
+\begin_inset Formula $d^{\tau}$
+\end_inset
+
+
+\begin_inset Formula \[
+\begin{array}{c}
+\begin{array}{cc}
+d^{\tau} & =-\left(B^{\tau}\right)^{-1}l^{\tau}\end{array}\\
+-\left(B^{\tau}\right)^{-1}A^{\tau}\left[\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}h^{\tau}-\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}l^{\tau}\right]\end{array}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\begin{array}{c}
+d^{\tau}=-\left(B^{\tau}\right)^{-1}l^{\tau}+\left(B^{\tau}\right)^{-1}A^{\tau}\left[\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}l^{\tau}\right]\\
+-\left(B^{\tau}\right)^{-1}A^{\tau}\left[\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}h^{\tau}\right]\end{array}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\begin{array}{c}
+d^{\tau}=-\left(B^{\tau}\right)^{-1}\left[I-A^{\tau}\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}\right]l^{\tau}\\
+-\left(B^{\tau}\right)^{-1}A^{\tau}\left[\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}h^{\tau}\right].\end{array}\]
+
+\end_inset
+
+ In summary, 
+\begin_inset Formula \begin{equation}
+\begin{array}{c}
+y^{\tau}=\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}\left[h^{\tau}-\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}l^{\tau}\right]\\
+d^{\tau}=-\left(B^{\tau}\right)^{-1}\left[I-A^{\tau}\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}\right]l^{\tau}\\
+-\left(B^{\tau}\right)^{-1}A^{\tau}\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}h^{\tau}.\end{array}\label{eq:solForModifiedNewtonUpdate1}\end{equation}
+
+\end_inset
+
+In case 1, 
+\begin_inset Formula $B^{\tau}$
+\end_inset
+
+ is a diagonal matrix with values
+\begin_inset Formula \[
+\nu\left[\begin{array}{ccc}
+1 & \cdots & 0\\
+\vdots & 1 & \vdots\\
+0 & \cdots & 1\end{array}\right]=\nu I\]
+
+\end_inset
+
+so the 
+\begin_inset Formula $\left(B^{\tau}\right)^{-1}$
+\end_inset
+
+ is merely
+\begin_inset Formula \[
+\frac{1}{\nu}\left[\begin{array}{ccc}
+1 & \cdots & 0\\
+\vdots & 1 & \vdots\\
+0 & \cdots & 1\end{array}\right]=\frac{1}{\nu}I\]
+
+\end_inset
+
+ which means we avoid an explicit matrix inverse opertion.
+ The above equations 
+\begin_inset Formula $\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}$
+\end_inset
+
+can be collasped to the scalar 
+\begin_inset Formula $\nu\left(\left(A^{\tau}\right)^{T}A^{\tau}\right)^{-1}$
+\end_inset
+
+; thus the equations reduce to 
+\begin_inset Formula \begin{equation}
+\begin{array}{c}
+y^{\tau}=\nu\left(\left(A^{\tau}\right)^{T}A^{\tau}\right)^{-1}\left[h^{\tau}-\frac{1}{\nu}\left(A^{\tau}\right)^{T}l^{\tau}\right]\\
+d^{\tau}=-\frac{1}{\nu}\left[I-\left(\left(A^{\tau}\right)^{T}A^{\tau}\right)^{-1}A^{\tau}\left(A^{\tau}\right)^{T}\right]l^{\tau}-A^{\tau}\left(\left(A^{\tau}\right)^{T}A^{\tau}\right)^{-1}h^{\tau}.\end{array}\label{eq:solForModifiedNewtonUpdate1Simpl}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can repeat the same analysis as above for (
+\begin_inset LatexCommand \ref{eq:lagrangeModifiedNewUpdate2}
+
+\end_inset
+
+) which will allow us to get 
+\begin_inset Formula $\lambda^{\tau+1}$
+\end_inset
+
+ directly.
+ Again start by isolating 
+\begin_inset Formula $d^{\tau}$
+\end_inset
+
+
+\begin_inset Formula \[
+\begin{array}{cc}
+d^{\tau} & =-\left(B^{\tau}\right)^{-1}\nabla nll(x^{\tau})-\left(B^{\tau}\right)^{-1}A^{\tau}\lambda^{\tau+1}\end{array}\]
+
+\end_inset
+
+and plugging into the second equation 
+\begin_inset Formula \[
+\left(A^{\tau}\right)^{T}\left[-\left(B^{\tau}\right)^{-1}\nabla nll(x^{\tau})-\left(B^{\tau}\right)^{-1}A^{\tau}\lambda^{\tau+1}\right]=-h^{\tau}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\begin{array}{c}
+\lambda^{\tau+1}=\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}h^{\tau}\\
+-\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}\nabla nll(x^{\tau}).\end{array}\]
+
+\end_inset
+
+Substitute this back in
+\begin_inset Formula \[
+\begin{array}{c}
+\begin{array}{cc}
+d^{\tau} & =-\left(B^{\tau}\right)^{-1}\nabla nll(x^{\tau})\end{array}\\
+-\left(B^{\tau}\right)^{-1}A^{\tau}\left[\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}h^{\tau}-\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}\nabla nll(x^{\tau})\right]\end{array}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\begin{array}{c}
+\begin{array}{cc}
+d^{\tau} & =-\left(B^{\tau}\right)^{-1}\nabla nll(x^{\tau})\end{array}+\left(B^{\tau}\right)^{-1}A^{\tau}\left[\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}\nabla nll(x^{\tau})\right]\\
+-\left(B^{\tau}\right)^{-1}A^{\tau}\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}h^{\tau}\end{array}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\begin{array}{c}
+\begin{array}{cc}
+d^{\tau} & =-\left(B^{\tau}\right)^{-1}\end{array}\left[I-A^{\tau}\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}\right]\nabla nll(x^{\tau})\\
+-\left(B^{\tau}\right)^{-1}A^{\tau}\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}h^{\tau}.\end{array}\]
+
+\end_inset
+
+In summary
+\begin_inset Formula \begin{equation}
+\begin{array}{c}
+\lambda^{\tau+1}=\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}\left[h^{\tau}-\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}\nabla nll(x^{\tau})\right]\\
+\begin{array}{cc}
+d^{\tau} & =-\left(B^{\tau}\right)^{-1}\end{array}\left[I-A^{\tau}\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}\right]\nabla nll(x^{\tau})\\
+-\left(B^{\tau}\right)^{-1}A^{\tau}\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}h^{\tau}.\end{array}\label{eq:solForModifiedNewtonUpdate2}\end{equation}
+
+\end_inset
+
+Simplifying as before when our matrix 
+\begin_inset Formula $B^{\tau}$
+\end_inset
+
+ is diagonal we get
+\begin_inset Formula \begin{equation}
+\begin{array}{c}
+\lambda^{\tau+1}=\nu\left(\left(A^{\tau}\right)^{T}A^{\tau}\right)^{-1}\left[h^{\tau}-\frac{1}{\nu}\left(A^{\tau}\right)^{T}\nabla nll(x^{\tau})\right]\\
+d^{\tau}=-\frac{1}{\nu}\left[I-\left(\left(A^{\tau}\right)^{T}A^{\tau}\right)^{-1}A^{\tau}\left(A^{\tau}\right)^{T}\right]\nabla nll(x^{\tau})-A^{\tau}\left(\left(A^{\tau}\right)^{T}A^{\tau}\right)^{-1}h^{\tau}.\end{array}\label{eq:solForModifiedNewtonUpdate2Simpl}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Asymptotic Verification
+\end_layout
+
+\begin_layout Standard
+Take note of the following asymptotic simplifications (Note 
+\begin_inset Formula $x^{\tau}$
+\end_inset
+
+ represents the coefficient vector not data point which are 
+\begin_inset Formula $x$
+\end_inset
+
+):
+\begin_inset Formula \[
+\begin{array}{c}
+\nabla nll(x^{\tau})\rightarrow\\
+\int-2\frac{\psi_{h,l}(x)}{\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x)+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x)\right]}\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x)+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x)\right]^{2}dx\\
+=\int-2\psi_{h,l}(x)\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x)+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x)\right]dx\\
+=-2\beta_{h,l}\Rightarrow\nabla nll(x^{\tau})\rightarrow-2x^{\tau},\end{array}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\left(A^{\tau}\right)^{T}A^{\tau}=\left(\nabla h\right)^{T}\nabla h=2\left(x^{\tau}\right)^{T}2x^{\tau}=4,\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+A^{\tau}\left(A^{\tau}\right)^{T}=\nabla h\left(\nabla h\right)^{T}=2x^{\tau}2\left(x^{\tau}\right)^{T}=4x^{\tau}\left(x^{\tau}\right)^{T},\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\left(x^{\tau}\right)x^{\tau}=1,\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+h^{\tau}=0.\]
+
+\end_inset
+
+Now let's figure out the asymptotic value of 
+\begin_inset Formula $d^{\tau}$
+\end_inset
+
+
+\begin_inset Formula \[
+\begin{array}{cc}
+\begin{array}{cc}
+d^{\tau} & =\end{array} & -\left(B^{\tau}\right)^{-1}\left[I-A^{\tau}\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}\right]\nabla nll(x^{\tau})\\
+ & -\left(B^{\tau}\right)^{-1}A^{\tau}\left(\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}A^{\tau}\right)^{-1}h^{\tau}\\
+= & -\left(B^{\tau}\right)^{-1}\left[I-A^{\tau}\left(\frac{1}{4}\left(A^{\tau}\right)^{T}A^{\tau}\right)^{-1}\left(A^{\tau}\right)^{T}\left(B^{\tau}\right)^{-1}\right]\left(-2x^{\tau}\right)\\
+= & -\left[\frac{1}{4}I-\frac{1}{16}A^{\tau}\left(A^{\tau}\right)^{T}\right]\left(-2x^{\tau}\right)\\
+= & \frac{1}{2}x^{\tau}-\frac{1}{2}x^{\tau}\left(x^{\tau}\right)^{T}x^{\tau}\\
+= & 0.\end{array}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since our update is 
+\begin_inset Formula $x^{\tau+1}=x^{\tau}+d^{\tau}$
+\end_inset
+
+, if we require 
+\begin_inset Formula $\left(x^{\tau}+d^{\tau}\right)^{T}\left(x^{\tau}+d^{\tau}\right)=1$
+\end_inset
+
+ then this would be trivially true given 
+\begin_inset Formula $d^{\tau}=0$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Section
+Bivariate 
+\begin_inset Formula $\sqrt{p(\mathbf{x})}$
+\end_inset
+
+ Estimation (not yet updated!)
+\end_layout
+
+\begin_layout Standard
+We now extend the results from the previous section on univariate density
+ estimation to include 2D densities.
+ The notation is going to get more messy so pay close attention! Let 
+\begin_inset Formula $(x_{1},x_{2})=\mathbf{x}\in\mathbb{R}^{2}$
+\end_inset
+
+, 
+\begin_inset Formula $\sqrt{p(\mathbf{x})}$
+\end_inset
+
+ expansion is given by 
+\begin_inset Formula \begin{equation}
+\sqrt{p(\mathbf{x})}=\sum_{j_{0},\mathbf{k}}\alpha_{j_{0},\mathbf{k}}\phi_{j_{0},\mathbf{k}}(\mathbf{x})+\sum_{j\ge j_{0},\mathbf{k}}\sum_{w=1}^{3}\beta_{j,\mathbf{k}}^{w}\psi_{j,\mathbf{k}}^{w}(\mathbf{x})\label{eq:sqrtPWaveExpansion2D}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $(k_{1},k_{2})=\mathbf{k}\in\mathbb{Z}^{2}$
+\end_inset
+
+ is a multi-index.
+ The 2D wavelet is actually a product of the regular 1D wavelets as show
+ below
+\begin_inset Formula \begin{equation}
+\begin{array}{cc}
+\phi_{j_{0},\mathbf{k}}(\mathbf{x})= & 2^{j_{0}}\phi(2^{j_{0}}x_{1}-k_{1})\phi(2^{j_{0}}x_{2}-k_{2})\\
+\psi_{j,\mathbf{k}}^{1}(\mathbf{x})= & 2^{j}\phi(2^{j}x_{1}-k_{1})\psi(2^{j}x_{2}-k_{2})\\
+\psi_{j,\mathbf{k}}^{2}(\mathbf{x})= & 2^{j}\psi(2^{j}x_{1}-k_{1})\phi(2^{j}x_{2}-k_{2})\\
+\psi_{j,\mathbf{k}}^{3}(\mathbf{x})= & 2^{j}\psi(2^{j}x_{1}-k_{1})\psi(2^{j}x_{2}-k_{2})\end{array}\label{eq:wavelet2DBasis}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Again our goal is to estimate the set of coefficients 
+\begin_inset Formula $\{\alpha_{j_{0},\mathbf{k}},\beta_{j,\mathbf{k}}^{w}\}$
+\end_inset
+
+.
+ As in the univariate case, we create an objective function that incorporates
+ the negative log likelihood and Lagrange parameter term to handle the constrain
+t that the sum of the coefficients squared equals one.
+ The square root of the density is expanded using wavelet basis as:
+\begin_inset Formula \[
+\sqrt{p(\mathbf{x})}=\sum_{j_{0},\mathbf{k}}\alpha_{j_{0},\mathbf{k}}\phi_{j_{0},\mathbf{k}}(\mathbf{x})+\sum_{j\ge j_{0},\mathbf{k}}\sum_{w=1}^{3}\beta_{j,\mathbf{k}}^{w}\psi_{j,\mathbf{k}}^{w}(\mathbf{x}).\]
+
+\end_inset
+
+Thus the negative log likelihood can be written as
+\begin_inset Formula \begin{equation}
+nll(X,\alpha_{j_{0},\mathbf{k}},\beta_{j,\mathbf{k}}^{w})=-\frac{1}{N}\sum_{i=1}^{N}\log\left[\sum_{j_{0},\mathbf{k}}\alpha_{j_{0},\mathbf{k}}\phi_{j_{0},\mathbf{k}}(\mathbf{x}_{i})+\sum_{j\ge j_{0},\mathbf{k}}\sum_{w=1}^{3}\beta_{j,\mathbf{k}}^{w}\psi_{j,\mathbf{k}}^{w}(\mathbf{x}_{i})\right]^{2}\label{eq:negativeLL2D}\end{equation}
+
+\end_inset
+
+and the constraints
+\begin_inset Formula \begin{equation}
+h(\alpha_{j_{0},\mathbf{k}},\beta_{j,\mathbf{k}}^{w})=\begin{array}{c}
+\sum_{j_{0},\mathbf{k}}\alpha_{j_{0},\mathbf{k}}^{2}+\sum_{j\ge j_{0},\mathbf{k}}\sum_{w=1}^{3}\left(\beta_{j,\mathbf{k}}^{w}\right)^{2}\end{array}-1=0.\label{eq:constraint2D}\end{equation}
+
+\end_inset
+
+The Lagrangian 
+\begin_inset Formula $\mathcal{L}(X,\alpha_{j_{0},\mathbf{k}},\beta_{j,\mathbf{k}}^{w},\lambda)=nll(X,\alpha_{j_{0},\mathbf{k}},\beta_{j,\mathbf{k}}^{w})+\lambda h(\alpha_{j_{0},\mathbf{k}},\beta_{j,\mathbf{k}}^{w})$
+\end_inset
+
+ .
+\end_layout
+
+\begin_layout Standard
+The gradient vector is obtain by first computing the partials of 
+\begin_inset Formula \begin{equation}
+\begin{array}{c}
+\frac{\partial\mathcal{L}}{\partial\alpha_{j_{0},\mathbf{l}}}=-\frac{2}{N}\sum_{i=1}^{N}\frac{\phi_{j_{0},\mathbf{l}}(\mathbf{x}_{i})}{\left[\sum_{j_{0},\mathbf{k}}\alpha_{j_{0},\mathbf{k}}\phi_{j_{0},\mathbf{k}}(\mathbf{x}_{i})+\sum_{j\ge j_{0},\mathbf{k}}\sum_{w=1}^{3}\beta_{j,\mathbf{k}}^{w}\psi_{j,\mathbf{k}}^{w}(\mathbf{x}_{i})\right]}+2\lambda\alpha_{j_{0},\mathbf{l}}\end{array}\label{eq:scalingPartial2D}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and the mother coefficients give
+\begin_inset Formula \begin{equation}
+\begin{array}{c}
+\frac{\partial\mathcal{L}}{\partial\beta_{h,\mathbf{l}}^{r}}=-\frac{2}{N}\sum_{i=1}^{N}\frac{\psi_{h,\mathbf{l}}^{r}(\mathbf{x}_{i})}{\left[\sum_{j_{0},\mathbf{k}}\alpha_{j_{0},\mathbf{k}}\phi_{j_{0},\mathbf{k}}(\mathbf{x}_{i})+\sum_{j\ge j_{0},\mathbf{k}}\sum_{w=1}^{3}\beta_{j,\mathbf{k}}^{w}\psi_{j,\mathbf{k}}^{w}(\mathbf{x}_{i})\right]}\end{array}+2\lambda\beta_{h,\mathbf{l}}^{r}\label{eq:motherPartial2D}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These are stored in the gradient vector in same order as illustrated for
+ the 2D version of the projected gradient in Part I.
+ To compute Hessian we need the following mixed partials.
+\begin_inset Formula \begin{equation}
+\begin{array}{c}
+\frac{\partial^{2}\mathcal{L}}{\partial\alpha_{j_{0},\mathbf{l}}\alpha_{j_{0},\mathbf{m}}}=\frac{2}{N}\sum_{i=1}^{N}\frac{\phi_{j_{0},\mathbf{l}}(\mathbf{x}_{i})\phi_{j_{0},\mathbf{m}}(\mathbf{x}_{i})}{\left[\sum_{j_{0},\mathbf{k}}\alpha_{j_{0},\mathbf{k}}\phi_{j_{0},\mathbf{k}}(\mathbf{x}_{i})+\sum_{j\ge j_{0},\mathbf{k}}\sum_{w=1}^{3}\beta_{j,\mathbf{k}}^{w}\psi_{j,\mathbf{k}}^{w}(\mathbf{x}_{i})\right]}+2\lambda\delta(\mathbf{l}=\mathbf{m})\end{array}\label{eq:hessianPartial1}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\begin{array}{c}
+\frac{\partial^{2}\mathcal{L}}{\partial\beta_{h,\mathbf{l}}^{r}\beta_{p,\mathbf{m}}^{s}}=\frac{2}{N}\sum_{i=1}^{N}\frac{\psi_{h,\mathbf{l}}^{r}(\mathbf{x}_{i})\psi_{p,\mathbf{m}}^{s}(\mathbf{x}_{i})}{\left[\sum_{j_{0},\mathbf{k}}\alpha_{j_{0},\mathbf{k}}\phi_{j_{0},\mathbf{k}}(\mathbf{x}_{i})+\sum_{j\ge j_{0},\mathbf{k}}\sum_{w=1}^{3}\beta_{j,\mathbf{k}}^{w}\psi_{j,\mathbf{k}}^{w}(\mathbf{x}_{i})\right]}+2\lambda\delta(h=p,\mathbf{l}=\mathbf{m})\end{array}\label{eq:hessianPartial2}\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\begin{array}{c}
+\frac{\partial^{2}\mathcal{L}}{\partial\alpha_{j_{0},\mathbf{l}}\beta_{p,\mathbf{m}}^{r}}=\frac{2}{N}\sum_{i=1}^{N}\frac{\phi_{j_{0},\mathbf{l}}(\mathbf{x}_{i})\psi_{p,\mathbf{m}}^{r}(\mathbf{x}_{i})}{\left[\sum_{j_{0},\mathbf{k}}\alpha_{j_{0},\mathbf{k}}\phi_{j_{0},\mathbf{k}}(\mathbf{x}_{i})+\sum_{j\ge j_{0},\mathbf{k}}\sum_{w=1}^{3}\beta_{j,\mathbf{k}}^{w}\psi_{j,\mathbf{k}}^{w}(\mathbf{x}_{i})\right]}\end{array}\label{eq:hessianPartial3}\end{equation}
+
+\end_inset
+
+Note in eqs.
+ (
+\begin_inset LatexCommand \ref{eq:hessianPartial1}
+
+\end_inset
+
+) and (
+\begin_inset LatexCommand \ref{eq:hessianPartial2}
+
+\end_inset
+
+) the last term (with 4 in front) is just the square of the coeffient if
+ the indicies match up if not it is getting multiplied by a total different
+ index.
+\end_layout
+
+\begin_layout Subsection
+Constrained Minimization
+\end_layout
+
+\begin_layout Standard
+Follow the same procedures as discussed in the 1D case.
+\end_layout
+
+\begin_layout Section
+Fisher Information of WDE
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+See analysis in Part I and II.
+\end_layout
+
+\begin_layout Section*
+Algorithm Notes
+\end_layout
+
+\end_body
+\end_document

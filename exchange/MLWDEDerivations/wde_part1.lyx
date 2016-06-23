@@ -1,0 +1,757 @@
+#LyX 1.4.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 245
+\begin_document
+\begin_header
+\textclass article
+\language english
+\inputencoding auto
+\fontscheme default
+\graphics default
+\paperfontsize default
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Non-negative Wavlet Density Estimation
+\newline
+Part I: Project Gradient Descent
+\end_layout
+
+\begin_layout Author
+Adrian M.
+ Peter 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Standard
+
+
+\backslash
+textdagger
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Univariate 
+\begin_inset Formula $\sqrt{p(x)}$
+\end_inset
+
+ Estimation Via Projected Gradient Descent
+\end_layout
+
+\begin_layout Standard
+Represent 
+\begin_inset Formula $\sqrt{p(x)}$
+\end_inset
+
+ , 
+\begin_inset Formula $x\in\mathbb{R}$
+\end_inset
+
+, as a expansion of wavelet basis
+\begin_inset Formula \begin{equation}
+\sqrt{p(x)}=\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x)+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x)\label{eq:sqrtPWaveExpansion1D}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\alpha_{j_{0},k}\mbox{ and }\beta_{j,k}$
+\end_inset
+
+ are the father (aka scaling) and mother (aka wavelet) basis function coefficien
+ts and the 
+\begin_inset Formula $j$
+\end_inset
+
+-index represents the current level and 
+\begin_inset Formula $k$
+\end_inset
+
+-index the integer translation value.
+ Given a set of samples we would like to estimate 
+\begin_inset LatexCommand \ref{eq:sqrtPWaveExpansion1D}
+
+\end_inset
+
+ using maximum likelihood with a gradient descent optimization.
+ So we will minimize the negative log likelihood over all the samples, 
+\begin_inset Formula $X=\{ x_{i}\}_{i=1}^{N}$
+\end_inset
+
+.
+ Our goal will be to estimate the coefficients.
+\begin_inset Formula \[
+\prod_{i=1}^{N}\left[\sqrt{p(x_{i})}\right]^{2}=\prod_{i=1}^{N}\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]^{2}\]
+
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\begin{array}{cc}
+-\log\prod_{i=1}^{N}\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]^{2}\\
+=-\sum_{i=1}^{N}\log\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]^{2}=F(X,\alpha_{j_{0},k},\beta_{j,k})\end{array}\label{eq:negativeLL1D}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $F(X,\alpha_{j_{0},k},\beta_{j,k})$
+\end_inset
+
+ will be used to represent the negative log likelihood objective function.
+ We must now minimize this over all the coefficients (i.e.
+ for each level 
+\begin_inset Formula $j$
+\end_inset
+
+ and translation 
+\begin_inset Formula $k$
+\end_inset
+
+).
+ The regular gradient descent update rule is given by
+\begin_inset Formula \[
+c^{\tau+1}=c^{\tau}-\gamma\nabla F\]
+
+\end_inset
+
+ where 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+
+\begin_inset Formula $c^{\tau}$
+\end_inset
+
+ is the vector of coefficients at iteration number 
+\begin_inset Formula $\tau$
+\end_inset
+
+, 
+\begin_inset Formula $\nabla F$
+\end_inset
+
+ is the gradient of the objective function and 
+\begin_inset Formula $\gamma$
+\end_inset
+
+ is a step size parameter.
+ We would like to have our coefficients sum to one so one way to accomplish
+ this is to do projected gradient descent.
+ This basically normalizes the updated coefficient vector such that it is
+ a unit vector.
+ Note: this may make the problem more difficult to optimize b/c we aren't
+ sure if projecting it will allow us to still minimize the original objective
+ function (may have to use small step size or find it optimally).
+ So the projection update rule is given by
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+
+\begin_inset Formula \begin{equation}
+c^{\tau+1}=\frac{c^{\tau}-\gamma\nabla F}{\| c^{\tau}-\gamma\nabla F\|}\label{eq:projectGradDes}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now we will show how to calculate the gradient and Hessian of 
+\begin_inset Formula $F$
+\end_inset
+
+.
+ The partial w.r.t father coefficients is given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\begin{array}{cc}
+\frac{\partial F}{\partial\alpha_{j_{0},l}}= & -\sum_{i=1}^{N}\frac{\partial log\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]^{2}}{\partial\alpha_{j_{0},l}}\\
+= & -\sum_{i=1}^{N}\frac{\frac{\partial}{\partial\alpha_{j_{0},l}}\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]^{2}}{\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]^{2}}\\
+= & -2\sum_{i=1}^{N}\frac{\left[\frac{\partial}{\partial\alpha_{j_{0},l}}\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]}{\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]^{2}}\\
+= & -2\sum_{i=1}^{N}\frac{\phi_{j_{0},l}(x_{i})}{\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]}\end{array}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Similarly, the partial w.r.t the mother coefficients is 
+\begin_inset Formula \[
+\frac{\partial F}{\partial\beta_{h,l}}=-2\sum_{i=1}^{N}\frac{\psi_{h,l}(x_{i})}{\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Pay close attention to the index subscripts on the partials.
+ We can stack all these partials together in a long vector.
+ The ordering of the partials is such that all the father translation coefficien
+ts for all the starting are stacked first.
+ We then put in all the mother translation coefficients that are at the
+ same starting level 
+\begin_inset Formula $j_{0}$
+\end_inset
+
+ as the father.
+ This is repeated for the remaining mother coefficients at the other levels.
+ Below we show an example for 
+\begin_inset Formula $M$
+\end_inset
+
+ number of translations and 
+\begin_inset Formula $P$
+\end_inset
+
+ number of levels.
+\begin_inset Formula \begin{eqnarray*}
+\nabla F & = & \left[\begin{array}{c}
+\frac{\partial F}{\partial\alpha_{j_{0},l}}\\
+\vdots\\
+\frac{\partial F}{\partial\alpha_{j_{0},l+M}}\\
+\frac{\partial F}{\partial\beta_{j_{0},l}}\\
+\vdots\\
+\frac{\partial F}{\partial\beta_{j_{0},l+M}}\\
+\frac{\partial F}{\partial\beta_{j_{0}+1,l}}\\
+\vdots\\
+\frac{\partial F}{\partial\beta_{j_{0}+P,l+M}}\end{array}\right]\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally the Hessian can be computed by first calculating the second partial
+ given by
+\begin_inset Formula \[
+\begin{array}{cc}
+\frac{\partial^{2}F}{\partial\alpha_{j_{0},l}\partial\alpha_{j_{0},m}}= & -2\sum_{i=1}^{N}\frac{\partial}{\partial\alpha_{j_{0},m}}(\frac{\phi_{j_{0},l}(x_{i})}{\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]})\\
+= & -2\sum_{i=1}^{N}\frac{\partial}{\partial\alpha_{j_{0},m}}(\phi_{j_{0},l}(x_{i})\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]^{-1})\\
+= & 2\sum_{i=1}^{N}(\phi_{j_{0},l}(x_{i})\frac{\frac{\partial}{\partial\alpha_{j_{0},m}}[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})]}{\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]^{2}})\\
+= & 2\sum_{i=1}^{N}\frac{\phi_{j_{0},l}(x_{i})\phi_{j_{0},m}(x_{i})}{\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]^{2}}\end{array}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Similarly the second partial w.r.t a mother coefficient is
+\begin_inset Formula \[
+\frac{\partial^{2}F}{\partial\beta_{h,l}\partial\beta_{p,m}}=2\sum_{i=1}^{N}\frac{\psi_{h,l}(x_{i})\psi_{p,m}(x_{i})}{\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]^{2}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+When the coefficient partials mix we get
+\begin_inset Formula \[
+\frac{\partial^{2}F}{\partial\alpha_{j_{0},l}\partial\beta_{p,m}}=2\sum_{i=1}^{N}\frac{\phi_{j_{0},l}(x_{i})\psi_{p,m}(x_{i})}{\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x_{i})+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x_{i})\right]^{2}}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These can be arranged in a square matrix to get the Hessian.
+ The Hessian matrix structure looks as follows (the superscript 
+\begin_inset Formula $s,e$
+\end_inset
+
+ are used to designate start and stop, respectively)
+\begin_inset Formula \[
+\left[\begin{array}{ccccccccccc}
+\frac{\partial^{2}F}{\partial\alpha_{j_{0},k^{s}}\partial\alpha_{j_{0},k^{s}}} & \cdots & \frac{\partial^{2}F}{\partial\alpha_{j_{0},k^{s}}\partial\alpha_{j_{0},k^{e}}} & \frac{\partial^{2}F}{\partial\alpha_{j_{0},k^{s}}\partial\beta_{j_{0},k^{s}}} & \cdots & \frac{\partial^{2}F}{\partial\alpha_{j_{0},k^{s}}\partial\beta_{j_{0},k^{e}}} & \frac{\partial^{2}F}{\partial\alpha_{j_{0},k^{s}}\partial\beta_{j_{0}+1,k^{s}}} & \cdots & \frac{\partial^{2}F}{\partial\alpha_{j_{0},k^{s}}\partial\beta_{j_{0}+1,k^{e}}} & \cdots & \frac{\partial^{2}F}{\partial\alpha_{j_{0},k^{s}}\partial\beta_{j_{0}+P,k^{e}}}\\
+\frac{\partial^{2}F}{\partial\alpha_{j_{0},k^{s+1}}\partial\alpha_{j_{0},k^{s}}} & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots\\
+\cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots\\
+\cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots & \cdots\end{array}\right].\]
+
+\end_inset
+
+We see that all father translations are computed first, then it goes to
+ the mother translation and levels.
+ Can use the 'kron' in Matlab to get pairwise combinations of the basis
+ function values required to compute the Hessian terms.
+\end_layout
+
+\begin_layout Section
+Bivariate 
+\begin_inset Formula $\sqrt{p(\mathbf{x})}$
+\end_inset
+
+ Estimation Via Projected Gradient Descent
+\end_layout
+
+\begin_layout Standard
+We now extend the results from the previous section on univariate density
+ estimation to include 2D densities.
+ The notation is going to get more messy so pay close attention! Let 
+\begin_inset Formula $(x_{1},x_{2})=\mathbf{x}\in\mathbb{R}^{2}$
+\end_inset
+
+, 
+\begin_inset Formula $\sqrt{p(\mathbf{x})}$
+\end_inset
+
+ expansion is given by 
+\begin_inset Formula \begin{equation}
+\sqrt{p(\mathbf{x})}=\sum_{j_{0},\mathbf{k}}\alpha_{j_{0},\mathbf{k}}\phi_{j_{0},\mathbf{k}}(\mathbf{x})+\sum_{j\ge j_{0},\mathbf{k}}\sum_{w=1}^{3}\beta_{j,\mathbf{k}}^{w}\psi_{j,\mathbf{k}}^{w}(\mathbf{x})\label{eq:sqrtPWaveExpansion2D}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $(k_{1},k_{2})=\mathbf{k}\in\mathbb{Z}^{2}$
+\end_inset
+
+ is a multi-index.
+ The 2D wavelet is actually a product of the regular 1D wavelets as show
+ below
+\begin_inset Formula \begin{equation}
+\begin{array}{cc}
+\phi_{j_{0},\mathbf{k}}(\mathbf{x})= & 2^{j_{0}}\phi(2^{j_{0}}x_{1}-k_{1})\phi(2^{j_{0}}x_{2}-k_{2})\\
+\psi_{j,\mathbf{k}}^{1}(\mathbf{x})= & 2^{j}\phi(2^{j}x_{1}-k_{1})\psi(2^{j}x_{2}-k_{2})\\
+\psi_{j,\mathbf{k}}^{2}(\mathbf{x})= & 2^{j}\psi(2^{j}x_{1}-k_{1})\phi(2^{j}x_{2}-k_{2})\\
+\psi_{j,\mathbf{k}}^{3}(\mathbf{x})= & 2^{j}\psi(2^{j}x_{1}-k_{1})\psi(2^{j}x_{2}-k_{2})\end{array}\label{eq:wavelet2DBasis}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Again our goal is to estimate the set of coefficients 
+\begin_inset Formula $\{\alpha_{j_{0},\mathbf{k}},\beta_{j,\mathbf{k}}^{w}\}$
+\end_inset
+
+.
+ As in the univariate case, we will minimize the negative of log likelihood
+ and use a projected gradient descent to get solution.
+\begin_inset Formula \begin{equation}
+-\sum_{i=1}^{N}\log\left[\sum_{j_{0},\mathbf{k}}\alpha_{j_{0},\mathbf{k}}\phi_{j_{0},\mathbf{k}}(\mathbf{x}_{i})+\sum_{j\ge j_{0},\mathbf{k}}\sum_{w=1}^{3}\beta_{j,\mathbf{k}}^{w}\psi_{j,\mathbf{k}}^{w}(\mathbf{x}_{i})\right]^{2}=F(X,\alpha_{j_{0},\mathbf{k}},\beta_{j,\mathbf{k}}^{w})\label{eq:negativeLL2D}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The graident vector is obtain by first computing the partials of 
+\begin_inset Formula $F$
+\end_inset
+
+
+\begin_inset Formula \begin{equation}
+\begin{array}{cc}
+\frac{\partial F}{\partial\alpha_{j_{0},\mathbf{l}}}= & -\sum_{i=1}^{N}\frac{\frac{\partial}{\partial\alpha_{j_{0},\mathbf{l}}}\left[\sum_{j_{0},\mathbf{k}}\alpha_{j_{0},\mathbf{k}}\phi_{j_{0},\mathbf{k}}(\mathbf{x}_{i})+\sum_{j\ge j_{0},\mathbf{k}}\sum_{w=1}^{3}\beta_{j,\mathbf{k}}^{w}\psi_{j,\mathbf{k}}^{w}(\mathbf{x}_{i})\right]^{2}}{\left[\sum_{j_{0},\mathbf{k}}\alpha_{j_{0},\mathbf{k}}\phi_{j_{0},\mathbf{k}}(\mathbf{x}_{i})+\sum_{j\ge j_{0},\mathbf{k}}\sum_{w=1}^{3}\beta_{j,\mathbf{k}}^{w}\psi_{j,\mathbf{k}}^{w}(\mathbf{x}_{i})\right]^{2}}\\
+= & -2\sum_{i=1}^{N}\frac{\phi_{j_{0},\mathbf{l}}(\mathbf{x}_{i})}{\left[\sum_{j_{0},\mathbf{k}}\alpha_{j_{0},\mathbf{k}}\phi_{j_{0},\mathbf{k}}(\mathbf{x}_{i})+\sum_{j\ge j_{0},\mathbf{k}}\sum_{w=1}^{3}\beta_{j,\mathbf{k}}^{w}\psi_{j,\mathbf{k}}^{w}(\mathbf{x}_{i})\right]}\end{array}\label{eq:scalingPartial2D}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and the mother coefficients give
+\begin_inset Formula \begin{equation}
+\begin{array}{cc}
+\frac{\partial F}{\partial\beta_{h,\mathbf{l}}^{r}}= & -\sum_{i=1}^{N}\frac{\frac{\partial}{\partial\beta_{h,\mathbf{l}}^{r}}\left[\sum_{j_{0},\mathbf{k}}\alpha_{j_{0},\mathbf{k}}\phi_{j_{0},\mathbf{k}}(\mathbf{x}_{i})+\sum_{j\ge j_{0},\mathbf{k}}\sum_{w=1}^{3}\beta_{j,\mathbf{k}}^{w}\psi_{j,\mathbf{k}}^{w}(\mathbf{x}_{i})\right]^{2}}{\left[\sum_{j_{0},\mathbf{k}}\alpha_{j_{0},\mathbf{k}}\phi_{j_{0},\mathbf{k}}(\mathbf{x}_{i})+\sum_{j\ge j_{0},\mathbf{k}}\sum_{w=1}^{3}\beta_{j,\mathbf{k}}^{w}\psi_{j,\mathbf{k}}^{w}(\mathbf{x}_{i})\right]^{2}}\\
+= & -2\sum_{i=1}^{N}\frac{\psi_{h,\mathbf{l}}^{r}(\mathbf{x}_{i})}{\left[\sum_{j_{0},\mathbf{k}}\alpha_{j_{0},\mathbf{k}}\phi_{j_{0},\mathbf{k}}(\mathbf{x}_{i})+\sum_{j\ge j_{0},\mathbf{k}}\sum_{w=1}^{3}\beta_{j,\mathbf{k}}^{w}\psi_{j,\mathbf{k}}^{w}(\mathbf{x}_{i})\right]}\end{array}\label{eq:motherPartial2D}\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These are stored in the gradient vector in the following order illustrating
+ 
+\begin_inset Formula $R$
+\end_inset
+
+ number of translations in 
+\begin_inset Formula $k_{1}$
+\end_inset
+
+, 
+\begin_inset Formula $S$
+\end_inset
+
+ number of translations in 
+\begin_inset Formula $k_{2}$
+\end_inset
+
+ and 
+\begin_inset Formula $P$
+\end_inset
+
+ number of levels.
+\begin_inset Formula \begin{eqnarray}
+\nabla F & = & \left[\begin{array}{c}
+\frac{\partial F}{\partial\alpha_{j_{0},(k_{1},k_{2})}}\\
+\vdots\\
+\frac{\partial F}{\partial\alpha_{j_{0},(k_{1},k_{2}+S)}}\\
+\frac{\partial F}{\partial\alpha_{j_{0},(k_{1}+1,k_{2})}}\\
+\vdots\\
+\frac{\partial F}{\partial\alpha_{j_{0},(k_{1}+1,k_{2}+S)}}\\
+\vdots\\
+\frac{\partial F}{\partial\alpha_{j_{0},(k_{1}+R,k_{2}+S)}}\\
+\frac{\partial F}{\partial\beta_{j_{0},(k_{1},k_{2})}^{1}}\\
+\vdots\\
+\frac{\partial F}{\partial\beta_{j_{0},(k_{1},k_{2}+S)}^{1}}\\
+\vdots\\
+\frac{\partial F}{\partial\beta_{j_{0},(k_{1}+R,k_{2}+S)}^{1}}\\
+\frac{\partial F}{\partial\beta_{j_{0},(k_{1},k_{2})}^{2}}\\
+\vdots\\
+\frac{\partial F}{\partial\beta_{j_{0},(k_{1},k_{2}+S)}^{2}}\\
+\vdots\\
+\frac{\partial F}{\partial\beta_{j_{0},(k_{1}+R,k_{2}+S)}^{2}}\\
+\frac{\partial F}{\partial\beta_{j_{0},(k_{1},k_{2})}^{3}}\\
+\vdots\\
+\frac{\partial F}{\partial\beta_{j_{0},(k_{1},k_{2}+S)}^{3}}\\
+\vdots\\
+\frac{\partial F}{\partial\beta_{j_{0},(k_{1}+R,k_{2}+S)}^{3}}\\
+\frac{\partial F}{\partial\beta_{j_{0}+1,(k_{1},k_{2})}^{1}}\\
+\vdots\\
+\frac{\partial F}{\partial\beta_{j_{0}+P,(k_{1}+R,k_{2}+S)}^{3}}\end{array}\right]\label{eq:gradientVector2D}\end{eqnarray}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The pictures below illustrate how these vectors are stacked up etc...
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename wde2DCoeffsLayout.png
+	lyxscale 20
+	width 5in
+	height 5in
+	keepAspectRatio
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Caption
+Coefficent ordering in gradient vector
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Fisher Information of WDE
+\end_layout
+
+\begin_layout Standard
+We can use the square-root density estimate to calculate Fisher information.
+ Recalling that
+\begin_inset Formula \[
+\begin{array}{ccc}
+\tilde{g_{ij}} & = & \int\frac{\partial\sqrt{p(x|\theta)}}{\partial\theta^{i}}\frac{\partial\sqrt{p(x|\theta)}}{\partial\theta^{j}}dx\\
+ & = & \int\frac{\frac{\partial p(x|\theta)}{\partial\theta^{i}}}{2\sqrt{p(x|\theta)}}\frac{\frac{\partial p(x|\theta)}{\partial\theta^{j}}}{2\sqrt{p(x|\theta)}}dx\\
+ & = & \frac{1}{4}\int\frac{1}{p(x|\theta)}\frac{\partial p(x|\theta)}{\partial\theta^{i}}\frac{\partial p(x|\theta)}{\partial\theta^{j}}dx\end{array}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+\Rightarrow g_{ij}=4\tilde{g_{ij}}\]
+
+\end_inset
+
+where 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\tilde{g_{ij}}$
+\end_inset
+
+ denotes the Fisher information computed from 
+\begin_inset Formula $\sqrt{p(x|\theta)}$
+\end_inset
+
+.
+ Notice there is a factor of 
+\begin_inset Formula $4$
+\end_inset
+
+ difference between this version and the original 
+\begin_inset Formula $g_{ij}$
+\end_inset
+
+ computed using the partials of the log likelihood.
+ Let's replace 
+\begin_inset Formula $\sqrt{p(x|\theta)}$
+\end_inset
+
+ with its WDE and compute 
+\begin_inset Formula $\tilde{g_{ij}}$
+\end_inset
+
+.
+ Due to conflitcs with the wavelet expansion, we temporarily replace 
+\begin_inset Formula $(i,j)$
+\end_inset
+
+ notation for the matrix position with 
+\begin_inset Formula $(u,v)$
+\end_inset
+
+.
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+
+\begin_inset Formula \begin{eqnarray*}
+\begin{array}{c}
+\tilde{g_{uv}}=\int\frac{\partial\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x)+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x)\right]}{\partial\alpha_{j_{0},l}}\frac{\partial\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x)+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x)\right]}{\partial\beta_{h,l}}dx\\
+=\int\phi_{j_{0},l}(x)\psi_{h,l}(x)dx\\
+=0\\
+\tilde{g_{uv}}=\int\frac{\partial\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x)+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x)\right]}{\partial\alpha_{j_{0},l}}\frac{\partial\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x)+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x)\right]}{\partial\alpha_{j_{0},l}}\\
+=\int\phi_{j_{0},l}(x)\phi_{j_{0},l}(x)dx\\
+=1\end{array}\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This can be generalized to
+\begin_inset Formula \[
+\tilde{g_{uv}}=\begin{cases}
+1\mbox{ if }k=l\,\&\, j=h\\
+0\mbox{ otherwise}\end{cases}.\]
+
+\end_inset
+
+This is basically an idenity matrix, so the original Fisher information
+ can be written as 
+\begin_inset Formula $g_{ij}=4\mathbf{I}$
+\end_inset
+
+ (
+\begin_inset Formula $\mathbf{I}$
+\end_inset
+
+ is square matrix with the same size as the number of coefficients).
+\end_layout
+
+\begin_layout Standard
+To see if our wavelet expasion checks out lets comput the expected value
+ of the Hessian of the negative log likelihood and see if we the same thing.
+ We going to let 
+\begin_inset Formula $F=\log\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x)+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x)\right]^{2}$
+\end_inset
+
+, ignoring the estimation from the samples as we want to compute the theoretical
+ value.
+ It is good enough to check one of the Hessian partials to see if we get
+ the right answer.
+ We repeat the second derivative of the negative log likelihood 
+\begin_inset Formula \[
+\frac{\partial^{2}F}{\partial\beta_{h,l}\partial\beta_{p,m}}=2\frac{\psi_{h,l}(x)\psi_{p,m}(x)}{\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x)+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x)\right]^{2}}\]
+
+\end_inset
+
+and taking its expected value, we get
+\begin_inset Formula \[
+\begin{array}{c}
+E[\frac{\partial^{2}F}{\partial\beta_{h,l}\partial\beta_{p,m}}]=\int\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x)+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x)\right]^{2}\left\{ 2\frac{\psi_{h,l}(x)\psi_{p,m}(x)}{\left[\sum_{j_{0},k}\alpha_{j_{0},k}\phi_{j_{0},k}(x)+\sum_{j\ge j_{0},k}\beta_{j,k}\psi_{j,k}(x)\right]^{2}}\right\} dx\\
+=2\int\psi_{h,l}(x)\psi_{p,m}(x)dx\\
+=2=g_{uv}\end{array}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Interesting, we can notice that the expected value of the Hessian is turning
+ out to be 
+\begin_inset Formula $g_{ij}=2\mathbf{I}$
+\end_inset
+
+.
+ This is a factor of 
+\begin_inset Formula $2$
+\end_inset
+
+ off from what we expected.
+ Calculating the Fisher information directly from the WDE of 
+\begin_inset Formula $\sqrt{p(x|\theta)}$
+\end_inset
+
+ gives us 
+\begin_inset Formula $g_{ij}=4\mathbf{I}$
+\end_inset
+
+.
+ Whereas computing it from the Hessian gives us 
+\begin_inset Formula $g_{ij}=2\mathbf{I}$
+\end_inset
+
+.
+ We will show in Part II how this discrepancy can be resolved by including
+ the normalization factor for our coefficients implicitly in the 
+\begin_inset Formula $\sqrt{p(x|\theta)}$
+\end_inset
+
+ expansion.
+ Here, we algorithmically achieved the 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+
+\begin_inset Formula $\sum_{j_{0},k}\alpha_{j_{0},k}^{2}+\sum_{j\ge j_{0},k}\beta_{j,k}^{2}=1$
+\end_inset
+
+ by projecting the coefficient updates during minimization.
+ A similar analysis can be carried out in 2D to get the same results.
+\end_layout
+
+\begin_layout Section*
+Algorithm Notes
+\end_layout
+
+\begin_layout Standard
+In order for the log likelihood to converge asymptotically we need to place
+ a 
+\begin_inset Formula $\frac{1}{N}$
+\end_inset
+
+ factor in front of the log likelihood and this gets passed down to the
+ gradient and the Hessian.
+\end_layout
+
+\begin_layout Standard
+Calculating the translation range:(Also look Vannucci's tech report Nonparametri
+c Density Estimation using Wavelets pg.
+ 19) 
+\begin_inset Formula \begin{eqnarray*}
+startTrans & = & \lfloor2^{j}\times sampleSupportStart-waveletSupportEnd\rfloor\end{eqnarray*}
+
+\end_inset
+
+
+\begin_inset Formula \[
+endTrans=\lceil2^{j}\times sampleSupportEnd-waveletSupportStart\rceil\]
+
+\end_inset
+
+The starting level should be coarsest and subsequent levels will be finer.
+ 
+\begin_inset Formula \[
+level<0\mbox{ get more coarse as we decrease in value}\]
+
+\end_inset
+
+
+\begin_inset Formula \[
+level\ge0\mbox{ get more fine as we increase in value}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Hessian is diagonal has some values that are zeros in the middle.
+ These are actually showing up at the edge values of the number of translations.
+ The last couple of translations or the begining may be over blank space
+ so they would give back zero in the Hessian equation when we evaluate the
+ scaling function or the wavelet.
+ In order to check if this is true, just take the diagonal of the Hessian
+ and find out the index location of the coefficient that is zero.
+ We can then check this position again the coefficient index array that
+ has all the positions.
+ They should correspond to edge values.
+\end_layout
+
+\end_body
+\end_document
