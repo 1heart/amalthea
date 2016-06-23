@@ -11,7 +11,7 @@
 %	distMatrices		- A cell array of the Euclidean distance between the points that each
 % 						dimension of the hypersphere represents, at each resolution level.
 %
-% 	lambda 			- The weighting of the distance matrix on the final result
+% 	lambdas 			- The weighting of the distance matrix on the final result
 %
 % 	multires_i        - An mx2 array of [start_i, end_i] that represent each
 %                                  segment of the vector that corresponds to each resolution level.
@@ -36,7 +36,7 @@
 %              http://research2.fit.edu/ice/
 % -------------------------------------------------------------------------
 
-function d = sphere_dist_linassgn(x, y, distMatrices, lambda, multires_i)
+function d = sphere_dist_linassgn(x, y, distMatrices, lambdas, multires_i)
 
 if (~isvector(x) || ~isvector(y)) error('Not vector inputs!'); end;
 if (~isequal(length(x), length(y))) error('Not equal size vectors!'); end;
@@ -49,8 +49,8 @@ x_new = []; x_new_reverse = [];
 for res_level = 1:size(multires_i, 1)
   curr_range = multires_i(res_level, 1):multires_i(res_level, 2);
   x_curr = x(curr_range); y_curr = y(curr_range);
-  x_new = [x_new; linassgn_warp(x_curr, y_curr, distMatrices{res_level}, lambda)];
-  x_new_reverse = [x_new_reverse; linassgn_warp(x_curr, y_curr, distMatrices{res_level}, lambda)];
+  x_new = [x_new; linassgn_warp(x_curr, y_curr, distMatrices{res_level}, lambdas)];
+  x_new_reverse = [x_new_reverse; linassgn_warp(x_curr, y_curr, distMatrices{res_level}, lambdas)];
 end
 
 d = min(sphere_dist(x_new, y), sphere_dist(x_new_reverse, y)); % Take the distance between y and the modified x
