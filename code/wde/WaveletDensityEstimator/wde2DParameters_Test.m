@@ -21,7 +21,7 @@ wdeSet.gamma       = 1e-1;
 % WDE free parameters
 wdeSet.wName       = 'sym4'; %
 
-wdeSet.startLevel  = 3; %jo resolution
+wdeSet.startLevel  = 4; %jo resolution
 wdeSet.stopLevel   = 4; %j resolution
 wdeSet.onlyScaling = 1;
 wdeSet.iterations  =  12;
@@ -29,7 +29,7 @@ wdeSet.wdePlotting = 0; % Plotting the density.
 
 wdeSet.delta          = .05;
 
-domVal = 1;
+domVal = 6;
 wdeSet.xMin           = -domVal;
 wdeSet.xMax           = domVal;
 wdeSet.yMin           = -domVal;

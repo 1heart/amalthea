@@ -35,9 +35,6 @@ dataSetFold = 'MPEG7'; % Brown, MPEG7, MPEG7, SweedishLeaf
 % Brown_2D_ns99, Animal_All, mpeg7Aligned, mpeg7NoAligned
 shapeName = 'mpeg7Aligned'; % Shape file name. 
 
-wdeSet.wName       = 'sym4'; %
-wdeSet.startLevel  = 3;
-
 partNum = 2;
 minInd = 251;
 maxInd = 500;
@@ -85,7 +82,7 @@ F = findall(0,'type','figure','tag','TMWWaitbar'); delete(F);
 
 % Loop through the shapes, resize them approriately, and estimate the
 % coeffients and densities and store them. 
-for i = 1 : 1
+for i = 1 : 5
     % Progress updates
 %     waitbar(i/numShapes, h);
 %     disp(['Running shape ', num2str(i)]);
