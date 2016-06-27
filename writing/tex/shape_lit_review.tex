@@ -38,4 +38,12 @@ Another highly cited paper is the the work by Novotni and Klein\cite{novotni2003
 
 An approach that has some similarities with our work is that of Shum et al., which presents a way to measure similarity between 3D shapes. They map local curvatures a distribution on a sphere, and then construct a distance metric between these spherical approximations of 3D shapes. However, this requires closed surfaces.
 
+Ohbuchi et al.\cite{ohbuchi2008salient} use SIFT features extracted from range images and put into a bag-of-features representation. The range images are sampled uniformly from the view sphere.
+
+\subsection{View-based features}
+
+The idea of view-based features is that much of intrinsic information of a 3D shape can be encoded into multiple 2D views from different angles of that shape. Therefore, it's possible to compare two shapes by simply comparing the views.
+
+A recent paper by Zhu et al.\cite{zhu2016deep} uses deep learning to learn a feature representation of a shape using autoencoders on 2D views of a 3D shape. They combine this with the local descriptors by the previous Ohbuchi et al\cite{ohbuchi2008salient} to obtain state-of-the-art results. 
+
 \end{document}
