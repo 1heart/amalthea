@@ -176,7 +176,55 @@ Time looping over shapes: 31.5127
 
 
 
-
+DOMAIN:6
+Time in initializeCoefficients: 89.384
+Time in negativeLogLikelihood: 3.5625
+Iteration 1: nll = 3.6403
+              Gradient Norm = 2.3102
+              Direction = 0.28909
+              lambda    = 1
+Iteration 2: nll = 3.3961
+              Gradient Norm = 1.9408
+              Direction = 0.079454
+              lambda    = 1
+Iteration 3: nll = 3.4579
+              Gradient Norm = 1.9955
+              Direction = 0.021114
+              lambda    = 1
+Iteration 4: nll = 3.4627
+              Gradient Norm = 1.9997
+              Direction = 0.0050405
+              lambda    = 1
+Iteration 5: nll = 3.4631
+              Gradient Norm = 2
+              Direction = 0.0016211
+              lambda    = 1
+Iteration 6: nll = 3.4631
+              Gradient Norm = 2
+              Direction = 0.00083857
+              lambda    = 1
+Iteration 7: nll = 3.4631
+              Gradient Norm = 2
+              Direction = 0.00048123
+              lambda    = 1
+Iteration 8: nll = 3.4631
+              Gradient Norm = 2
+              Direction = 0.00028753
+              lambda    = 1
+Iteration 9: nll = 3.4631
+              Gradient Norm = 2
+              Direction = 0.00017408
+              lambda    = 1
+Iteration 10: nll = 3.4631
+              Gradient Norm = 2
+              Direction = 0.00010642
+              lambda    = 1
+Iteration 11: nll = 3.4631
+              Gradient Norm = 2
+              Direction = 6.5241e-05
+              lambda    = 1
+Program execution took: 48.3115 seconds.
+Time looping over shapes: 147.4088
 
 
 

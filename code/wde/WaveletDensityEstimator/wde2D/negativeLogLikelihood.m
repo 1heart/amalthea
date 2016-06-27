@@ -84,6 +84,7 @@ else
 end
 
 % OPTIMIZATION FOUR: Passed in scalValsPerPoint. Eliminated loops.
+% Only performs operations.
 fatherValsPerPoint = bsxfun(@times, scalValsPerPoint, coeffs');
 fatherValsPerPoint = sum(fatherValsPerPoint,2);
 scalingBasisPerSample = bsxfun(@rdivide, scalValsPerPoint, fatherValsPerPoint);

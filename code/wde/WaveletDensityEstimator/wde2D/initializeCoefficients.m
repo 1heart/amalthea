@@ -203,16 +203,16 @@ switch(lower(initType{1}))
             % Calculate the father wavelet for all relevant points that fall under current translations
             fatherWav = bsxfun(@times, 2^startLevel * father_x, father_y);
 
+            % Save father wavelet values
             newyTranlateIndex = translateIndex + (i-1) * numXTranslations;
             linearIndex = sub2ind(size(scalValsPerPoint), sampleIndex, newyTranlateIndex);
             scalValsPerPoint(linearIndex) = fatherWav;
 
         end % for i = 1 : numXTranslations
         
+        % Calculate coefficients
         scalVals = bsxfun(@rdivide, scalValsPerPoint, sqrtPEachSamp);
         scalingBasisGrid = sum(scalVals,1);
-
-        % Calculate coefficients
         scalingBasisGrid = scalingBasisGrid';
         c = (1/numSamps)*scalingBasisGrid;
         coeffs = c/norm(c);
