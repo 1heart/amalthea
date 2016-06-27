@@ -68,26 +68,13 @@
 %--------------------------------------------------------------------------
 
 function [currCost, currGrad, currHessian] = negativeLogLikelihood(samps,...
-    wName,...
     startLevel,...
     stopLevel,...
     coeffs,...
-    coeffsIdx,...
     scalingOnly,...
-    sampleSupport)
+    scalValsPerPoint)
 
 numSamps = size(samps,1);
-
-% Translation range for the starting level scaling function.  Need both x
-% and y values since 2D.
-scalingTransRX    = translationRange(sampleSupport(1,:), wName, startLevel);
-scalingShiftValsX = scalingTransRX(1):scalingTransRX(2);
-scalingTransRY    = translationRange(sampleSupport(2,:), wName, startLevel);
-scalingShiftValsY = scalingTransRY(1):scalingTransRY(2);
-
-% Set up correct basis functions. Now that we have all the translation
-[father, mother] = basisFunctions(wName);
-waveSupp = waveSupport(wName);
 
 % Determine if we need to count up or down.
 if(startLevel <= stopLevel)
@@ -96,48 +83,7 @@ else
     inc = -1;
 end
 
-%%%%%%
-numXTranslations = length(scalingShiftValsX);
-numYTranslations = length(scalingShiftValsY);
-numTranslations = numXTranslations * numYTranslations;
-
-% OPTIMIZATION THREE: Single loop along translations
-% Gives back new sample points (x,y) along each translate K
-x = bsxfun(@minus, (2^startLevel)*samps(:,1), scalingShiftValsX);
-y = bsxfun(@minus, (2^startLevel)*samps(:,2), scalingShiftValsY);
-
-% For each translate, sample values (x,y) that live under wavelet's support --> 1
-valid_x = (x >= waveSupp(1) & x <= waveSupp(2));
-valid_y = (y >= waveSupp(1) & y <= waveSupp(2));
-
-scalValsPerPoint = zeros(numSamps,numTranslations);
-loglikelihood = zeros(numSamps,1);
-% Loop along translations in x
-for i = 1 : numXTranslations
-    % Find where points x and y exist together or intersect --> 1
-    intersections = bsxfun(@times, valid_x(:,i), valid_y);
-    
-    % Sample indices are represented by rows.
-    % Relevant y translations are represented by columns
-    [sampleIndex, yTranslateIndex] = find(intersections == 1);
-    
-    % Calculate father wavelet for relevant points that fall under current x translation
-    x_at_translate = x(sampleIndex,i);
-    father_x = father(x_at_translate);
-    
-    % Calculate father wavelet for relevant points that fall under all y translations
-    y_at_translate = y(logical(intersections));
-    father_y = father(y_at_translate);
-    
-    % Calculate the father wavelet for all relevant points that fall under current translations
-    fatherWav = 2^startLevel .* father_x .* father_y;
-    
-    newyTranlateIndex = yTranslateIndex + (i-1) * numXTranslations;
-    linearIndex = sub2ind(size(scalValsPerPoint), sampleIndex, newyTranlateIndex);
-    scalValsPerPoint(linearIndex) = fatherWav;
-    
-end % for i = 1 : translations_x
-
+% OPTIMIZATION FOUR: Passed in scalValsPerPoint. Eliminated loops.
 fatherValsPerPoint = bsxfun(@times, scalValsPerPoint, coeffs');
 fatherValsPerPoint = sum(fatherValsPerPoint,2);
 scalingBasisPerSample = bsxfun(@rdivide, scalValsPerPoint, fatherValsPerPoint);
