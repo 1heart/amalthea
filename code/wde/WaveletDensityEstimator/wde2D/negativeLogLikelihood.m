@@ -132,7 +132,7 @@ for i = 1 : numXTranslations
     % Calculate the father wavelet for all relevant points that fall under current translations
     fatherWav = 2^startLevel .* father_x .* father_y;
     
-    newyTranlateIndex = yTranslateIndex + (i-1) * 24;
+    newyTranlateIndex = yTranslateIndex + (i-1) * numXTranslations;
     linearIndex = sub2ind(size(scalValsPerPoint), sampleIndex, newyTranlateIndex);
     scalValsPerPoint(linearIndex) = fatherWav;
     

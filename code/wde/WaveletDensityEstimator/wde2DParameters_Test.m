@@ -25,7 +25,7 @@ wdeSet.startLevel  = 3; %jo resolution
 wdeSet.stopLevel   = 4; %j resolution
 wdeSet.onlyScaling = 1;
 wdeSet.iterations  =  12;
-wdeSet.wdePlotting = 1; % Plotting the density.
+wdeSet.wdePlotting = 0; % Plotting the density.
 
 wdeSet.delta          = .05;
 

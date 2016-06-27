@@ -30,17 +30,17 @@ addpath('../ShapeProcessing_Code/');
 wdeSet = wde2DParameters_Test();
 
 % -------------------------------------------------------------------------
-dataSetFold = 'Brown'; % Brown, MPEG7, MPEG7, SweedishLeaf
+dataSetFold = 'MPEG7'; % Brown, MPEG7, MPEG7, SweedishLeaf
 
 % Brown_2D_ns99, Animal_All, mpeg7Aligned, mpeg7NoAligned
-shapeName = 'Brown_2D_ns99'; % Shape file name. 
+shapeName = 'mpeg7Aligned'; % Shape file name. 
 
 wdeSet.wName       = 'sym4'; %
 wdeSet.startLevel  = 3;
 
 partNum = 2;
-minInd = 1 ;
-maxInd = 99 ;
+minInd = 251;
+maxInd = 500;
 wdeSet.minInd = minInd;
 wdeSet.maxInd = maxInd;
 wdeSet.partNum = partNum;
@@ -52,7 +52,7 @@ saveFold = ['../ShapeCoefficients/', dataSetFold];
 shapeFold = ['../Datasets/', dataSetFold, '/']; % Shape file folder. 
 
 saveFiles = 1;
-plotOrigShape = 1;
+plotOrigShape = 0;
 
 wdeSet.stopLevel   = 4; %testing resolution levels
 
@@ -72,7 +72,7 @@ wdeCell{1,3} = wdeSet;
 
 startTimeOverall = tic;
 F = findall(0,'type','figure','tag','TMWWaitbar'); delete(F);
-h = waitbar(0,'Computing coefficients and densities per category.');
+% h = waitbar(0,'Computing coefficients and densities per category.');
 
 
 
@@ -85,10 +85,10 @@ h = waitbar(0,'Computing coefficients and densities per category.');
 
 % Loop through the shapes, resize them approriately, and estimate the
 % coeffients and densities and store them. 
-for i = 1 : numShapes
+for i = 1 : 1
     % Progress updates
-    waitbar(i/numShapes, h);
-    disp(['Running shape ', num2str(i)]);
+%     waitbar(i/numShapes, h);
+%     disp(['Running shape ', num2str(i)]);
     
     currSh = shapeCell{i,1}; % Current category. 
 

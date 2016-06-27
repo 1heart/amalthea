@@ -169,7 +169,7 @@ switch(lower(initType{1}))
         numXTranslations = length(scalingShiftValsX);
         numYTranslations = length(scalingShiftValsY);
         scalingBasisGrid = zeros(numXTranslations,numYTranslations);
-        numTranslations = numXTranslations * numYTranslations;
+%         numTranslations = numXTranslations * numYTranslations;
         
         % OPTIMIZATION THREE: Single loop along translations
         % Gives back new sample points (x,y) along each translate K
@@ -180,7 +180,7 @@ switch(lower(initType{1}))
         valid_x = (x >= waveSupp(1) & x <= waveSupp(2));
         valid_y = (y >= waveSupp(1) & y <= waveSupp(2));
 
-        scalValsPerPoint = zeros(numSamps,numTranslations);
+%         scalValsPerPoint = zeros(numSamps,numTranslations);
 
         % Loop along translations in x
         for i = 1 : numXTranslations
