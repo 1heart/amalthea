@@ -1,0 +1,180 @@
+Compute_wde_2D_Distributed
+
+DOMAIN: 6 RESOLUTION: 2 SHAPES: 5
+Time in initializeCoefficients: 0.26581
+Time in negativeLogLikelihood: 0.090585
+Iteration 1: nll = 3.6958
+              Gradient Norm = 2.2422
+              Direction = 0.25342
+              lambda    = 1
+Iteration 2: nll = 3.5083
+              Gradient Norm = 1.9464
+              Direction = 0.053356
+              lambda    = 1
+Iteration 3: nll = 3.5633
+              Gradient Norm = 1.9974
+              Direction = 0.0081821
+              lambda    = 1
+Iteration 4: nll = 3.5659
+              Gradient Norm = 2
+              Direction = 0.00248
+              lambda    = 1
+Iteration 5: nll = 3.566
+              Gradient Norm = 2
+              Direction = 0.00098501
+              lambda    = 1
+Iteration 6: nll = 3.566
+              Gradient Norm = 2
+              Direction = 0.00041088
+              lambda    = 1
+Iteration 7: nll = 3.566
+              Gradient Norm = 2
+              Direction = 0.000176
+              lambda    = 1
+Iteration 8: nll = 3.566
+              Gradient Norm = 2
+              Direction = 7.6812e-05
+              lambda    = 1
+Program execution took: 2.0316 seconds.
+Time in initializeCoefficients: 0.1972
+Time in negativeLogLikelihood: 0.10306
+Iteration 1: nll = 3.7384
+              Gradient Norm = 2.2739
+              Direction = 0.27049
+              lambda    = 1
+Iteration 2: nll = 3.545
+              Gradient Norm = 1.9461
+              Direction = 0.070728
+              lambda    = 1
+Iteration 3: nll = 3.6023
+              Gradient Norm = 1.9956
+              Direction = 0.011918
+              lambda    = 1
+Iteration 4: nll = 3.6069
+              Gradient Norm = 1.9999
+              Direction = 0.0028963
+              lambda    = 1
+Iteration 5: nll = 3.607
+              Gradient Norm = 2
+              Direction = 0.0010453
+              lambda    = 1
+Iteration 6: nll = 3.607
+              Gradient Norm = 2
+              Direction = 0.00042569
+              lambda    = 1
+Iteration 7: nll = 3.607
+              Gradient Norm = 2
+              Direction = 0.00018326
+              lambda    = 1
+Iteration 8: nll = 3.607
+              Gradient Norm = 2
+              Direction = 8.1422e-05
+              lambda    = 1
+Program execution took: 1.6922 seconds.
+Time in initializeCoefficients: 0.40648
+Time in negativeLogLikelihood: 0.15817
+Iteration 1: nll = 4.0756
+              Gradient Norm = 2.1902
+              Direction = 0.22318
+              lambda    = 1
+Iteration 2: nll = 3.93
+              Gradient Norm = 1.9583
+              Direction = 0.046107
+              lambda    = 1
+Iteration 3: nll = 3.9729
+              Gradient Norm = 1.9981
+              Direction = 0.0075016
+              lambda    = 1
+Iteration 4: nll = 3.9749
+              Gradient Norm = 2
+              Direction = 0.0022058
+              lambda    = 1
+Iteration 5: nll = 3.9749
+              Gradient Norm = 2
+              Direction = 0.00086093
+              lambda    = 1
+Iteration 6: nll = 3.9749
+              Gradient Norm = 2
+              Direction = 0.00035908
+              lambda    = 1
+Iteration 7: nll = 3.9749
+              Gradient Norm = 2
+              Direction = 0.00015567
+              lambda    = 1
+Iteration 8: nll = 3.9749
+              Gradient Norm = 2
+              Direction = 6.934e-05
+              lambda    = 1
+Program execution took: 2.0961 seconds.
+Time in initializeCoefficients: 0.18036
+Time in negativeLogLikelihood: 0.08276
+Iteration 1: nll = 3.885
+              Gradient Norm = 2.2884
+              Direction = 0.27805
+              lambda    = 1
+Iteration 2: nll = 3.6792
+              Gradient Norm = 1.942
+              Direction = 0.070913
+              lambda    = 1
+Iteration 3: nll = 3.7407
+              Gradient Norm = 1.9954
+              Direction = 0.010759
+              lambda    = 1
+Iteration 4: nll = 3.7453
+              Gradient Norm = 1.9999
+              Direction = 0.0030416
+              lambda    = 1
+Iteration 5: nll = 3.7454
+              Gradient Norm = 2
+              Direction = 0.0011552
+              lambda    = 1
+Iteration 6: nll = 3.7454
+              Gradient Norm = 2
+              Direction = 0.00047971
+              lambda    = 1
+Iteration 7: nll = 3.7454
+              Gradient Norm = 2
+              Direction = 0.00020815
+              lambda    = 1
+Iteration 8: nll = 3.7454
+              Gradient Norm = 2
+              Direction = 9.2609e-05
+              lambda    = 1
+Program execution took: 1.4649 seconds.
+Time in initializeCoefficients: 0.31324
+Time in negativeLogLikelihood: 0.15919
+Iteration 1: nll = 4.1924
+              Gradient Norm = 2.1887
+              Direction = 0.22227
+              lambda    = 1
+Iteration 2: nll = 4.0459
+              Gradient Norm = 1.9575
+              Direction = 0.043002
+              lambda    = 1
+Iteration 3: nll = 4.0894
+              Gradient Norm = 1.9983
+              Direction = 0.0068901
+              lambda    = 1
+Iteration 4: nll = 4.0911
+              Gradient Norm = 2
+              Direction = 0.0020756
+              lambda    = 1
+Iteration 5: nll = 4.0912
+              Gradient Norm = 2
+              Direction = 0.00081341
+              lambda    = 1
+Iteration 6: nll = 4.0912
+              Gradient Norm = 2
+              Direction = 0.00034355
+              lambda    = 1
+Iteration 7: nll = 4.0912
+              Gradient Norm = 2
+              Direction = 0.00014982
+              lambda    = 1
+Iteration 8: nll = 4.0912
+              Gradient Norm = 2
+              Direction = 6.6725e-05
+              lambda    = 1
+Program execution took: 2.7572 seconds.
+Time looping over shapes: 31.6562
+diary off

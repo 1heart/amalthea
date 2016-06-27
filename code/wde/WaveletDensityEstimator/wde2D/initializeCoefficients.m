@@ -65,7 +65,7 @@
 %     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301
 %     USA
 %--------------------------------------------------------------------------
-function [coeffs coeffsIdx] = initializeCoefficients(samps, startLevel, stopLevel,...
+function [coeffs coeffsIdx, scalValsPerPoint] = initializeCoefficients(samps, startLevel, stopLevel,...
     sampleSupport, wName,...
     scalingOnly, initType, varargin)
 
@@ -166,11 +166,12 @@ switch(lower(initType{1}))
         waveSupp = waveSupport(wName);
 
         % Set up scaling basis grid for each translate
-        translations_x = length(scalingShiftValsX);
-        translations_y = length(scalingShiftValsY);
-        scalingBasisGrid = zeros(translations_x,translations_y);
+        numXTranslations = length(scalingShiftValsX);
+        numYTranslations = length(scalingShiftValsY);
+        scalingBasisGrid = zeros(numXTranslations,numYTranslations);
+        numTranslations = numXTranslations * numYTranslations;
         
-        % OPTIMIZATION THREE: Single loop along translations
+        % OPTIMIZATION FOUR: Single loop along translations
         % Gives back new sample points (x,y) along each translate K
         x = bsxfun(@minus, (2^startLevel)*samps(:,1), scalingShiftValsX);
         y = bsxfun(@minus, (2^startLevel)*samps(:,2), scalingShiftValsY);
@@ -179,8 +180,10 @@ switch(lower(initType{1}))
         valid_x = (x >= waveSupp(1) & x <= waveSupp(2));
         valid_y = (y >= waveSupp(1) & y <= waveSupp(2));
 
+        scalValsPerPoint = zeros(numSamps,numTranslations);
+
         % Loop along translations in x
-        for i = 1 : translations_x
+        for i = 1 : numXTranslations
             
             % Find where points x and y exist together or intersect --> 1
             intersections = bsxfun(@times, valid_x(:,i), valid_y);
@@ -199,29 +202,23 @@ switch(lower(initType{1}))
             
             % Calculate the father wavelet for all relevant points that fall under current translations
             fatherWav = bsxfun(@times, 2^startLevel * father_x, father_y);
-            fatherWav = fatherWav ./ sqrtPEachSamp(sampleIndex);
-            
-            % Add together scaling basis' that fall under the same y translations
-            fatherWav_per_translation = accumarray(translateIndex, fatherWav);
-            translateIndex = unique(translateIndex);
-            %relevantTransIndex = find(fatherWav_per_translation ~= 0);
-            
-            % Assign scaling basis to correspoding x translation and y translations
-            scalingBasisGrid(i,translateIndex) = fatherWav_per_translation(translateIndex);
 
-        end % for i = 1 : translations_x
+            % Save father wavelet values
+            newyTranlateIndex = translateIndex + (i-1) * numXTranslations;
+            linearIndex = sub2ind(size(scalValsPerPoint), sampleIndex, newyTranlateIndex);
+            scalValsPerPoint(linearIndex) = fatherWav;
+
+        end % for i = 1 : numXTranslations
         
         % Calculate coefficients
+        scalVals = bsxfun(@rdivide, scalValsPerPoint, sqrtPEachSamp);
+        scalingBasisGrid = sum(scalVals,1);
         scalingBasisGrid = scalingBasisGrid';
-        scalingBasisGrid = reshape(scalingBasisGrid,[1,numel(scalingBasisGrid)]);
-        c = (1/numSamps)*scalingBasisGrid';
+        c = (1/numSamps)*scalingBasisGrid;
         coeffs = c/norm(c);
         
         
         
-        
-        
-    
     
     
         

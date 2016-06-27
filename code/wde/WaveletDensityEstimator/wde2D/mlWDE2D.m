@@ -118,7 +118,7 @@ end
 
 stInitCoeff = tic; %%%%
 % Initialize the coefficients for gradient descent.
-[coeffs coeffsIdx] = initializeCoefficients(samps, scalingStartLevel, waveletStopLevel, ...
+[coeffs coeffsIdx, scalValsPerPoint] = initializeCoefficients(samps, scalingStartLevel, waveletStopLevel, ...
                                             sampleSupport, wName, scalingOnly,initType, ...
                                             samps, bins);
                                         
@@ -140,15 +140,22 @@ else
     maxIter = cell2mat(varargin(3));
 end
 
+ours = @negativeLogLikelihood;
+theirs = @negativeLogLikelihoodTrue;
+curr = ours;
+
 iter    = 0;
 gradTol = 1e-4;
 direction = 99999;
 
 stNegLog = tic;
+ ours = @negativeLogLikelihood;
+theirs = @negativeLogLikelihoodTrue;
+curr = ours;
 % Get initial value of the negative loglikelihood cost function
-[currCost, currGrad] = negativeLogLikelihood(samps, wName, scalingStartLevel,...
-                                             waveletStopLevel, coeffs, coeffsIdx, ...
-                                             scalingOnly, sampleSupport);
+[currCost, currGrad] = curr(samps, scalingStartLevel,...
+                                             waveletStopLevel, coeffs,...
+                                             scalingOnly, scalValsPerPoint);
 stopNegLog = toc(stNegLog);
 disp(['Time in negativeLogLikelihood: ', num2str(stopNegLog)]);
 
@@ -198,9 +205,9 @@ while( (iter<maxIter) & (norm(direction) >= gradTol))
     coeffs(:,iter+1) = coeffs(:,iter) + direction;
     
     % Get the update cost and gradient estimate.
-    [currCost, currGrad] = negativeLogLikelihood(samps, wName, scalingStartLevel,...
-                                                waveletStopLevel, coeffs(:,iter+1), coeffsIdx, ...
-                                                scalingOnly, sampleSupport);
+    [currCost, currGrad] = curr(samps, scalingStartLevel,...
+                                                waveletStopLevel, coeffs(:,iter+1),...
+                                                scalingOnly, scalValsPerPoint);
     % Additional check to see if we want to break out early.
     nllTrack = [nllTrack currCost];
     dirTrack = [dirTrack norm(direction)];
