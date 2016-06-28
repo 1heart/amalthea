@@ -6,6 +6,9 @@ outputFileName = 'temp_output';
 writeMatrixToBinaryFile(costMatrix,inputFileName);
 
 [status shellText] = unix(['./linAssignBinFile ' inputFileName ' ./' outputFileName]);
+if status ~= 0
+  error(shellText);
+end
 
 load(['./' outputFileName]);
 eval(['assignments = ' outputFileName ';']);
