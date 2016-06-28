@@ -65,7 +65,7 @@
 %     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301
 %     USA
 %--------------------------------------------------------------------------
-function [coeffs coeffsIdx, scalValsPerPoint] = initializeCoefficients(samps, startLevel, stopLevel,...
+function [coeffs, coeffsIdx, scalValsPerPoint, waveletValsPerPoint] = initializeCoefficients(samps, startLevel, stopLevel,...
     sampleSupport, wName,...
     scalingOnly, initType, varargin)
 
@@ -207,20 +207,96 @@ switch(lower(initType{1}))
             newyTranlateIndex = translateIndex + (i-1) * numXTranslations;
             linearIndex = sub2ind(size(scalValsPerPoint), sampleIndex, newyTranlateIndex);
             scalValsPerPoint(linearIndex) = fatherWav;
-
         end % for i = 1 : numXTranslations
-        
+
         % Calculate coefficients
         scalVals = bsxfun(@rdivide, scalValsPerPoint, sqrtPEachSamp);
         scalingBasisGrid = sum(scalVals,1);
         scalingBasisGrid = scalingBasisGrid';
-        c = (1/numSamps)*scalingBasisGrid;
+
+        
+        % MULTIRES OPTIMIZATION ---------------------------------------------------------------------------------------------
+        if(~scalingOnly)
+            
+            waveletValsPerPoint = [];
+            
+            for j = startLevel:inc:stopLevel
+                waveletTransRX    = translationRange(sampleSupport(1,:), wName, j);
+                waveletShiftValsX = [waveletTransRX(1):waveletTransRX(2)];
+                waveletTransRY    = translationRange(sampleSupport(2,:), wName, j);
+                waveletShiftValsY = [waveletTransRY(1):waveletTransRY(2)];
+                
+                % Set up wavelet basis grid for each translate
+                numXTranslations_multires = length(waveletShiftValsX);
+                numYTranslations_multires = length(waveletShiftValsY);
+                %         			waveletBasisGrid = zeros(numXTranslations_multires,numYTranslations_multires);
+                numTranslations_multires = numXTranslations_multires * numYTranslations_multires;
+                
+                % Gives back new sample points (x,y) along each translate K
+                x = bsxfun(@minus, (2^j)*samps(:,1), waveletShiftValsX);
+                y = bsxfun(@minus, (2^j)*samps(:,2), waveletShiftValsY);
+                
+                % For each translate, sample values (x,y) that live under wavelet's support --> 1
+                valid_x = (x >= waveSupp(1) & x <= waveSupp(2));
+                valid_y = (y >= waveSupp(1) & y <= waveSupp(2));
+                
+                waveletValsPerPoint1 = zeros(numSamps,numTranslations_multires);
+                waveletValsPerPoint2 = zeros(numSamps,numTranslations_multires);
+                waveletValsPerPoint3 = zeros(numSamps,numTranslations_multires);
+                
+                for i = 1:numYTranslations_multires
+                    % Find where points x and y exist together or intersect --> 1
+                    intersections = bsxfun(@times, valid_x(:,i), valid_y);
+                    
+                    % Sample indices are represented by rows.
+                    % Relevant y translations are represented by columns
+                    [sampleIndex, translateIndex] = find(intersections == 1);
+                    
+                    % Calculate father wavelet for relevant points that fall under current x translation
+                    x_at_translate = x(sampleIndex,i);
+                    mother_x = mother(x_at_translate);
+                    father_x = father(x_at_translate);
+                    
+                    % Calculate father wavelet for relevant points that fall under all y translations
+                    y_at_translate = y(logical(intersections));
+                    mother_y = mother(y_at_translate);
+                    father_y = father(y_at_translate);
+                    
+                    % Calculate the father wavelet for all relevant points that fall under current translations
+                    motherWav1 = bsxfun(@times, 2^j * father_x, mother_y);
+                    motherWav2 = bsxfun(@times, 2^j * mother_x, father_y);
+                    motherWav3 = bsxfun(@times, 2^j * mother_x, mother_y);
+                    
+                    % Save father wavelet values
+                    newyTranlateIndex = translateIndex + (i-1) * numXTranslations_multires;
+                    linearIndex = sub2ind(size(waveletValsPerPoint1), sampleIndex, newyTranlateIndex);
+                    
+                    waveletValsPerPoint1(linearIndex) = motherWav1;
+                    waveletValsPerPoint2(linearIndex) = motherWav2;
+                    waveletValsPerPoint3(linearIndex) = motherWav3;
+                    
+                end % for i = 1:numYTranslations_multires
+                
+                waveletValsPerPoint = [waveletValsPerPoint waveletValsPerPoint1 waveletValsPerPoint2 waveletValsPerPoint3];
+                
+            end % for = j startLevel:inc:stopLevel
+            
+            wavVals = bsxfun(@rdivide, waveletValsPerPoint, sqrtPEachSamp);
+            waveletBasisGrid = sum(wavVals,1);
+            waveletBasisGrid = waveletBasisGrid';
+            
+        end % if(~scalingOnly)
+        % -----------------------------------------------------------------------------------------------------------------
+        
+        
+        if(~scalingOnly)
+            c = (1/numSamps)*[scalingBasisGrid;waveletBasisGrid];
+        else
+            c = (1/numSamps)*scalingBasisGrid;
+        end
         coeffs = c/norm(c);
         
         
-        
-    
-    
         
     case 'histWDE'
         initDensityDir = char(varargin{1});

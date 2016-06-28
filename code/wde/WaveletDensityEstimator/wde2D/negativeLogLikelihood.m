@@ -71,8 +71,9 @@ function [currCost, currGrad, currHessian] = negativeLogLikelihood(samps,...
     startLevel,...
     stopLevel,...
     coeffs,...
+    coeffsIdx,...
     scalingOnly,...
-    scalValsPerPoint)
+    scalValsPerPoint, waveletValsPerPoint)
 
 numSamps = size(samps,1);
 
@@ -85,7 +86,7 @@ end
 
 % OPTIMIZATION FOUR: Passed in scalValsPerPoint. Eliminated loops.
 % Only performs operations.
-fatherValsPerPoint = bsxfun(@times, scalValsPerPoint, coeffs');
+fatherValsPerPoint = bsxfun(@times, scalValsPerPoint, coeffs(coeffsIdx(1,1):coeffsIdx(1,2))');
 fatherValsPerPoint = sum(fatherValsPerPoint,2);
 scalingBasisPerSample = bsxfun(@rdivide, scalValsPerPoint, fatherValsPerPoint);
 scalValsSum = sum(scalingBasisPerSample,1);
@@ -94,7 +95,13 @@ loglikelihood = log(fatherValsPerPoint.^2);
 currCost = -(1/numSamps)*sum(loglikelihood);
 
 if(~scalingOnly)
-    currGrad = -2*(1/numSamps)*[scalValsSum mothValsSum]';
+    motherValsPerPoint = bsxfun(@times, waveletValsPerPoint, coeffs(coeffsIdx(2,1):end)');
+    motherValsPerPoint = sum(motherValsPerPoint,2);
+    waveletBasisPerSample = bsxfun(@rdivide, waveletValsPerPoint, motherValsPerPoint);
+    wavValsSum = sum(waveletBasisPerSample,1);
+    
+    currGrad = -2*(1/numSamps)*[scalValsSum wavValsSum]';
+    disp('');
 else
     currGrad = -2*(1/numSamps)*[scalValsSum]';
 end

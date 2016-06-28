@@ -118,7 +118,7 @@ end
 
 stInitCoeff = tic; %%%%
 % Initialize the coefficients for gradient descent.
-[coeffs coeffsIdx, scalValsPerPoint] = initializeCoefficients(samps, scalingStartLevel, waveletStopLevel, ...
+[coeffs coeffsIdx, scalValsPerPoint, waveletValsPerPoint] = initializeCoefficients(samps, scalingStartLevel, waveletStopLevel, ...
                                             sampleSupport, wName, scalingOnly,initType, ...
                                             samps, bins);
                                         
@@ -154,8 +154,8 @@ theirs = @negativeLogLikelihoodTrue;
 curr = ours;
 % Get initial value of the negative loglikelihood cost function
 [currCost, currGrad] = curr(samps, scalingStartLevel,...
-                                             waveletStopLevel, coeffs,...
-                                             scalingOnly, scalValsPerPoint);
+                                             waveletStopLevel, coeffs,coeffsIdx,...
+                                             scalingOnly, scalValsPerPoint, waveletValsPerPoint);
 stopNegLog = toc(stNegLog);
 disp(['Time in negativeLogLikelihood: ', num2str(stopNegLog)]);
 
@@ -206,8 +206,8 @@ while( (iter<maxIter) & (norm(direction) >= gradTol))
     
     % Get the update cost and gradient estimate.
     [currCost, currGrad] = curr(samps, scalingStartLevel,...
-                                                waveletStopLevel, coeffs(:,iter+1),...
-                                                scalingOnly, scalValsPerPoint);
+                                                waveletStopLevel, coeffs(:,iter+1), coeffsIdx,...
+                                                scalingOnly, scalValsPerPoint, waveletValsPerPoint);
     % Additional check to see if we want to break out early.
     nllTrack = [nllTrack currCost];
     dirTrack = [dirTrack norm(direction)];

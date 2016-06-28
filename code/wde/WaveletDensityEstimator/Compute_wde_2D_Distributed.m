@@ -82,7 +82,7 @@ F = findall(0,'type','figure','tag','TMWWaitbar'); delete(F);
 
 % Loop through the shapes, resize them approriately, and estimate the
 % coeffients and densities and store them. 
-for i = 1 : 5
+for i = 1 : 1
     % Progress updates
 %     waitbar(i/numShapes, h);
 %     disp(['Running shape ', num2str(i)]);
