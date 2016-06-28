@@ -11,10 +11,10 @@ TARGET = lapmain
 all: lapmain
 
 lapmain:
-	$(CC) lapmain.cpp system.cpp lap.cpp -o lapmain
+	$(CC) lapmain.cpp system.cpp lap.cpp -o linAssignBinFile
 
 clean:
 	if [ -a lapmain ] ; \
 	  then \
-	  rm lapmain; \
+	  rm linAssignBinFile; \
 	  fi;
