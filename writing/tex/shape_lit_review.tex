@@ -40,6 +40,10 @@ An approach that has some similarities with our work is that of Shum et al., whi
 
 Ohbuchi et al.\cite{ohbuchi2008salient} use SIFT features extracted from range images and put into a bag-of-features representation. The range images are sampled uniformly from the view sphere.
 
+Shilane and Funkhouser\cite{shilane2006selecting} proposed a scheme for selecting the distinctive local feature descriptors of a set of such feature descriptors, find the ones that help distinguish them the best, and finally using only those descriptors (as opposed to the full set), which leads to faster performance at a low cost.
+
+A paper similar in approach is by Bai et al.\cite{bai2009integrating}, which combines contour, skeleton, global, and local features as a feature. This achieves good results on MPEG-7 without requiring many training samples.
+
 \subsection{View-based features}
 
 The idea of view-based features is that much of intrinsic information of a 3D shape can be encoded into multiple 2D views from different angles of that shape. Therefore, it's possible to compare two shapes by simply comparing the views.
