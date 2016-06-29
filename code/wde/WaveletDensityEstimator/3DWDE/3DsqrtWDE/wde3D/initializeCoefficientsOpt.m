@@ -213,16 +213,16 @@ switch(lower(initType{1}))
                 father_z = father(z_at_translate);
 
                 % Calculate the father wavelet for all relevant points that fall under current translations
-                fatherWav = father_x
-                fatherWav = bsxfun(@times, 2^startLevel * father_x, father_y, father_z);
+                fatherWav = father_x .* father_y .* father_z;
 
                 % Save father wavelet values
-                newyTranlateIndex = translateIndex + (i-1) * numXTranslations;
+                newyTranlateIndex = translateIndex + (i-1) + (k-1) * numXTranslations;
                 linearIndex = sub2ind(size(scalValsPerPoint), sampleIndex, newyTranlateIndex);
                 scalValsPerPoint(linearIndex) = fatherWav;
             end % for i = 1 : numXTranslations
         end
 
+disp('');
 
 
 
@@ -233,43 +233,42 @@ switch(lower(initType{1}))
 
 
 
+% tempScalValsSum = zeros(numSamps,numTranslations);
 
+%         % Calculate the coefficient estimates based on the histogram
+%         for s = 1 : numSamps
 
-
-        % Calculate the coefficient estimates based on the histogram
-        % for s = 1 : numSamps
-
-        %     %wavBasis = [];
+%             %wavBasis = [];
             
-        %     sampX = samps(s,1); sampY = samps(s,2); sampZ = samps(s,3);
-        %     % Compute father value for all scaled and translated samples.
-        %     x         = 2^startLevel*sampX - scalingShiftValsX;
-        %     y         = 2^startLevel*sampY - scalingShiftValsY;
-        %     z         = 2^startLevel*sampZ - scalingShiftValsZ;
+%             sampX = samps(s,1); sampY = samps(s,2); sampZ = samps(s,3);
+%             % Compute father value for all scaled and translated samples.
+%             x         = 2^startLevel*sampX - scalingShiftValsX;
+%             y         = 2^startLevel*sampY - scalingShiftValsY;
+%             z         = 2^startLevel*sampZ - scalingShiftValsZ;
             
-        %     scalVals  = kron(father(x),father(y));
-        %     scalVals  = kron(scalVals, father(z));
-        %     % disp(['Thing that shouldnt be the same: ' num2str(norm(testScalVals - scalVals))])
+%             scalVals  = kron(father(x),father(y));
+%             scalVals  = kron(scalVals, father(z));
+%             % disp(['Thing that shouldnt be the same: ' num2str(norm(testScalVals - scalVals))])
             
-        %     % Weight the basis functions with the coefficients.
-        %     %             scalingBasis = scalVals./sqrtPEachSamp(s);
-        %     %scalingSum   = sum(scalingBasis);
+%             % Weight the basis functions with the coefficients.
+%             %             scalingBasis = scalVals./sqrtPEachSamp(s);
+%             %scalingSum   = sum(scalingBasis);
             
-        %     % Divide the basis by the sqrt hist.
-        %     scalingBasis = scalVals./sqrtPEachSamp(s);
-            
-        %     % Incorporate the mother basis if necessary.
+%             % Divide the basis by the sqrt hist.
+%             % scalingBasis = scalVals./sqrtPEachSamp(s);
+%             scalingBasis = scalVals;
+%             % Incorporate the mother basis if necessary.
             
                 
-        %     % scalVals  = accessAllTranslatesAndTensorProd(samps(s,:),wName,...
-        %     %      scalingShiftValsX,scalingShiftValsY,scalingShiftValsZ,startLevel);
+%             % scalVals  = accessAllTranslatesAndTensorProd(samps(s,:),wName,...
+%             %      scalingShiftValsX,scalingShiftValsY,scalingShiftValsZ,startLevel);
             
-        %     % % Divide the basis by the sqrt hist.
-        %     % scalingBasis = scalVals/sqrtPEachSamp(s);
-        %     tempScalValsSum(s,:) = scalingBasis;
-        % end
-        % c = (1/numSamps)*sum(tempScalValsSum,1)';
-        % coeffs = c/norm(c);
+%             % % Divide the basis by the sqrt hist.
+%             % scalingBasis = scalVals/sqrtPEachSamp(s);
+%             tempScalValsSum(s,:) = scalingBasis;
+%         end
+%         c = (1/numSamps)*sum(tempScalValsSum,1)';
+%         coeffs = c/norm(c);
         
 
 %         initDensityDir = char(varargin{1});
