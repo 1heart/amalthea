@@ -13,14 +13,14 @@ if (normCoeffHypCheck > epsCheck) % Normalize the vector.
     D = norm(coeffs(:,end))^2;
     coeffs(:,end) = coeffs(:,end)/sqrt(D);
 end
-% 
-% tic
-% % Plot square root density
-% sp = plotWDE(wdeSet.densityPts, wdeSet.sampleSupp, wdeSet.wName,....
-%              wdeSet.startLevel, wdeSet.stopLevel, coeffs(:,end),...
-%              coeffsIdx, wdeSet.onlyScaling, wdeSet.x1Grid,...
-%              wdeSet.x2Grid, wdeSet.wdePlotting);
-%     toc     
-% pdf = sp.^2;
-% pdf = pdf + max(pdf(:))*wdeSet.scaleFac;
-% pdf = pdf/sum(pdf(:));
+
+
+% Plot square root density
+sp = plotWDE(wdeSet.densityPts, wdeSet.sampleSupp, wdeSet.wName,....
+             wdeSet.startLevel, wdeSet.stopLevel, coeffs(:,end),...
+             coeffsIdx, wdeSet.onlyScaling, wdeSet.x1Grid,...
+             wdeSet.x2Grid, wdeSet.wdePlotting);
+         
+pdf = sp.^2;
+pdf = pdf + max(pdf(:))*wdeSet.scaleFac;
+pdf = pdf/sum(pdf(:));

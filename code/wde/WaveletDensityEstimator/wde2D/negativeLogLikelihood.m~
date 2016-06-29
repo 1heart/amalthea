@@ -88,25 +88,23 @@ end
 % Only performs operations.
 fatherValsPerPoint = bsxfun(@times, scalValsPerPoint, coeffs(coeffsIdx(1,1):coeffsIdx(1,2))');
 fatherValsPerPoint = sum(fatherValsPerPoint,2);
-basisValPerPoint = fatherValsPerPoint;
 
 if(~scalingOnly)
     motherValsPerPoint = bsxfun(@times, waveletValsPerPoint, coeffs(coeffsIdx(2,1):end)');
     motherValsPerPoint = sum(motherValsPerPoint,2);
-    basisValPerPoint = fatherValsPerPoint + motherValsPerPoint;
-    loglikelihood = log((basisValPerPoint).^2);
+    loglikelihood = log((fatherValsPerPoint + motherValsPerPoint).^2);
 else
-    loglikelihood = log(basisValPerPoint.^2);
+    loglikelihood = log(fatherValsPerPoint.^2);
 end
 
 currCost = -(1/numSamps)*sum(loglikelihood);
 
-
-scalingBasisPerSample = bsxfun(@rdivide, scalValsPerPoint, basisValPerPoint);
+basisValPerPoint = fatherValsPerPoint + motherValsPerPoint;
+scalingBasisPerSample = bsxfun(@rdivide, scalValsPerPoint, fatherValsPerPoint);
 scalValsSum = sum(scalingBasisPerSample,1);
 
 if(~scalingOnly)
-    waveletBasisPerSample = bsxfun(@rdivide, waveletValsPerPoint, basisValPerPoint);
+    waveletBasisPerSample = bsxfun(@rdivide, waveletValsPerPoint, motherValsPerPoint);
     wavValsSum = sum(waveletBasisPerSample,1);
     currGrad = -2*(1/numSamps)*[scalValsSum wavValsSum]';
     disp('');

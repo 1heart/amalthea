@@ -98,10 +98,11 @@ for i = 1 : 1
      end
 
     % Compute the coefficients and densities. 
-    [coeffs, coeffsIdx, pdf] = mlWDE2DWrapper(currSh, wdeSet);
+%     [coeffs, coeffsIdx, pdf] = mlWDE2DWrapper(currSh, wdeSet);
+    [coeffs, coeffsIdx] = mlWDE2DWrapper(currSh, wdeSet);
 
     wdeCell{i,1} = coeffs(:,end); 
-    wdeCell{i,2} = pdf;
+%     wdeCell{i,2} = pdf;
             
 end
 
