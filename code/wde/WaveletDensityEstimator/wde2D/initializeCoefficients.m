@@ -213,12 +213,12 @@ switch(lower(initType{1}))
         scalVals = bsxfun(@rdivide, scalValsPerPoint, sqrtPEachSamp);
         scalingBasisGrid = sum(scalVals,1);
         scalingBasisGrid = scalingBasisGrid';
+    
+        waveletValsPerPoint = [];
 
-        
         % MULTIRES OPTIMIZATION ---------------------------------------------------------------------------------------------
         if(~scalingOnly)
             
-            waveletValsPerPoint = [];
             
             for j = startLevel:inc:stopLevel
                 waveletTransRX    = translationRange(sampleSupport(1,:), wName, j);

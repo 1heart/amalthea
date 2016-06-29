@@ -121,14 +121,25 @@ initDir = '';
 scalingOnly = 1;
 % initType = {'hist'};
 stInitCoeff = tic;
+% currInitCoeffs = @initializeCoefficients;
+currInitCoeffs = @initializeCoefficientsOpt;
 % Initialize the coefficients for gradient descent.
-[coeffs, coeffsIdx] = initializeCoefficients(samps,...
+[coeffs, coeffsIdx] = currInitCoeffs(samps,...
                     wdeSet.startLevel, wdeSet.stopLevel, ...
                      wdeSet.sampleSupp, wdeSet.wName, scalingOnly,...
-                     initType, initDir); 
+                     initType, initDir);
+
+% [coeffs_test, coeffsIdx_test] = initializeCoefficientsOpt(samps,...
+%                     wdeSet.startLevel, wdeSet.stopLevel, ...
+%                      wdeSet.sampleSupp, wdeSet.wName, scalingOnly,...
+%                      initType, initDir);
+% disp(norm(sum(coeffs) - sum(coeffs_test)));
+% disp(norm((coeffs) - (coeffs_test)));
 
 stopStInitCoeff = toc(stInitCoeff);
-disp(stopStInitCoeff);
+disp(['Time in initializeCoefficients: ' num2str(stopStInitCoeff)]);
+
+
 
 % Initialize a positive definite matrix to approximate the 
 % Hessian of the Lagrangian.                    
@@ -153,14 +164,17 @@ direction = 99999;
 startTime = tic;
 % 
 % %%%%%
+% currNLL = @negativeLogLikelihood;
+currNLL = @negativeLogLikelihoodOpt;
 % Get initial value of the negative loglikelihood cost function
-[currCost, currGrad] = negativeLogLikelihood(samps,...
+[currCost, currGrad] = currNLL(samps,...
     wdeSet.wName, wdeSet.startLevel, wdeSet.stopLevel, coeffs, ...
                 coeffsIdx, scalingOnly, wdeSet.sampleSupp, alpha);
 
 % %%%%% Mark inserted code. 
 stopTime = toc(startTime);
-disp(stopTime);
+disp(['Time in negativeLogLikelihood: ' num2str(stopTime)]);% 
+
 % 
 % %%%%%
                                          
@@ -251,7 +265,7 @@ while( (iter < wdeSet.maxIterWhile) & (norm(direction) >= gradTol))
     coeffs(:,iter+1) = coeffs(:,iter) + direction;
     
     % Get the update cost and gradient estimate.
-    [currCost, currGrad] = negativeLogLikelihood(samps,...
+    [currCost, currGrad] = currNLL(samps,...
                      wdeSet.wName, wdeSet.startLevel, wdeSet.stopLevel,...
                         coeffs(:,iter+1), coeffsIdx, scalingOnly,...
                         wdeSet.sampleSupp, alpha);

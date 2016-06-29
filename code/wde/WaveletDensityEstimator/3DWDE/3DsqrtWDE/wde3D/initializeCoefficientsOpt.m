@@ -126,34 +126,12 @@ switch(lower(initType{1}))
         % Normalize the coefficients so that sum of squares of the coefficients is
         % 1.
         coeffs = c/norm(c);
+    
+
+
+
+
     case 'hist'
-        
-%         % Determine if we need to count up or down
-%         if(startLevel <= stopLevel)
-%             inc = 1;
-%         else
-%             inc = -1;
-%         end
-%         if(isempty(cell2mat(varargin(1))))
-%             error('Need samps to estimate histogram');
-%         else
-%             samps =  cell2mat(varargin(1));
-%         end
-        
-%         % Get histogram of the samples and the corresponding sqrt of
-%         % density value for each sample.        
-%         if(isempty(cell2mat(varargin(2))))
-%             % Use Freedman-Diaconis rule to calculate the optimal bin width.
-%             h1 = 2*iqr(samps(:,1))*length(samps(:,1))^(-1/3);
-%             h2 = 2*iqr(samps(:,2))*length(samps(:,2))^(-1/3);
-%             h3 = 2*iqr(samps(:,3))*length(samps(:,3))^(-1/3);
-%             h  = max(h1,h2,h3);
-%             bins{1} = min(samps(:,1)) : h : max(samps(:,1))+h;
-%             bins{2} = min(samps(:,2)) : h : max(samps(:,2))+h;
-%             bins{3} = min(samps(:,3)) : h : max(samps(:,3))+h;
-%         else
-%             bins =  cell2mat(varargin(2));
-%         end
 
         % Use Freedman-Diaconis rule to calculate the optimal bin width.
         h1 = 2*iqr(samps(:,1))*length(samps(:,1))^(-1/3);
@@ -190,20 +168,43 @@ switch(lower(initType{1}))
         scalingShiftValsZ = scalingTransRZ(1):scalingTransRZ(2);
         
         tempScalValsSum = zeros(numSamps, coeffsIdx(1,2));
+        tempScalValsSum2 = zeros(numSamps, coeffsIdx(1,2));
         
         % Calculate the coefficient estimates based on the histogram
         for s = 1 : numSamps
-                
-            scalVals  = accessAllTranslatesAndTensorProd(samps(s,:),wName,...
-                 scalingShiftValsX,scalingShiftValsY,scalingShiftValsZ,startLevel);
+
+            %wavBasis = [];
+            
+            sampX = samps(s,1); sampY = samps(s,2); sampZ = samps(s,3);
+            % Compute father value for all scaled and translated samples.
+            x         = 2^startLevel*sampX - scalingShiftValsX;
+            y         = 2^startLevel*sampY - scalingShiftValsY;
+            z         = 2^startLevel*sampZ - scalingShiftValsZ;
+            
+            scalVals  = kron(father(x),father(y));
+            scalVals  = kron(scalVals, father(z));
+            % disp(['Thing that shouldnt be the same: ' num2str(norm(testScalVals - scalVals))])
+            
+            % Weight the basis functions with the coefficients.
+            %             scalingBasis = scalVals./sqrtPEachSamp(s);
+            %scalingSum   = sum(scalingBasis);
+            
             % Divide the basis by the sqrt hist.
-            scalingBasis = scalVals/sqrtPEachSamp(s);
+            scalingBasis = scalVals./sqrtPEachSamp(s);
             
+            % Incorporate the mother basis if necessary.
+            
+                
+            % scalVals  = accessAllTranslatesAndTensorProd(samps(s,:),wName,...
+            %      scalingShiftValsX,scalingShiftValsY,scalingShiftValsZ,startLevel);
+            
+            % % Divide the basis by the sqrt hist.
+            % scalingBasis = scalVals/sqrtPEachSamp(s);
             tempScalValsSum(s,:) = scalingBasis;
-            
         end
         c = (1/numSamps)*sum(tempScalValsSum,1)';
         coeffs = c/norm(c);
+        
 
 %         initDensityDir = char(varargin{1});
 %         strIdx=strfind(initDensityDir,'/');

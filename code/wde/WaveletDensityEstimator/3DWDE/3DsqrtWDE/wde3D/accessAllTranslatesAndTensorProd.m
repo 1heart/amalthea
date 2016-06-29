@@ -56,7 +56,7 @@ end
 % Load the scaling function and wavelet.  with the suport
 % this part is executed if the basis function is not Haar
 
-load(['waveCommon\' wavelet 'Tables.mat'], 'supp', 'phi', 'psi');   
+load(['waveCommon/' wavelet 'Tables.mat'], 'supp', 'phi', 'psi');   
 phiVect1 = interpolationFun(samp1,t1,supp,phi,startLevel); 
 phiVect2 = interpolationFun(samp2,t2,supp,phi,startLevel); 
 phiVect3 = interpolationFun(samp3,t3,supp,phi,startLevel); 

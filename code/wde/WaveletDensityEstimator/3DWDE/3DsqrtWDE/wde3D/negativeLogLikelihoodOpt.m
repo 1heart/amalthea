@@ -153,9 +153,30 @@ for s = 1 : numSamps
 %     end                               
 %     %---------------------------------------------------------------------------
      
-    scalVals  = accessAllTranslatesAndTensorProd(oneSample,wavelet,...
-                 scalingShiftValsX,scalingShiftValsY,scalingShiftValsZ,startLevel);
+    % scalVals  = accessAllTranslatesAndTensorProd(oneSample,wavelet,...
+    %              scalingShiftValsX,scalingShiftValsY,scalingShiftValsZ,startLevel);
     
+    % Get (x,y) value of the sample.
+    %sampX = samps(goodSampsIdx(s),1); sampY = samps(goodSampsIdx(s),2);
+    sampX = samps(s,1); sampY = samps(s,2); sampZ = samps(s,3);
+    
+    % Compute father value for all scaled and translated samples 
+    % over our entire 2D sampling grid.
+    x         = 2^startLevel*sampX - scalingShiftValsX;
+    y         = 2^startLevel*sampY - scalingShiftValsY;
+    z         = 2^startLevel*sampZ - scalingShiftValsZ;
+    
+    % Using kronecker prodcut to get combination of all shift values.
+    % Will result in:
+    % f(x1)*f(y1),f(x1)f(y2),f(x1)f(y3),...f(x2)f(y1),...f(xN)f(yM)
+    % Also note we don't need the (1/2) factor in normalization because we
+    % are multiplying 2 basis functions together so the factor cancels.
+    scalVals = kron(father(x),father(y));
+    scalVals = kron(scalVals, father(z));
+    scalVals  = (2^(1.5*startLevel))*scalVals';
+    
+
+
     %**********************************************************************
     % Weight the basis functions with the coefficients.
     

@@ -115,12 +115,16 @@ end
 % initType = {'hist'};
 stInitCoeff = tic;
 % Initialize the coefficients for gradient descent.
+
 [coeffs,coeffsIdx] = initializeCoefficients(samps, scalingStartLevel, waveletStopLevel, ...
                                             sampleSupport, wName, scalingOnly,initType, ...
                                             initDir); 
+% [coeffs,coeffsIdx] = initializeCoefficientsOpt(samps, scalingStartLevel, waveletStopLevel, ...
+%                                             sampleSupport, wName, scalingOnly,initType, ...
+%                                             initDir); 
 
 stopStInitCoeff = toc(stInitCoeff);
-disp(stopStInitCoeff);
+disp(['Time in initializeCoefficients: ' num2str(stopStInitCoeff)]);
 
 % Initialize a positive definite matrix to approximate the 
 % Hessian of the Lagrangian.                    
@@ -152,8 +156,7 @@ startTime = tic;
 
 % %%%%% Mark inserted code. 
 stopTime = toc(startTime);
-disp(stopTime);
-% 
+disp(['Time in negativeLogLikelihood: ' num2str(stopTime)]);% 
 % %%%%%
                                          
 nllTrack     = currCost;

@@ -35,18 +35,19 @@ wdeCell{1,3} = wdeSet;
 
 convCheck = zeros(nts,2);
 
-efwb = waitbar(0, 'Estimating Coefficients');
+% efwb = waitbar(0, 'Estimating Coefficients');
 % Loop through the shapes and compute the coefficients.
-for i = 1 : nts    
+% for i = 1 : nts
+for i = 1 : 1  
     
-        waitbar(i/nts, efwb);
+        % waitbar(i/nts, efwb);
         
         efcs = shapeData{i,1}; % Eigenfunctions of the current shape.        
         chosenData = efcs(:, wdeSet.eftc); % Chosen eigenfunction data. 
         
         chosenData = resizeShapesToSquareGrid(chosenData, abs(wdeSet.xMin));
         
-        plot3DShape(chosenData, 'c.');
+        % plot3DShape(chosenData, 'c.');
         
         % Calulate the coefficients of the chosen eigenfunctions.
         [wdeCell{i,1}, wdeCell{i,2}, convCheck(i,:)] = shapeToCoefficientsAndDensity(...
@@ -54,5 +55,5 @@ for i = 1 : nts
         
         save tempWdeCell wdeCell convCheck;
 end
-delete(efwb);
+% delete(efwb);
                     

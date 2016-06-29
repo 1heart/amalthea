@@ -13,21 +13,21 @@
 clear; clc; close all; 
 
 % Parallel pool.
-numWorkers = 8;
-if (isempty(gcp('nocreate')))
-    parpool('local', numWorkers);
-    clc;
-else
-    workers = gcp('nocreate');
-    if (workers.NumWorkers < numWorkers)
-        delete(workers);
-        workers = parpool('local', numWorkers);
-        clc
-    end
-end
+% numWorkers = 8;
+% if (isempty(gcp('nocreate')))
+%     parpool('local', numWorkers);
+%     clc;
+% else
+%     workers = gcp('nocreate');
+%     if (workers.NumWorkers < numWorkers)
+%         delete(workers);
+%         workers = parpool('local', n
+%         clc
+%     end
+% end
 
-addpath(genpath('..\..\..\3DWDE'));
-% addpath('C:\Users\mmoyou\Documents\MATLAB\Wasserstein\Plotting_Code');
+addpath(genpath('../../../3DWDE'));
+% addpath('C:/Users/mmoyou/Documents/MATLAB/Wasserstein/Plotting_Code');
 
 F = findall(0,'type','figure','tag','TMWWaitbar'); delete(F);
 % -------------------------- DEFINING VARIABLES -------------------------
@@ -71,23 +71,24 @@ shNameToSave = 'SHREC15_WTM_Or_PN'; % Shape name to save.
 
 %%
 
-expFoldLocal = 'C:\Users\mmoyou\Documents\MATLAB\Wasserstein\ShapeCoefficients\'; 
+expFoldLocal = '~/Desktop/Folder/Wasserstein/ShapeCoefficients/'; 
+expFoldLocal = '~/Desktop/Folder/Wasserstein/ShapeCoefficients/'; 
 
 % Saving data. 
-saveFoldLocal = [expFoldLocal, coeffDataSetFold, '\'];
+saveFoldLocal = [expFoldLocal, coeffDataSetFold, '/'];
 
 % Shape folder to load the shapes from. The variable should be shapeCell. 
-shFileFolder = 'C:\Users\mmoyou\Documents\MATLAB\Wasserstein\Datasets\3D\SHREC15_WTM\'; % Shape file folder.
+shFileFolder = '~/Desktop/Folder/Wasserstein/Datasets/3D/SHREC15_WTM/'; % Shape file folder.
 
-shFoldExternal = 'Z:\Users\mmoyou\Experiments\Wasserstein\ShapeCoefficientsWholeDataset\';
-saveFoldExternal = [shFoldExternal, coeffDataSetFold, '\'];
+% shFoldExternal = 'Z:/Users/mmoyou/Experiments/Wasserstein/ShapeCoefficientsWholeDataset/';
+% saveFoldExternal = [shFoldExternal, coeffDataSetFold, '/'];
 
-loadFileName = [shFileFolder, '\', origShFn];
+loadFileName = [shFileFolder, '/', origShFn];
 fileInfo = whos('-file', loadFileName);
 load(loadFileName); % Load shape data. 
 eval(['shapeCell = ' fileInfo.name ';']);
 
-saveFlag = 1;
+saveFlag = 0;
 saveExternally = 1;
 
 % Used to save the files.

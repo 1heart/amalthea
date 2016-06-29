@@ -90,7 +90,7 @@ zub = 1;    % z upper bound.
 
 domain = [xlb, xub; ylb, yub; zlb, zub]; % Domain for x,y,z.
 
-shapeFileName = 'ShapeCoseg.mat'; % Shape file name. 
+shapeFileName = 'inputMAT/tri1.mat'; % Shape file name. 
 load(shapeFileName); % Load shape data.  % Variable is shapeData.
 nc = size(shapeData,1); % Number of categories. 
 nst = shapeData{1,4}; % Number of shapes total. 
