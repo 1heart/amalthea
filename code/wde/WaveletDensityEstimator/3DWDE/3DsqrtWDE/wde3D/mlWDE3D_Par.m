@@ -121,20 +121,20 @@ initDir = '';
 scalingOnly = 1;
 % initType = {'hist'};
 stInitCoeff = tic;
-% currInitCoeffs = @initializeCoefficients;
-currInitCoeffs = @initializeCoefficientsOpt;
+% currInitCoeffs = @initializeCoefficientsOpt;
+currInitCoeffs = @initializeCoefficientsOptTwo;
 % Initialize the coefficients for gradient descent.
-[coeffs, coeffsIdx] = currInitCoeffs(samps,...
+[coeffs, coeffsIdx, scalValsPerPoint] = currInitCoeffs(samps,...
                     wdeSet.startLevel, wdeSet.stopLevel, ...
                      wdeSet.sampleSupp, wdeSet.wName, scalingOnly,...
                      initType, initDir);
-
-% [coeffs_test, coeffsIdx_test] = initializeCoefficientsOpt(samps,...
-%                     wdeSet.startLevel, wdeSet.stopLevel, ...
+                 
+%                  [coeffs_test, coeffsIdx_test, scalValsPerPoint] = initializeCoefficientsOptTwo(samps,...
+%                      wdeSet.startLevel, wdeSet.stopLevel, ...
 %                      wdeSet.sampleSupp, wdeSet.wName, scalingOnly,...
 %                      initType, initDir);
-% disp(norm(sum(coeffs) - sum(coeffs_test)));
-% disp(norm((coeffs) - (coeffs_test)));
+%                  disp(norm(sum(coeffs) - sum(coeffs_test)));
+%                  disp(norm(sum(sum(scalValsPerPointTrue)) - sum(sum(scalValsPerPoint))));
 
 stopStInitCoeff = toc(stInitCoeff);
 disp(['Time in initializeCoefficients: ' num2str(stopStInitCoeff)]);
@@ -164,12 +164,12 @@ direction = 99999;
 startTime = tic;
 % 
 % %%%%%
-% currNLL = @negativeLogLikelihood;
-currNLL = @negativeLogLikelihoodOpt;
+% currNLL = @negativeLogLikelihoodOpt;
+currNLL = @negativeLogLikelihoodOptTwo;
 % Get initial value of the negative loglikelihood cost function
 [currCost, currGrad] = currNLL(samps,...
     wdeSet.wName, wdeSet.startLevel, wdeSet.stopLevel, coeffs, ...
-                coeffsIdx, scalingOnly, wdeSet.sampleSupp, alpha);
+                coeffsIdx, scalingOnly, wdeSet.sampleSupp, alpha, scalValsPerPoint);
 
 % %%%%% Mark inserted code. 
 stopTime = toc(startTime);
@@ -268,7 +268,7 @@ while( (iter < wdeSet.maxIterWhile) & (norm(direction) >= gradTol))
     [currCost, currGrad] = currNLL(samps,...
                      wdeSet.wName, wdeSet.startLevel, wdeSet.stopLevel,...
                         coeffs(:,iter+1), coeffsIdx, scalingOnly,...
-                        wdeSet.sampleSupp, alpha);
+                        wdeSet.sampleSupp, alpha, scalValsPerPoint);
     
     % Additional check to see if we want to break out early.
     nllTrack = [nllTrack currCost];

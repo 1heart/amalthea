@@ -65,7 +65,7 @@
 %     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301
 %     USA
 %--------------------------------------------------------------------------
-function [coeffs, coeffsIdx, tempScalValsSum2] = initializeCoefficients(samps, startLevel, stopLevel,...
+function [coeffs, coeffsIdx, scalValsPerPoint] = initializeCoefficients(samps, startLevel, stopLevel,...
                                                      sampleSupport, wName,...
                                                      scalingOnly, initType, varargin)
 
@@ -129,6 +129,25 @@ switch(lower(initType{1}))
     
 
 
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
 
     case 'hist'
@@ -156,6 +175,7 @@ switch(lower(initType{1}))
         
         % Set up correct basis functions.
         [father, mother] = basisFunctions(wName);
+        waveSupp = waveSupport(wName);
 %         scalValsSum      = 0;
 %         mothValsSum      = 0;
         
@@ -166,45 +186,91 @@ switch(lower(initType{1}))
         scalingShiftValsY = scalingTransRY(1):scalingTransRY(2);
         scalingTransRZ    = translationRange(sampleSupport(3,:), wName, startLevel);
         scalingShiftValsZ = scalingTransRZ(1):scalingTransRZ(2);
-        
-        tempScalValsSum = zeros(numSamps, coeffsIdx(1,2));
-        tempScalValsSum2 = zeros(numSamps, coeffsIdx(1,2));
-        
-        % Calculate the coefficient estimates based on the histogram
-        for s = 1 : numSamps
 
-            %wavBasis = [];
+        % Set up scaling basis grid for each translate
+        numXTranslations = length(scalingShiftValsX);
+        numYTranslations = length(scalingShiftValsY);
+        numZTranslations = length(scalingShiftValsZ);
+        scalingBasisGrid = zeros(numXTranslations,numYTranslations,numZTranslations);
+        numTranslations = numXTranslations * numYTranslations * numZTranslations;
+        
+        % OPTIMIZATION TWO: Loop along translations
+        % Gives back new sample points (x,y) along each translate K
+        x = bsxfun(@minus, (2^startLevel)*samps(:,1), scalingShiftValsX);
+        y = bsxfun(@minus, (2^startLevel)*samps(:,2), scalingShiftValsY);
+        z = bsxfun(@minus, (2^startLevel)*samps(:,3), scalingShiftValsZ);
+        
+        % For each translate, sample values (x,y) that live under wavelet's support --> 1
+        valid_x = (x >= waveSupp(1) & x <= waveSupp(2));
+        valid_y = (y >= waveSupp(1) & y <= waveSupp(2));
+        valid_z = (z >= waveSupp(1) & z <= waveSupp(2));
+
+        scalValsPerPoint = zeros(numSamps,numTranslations);
+        
+
+
+        % Loop along translations in x
+        for k = 1 : numYTranslations
+            for i = 1 : numXTranslations
+
+            % Find where points x and y exist together or intersect --> 1
+            intersections = bsxfun(@times, valid_x(:,i), valid_y(:,k));
+            intersections = bsxfun(@times, intersections, valid_z);
             
-            sampX = samps(s,1); sampY = samps(s,2); sampZ = samps(s,3);
-            % Compute father value for all scaled and translated samples.
-            x         = 2^startLevel*sampX - scalingShiftValsX;
-            y         = 2^startLevel*sampY - scalingShiftValsY;
-            z         = 2^startLevel*sampZ - scalingShiftValsZ;
+            % Sample indices are represented by rows.
+            % Relevant y translations are represented by columns
+            [sampleIndex, translateIndex] = find(intersections == 1);
             
-            scalVals  = kron(father(x),father(y));
-            scalVals  = kron(scalVals, father(z));
-            tempScalValsSum2(s,:) = scalVals;
-            % disp(['Thing that shouldnt be the same: ' num2str(norm(testScalVals - scalVals))])
+            % Calculate father wavelet for relevant points that fall under current x translation
+            x_at_translate = x(sampleIndex,i);
+            father_x = father(x_at_translate);
+
+            % Calculate father wavelet for relevant points that fall under all y translations
+            y_at_translate = y(sampleIndex,k);
+            father_y = father(y_at_translate);
+
+            % Calculate father wavelet for relevant points that fall under all z translations
+            z_at_translate = z(logical(intersections));
+            father_z = father(z_at_translate);
             
-            % Weight the basis functions with the coefficients.
-            %             scalingBasis = scalVals./sqrtPEachSamp(s);
-            %scalingSum   = sum(scalingBasis);
+            % Calculate the father wavelet for all relevant points that fall under current translations
+            fatherWav = father_x .* father_y .* father_z;
+
+            % Save father wavelet values
+            newyTranlateIndex = sub2ind(size(scalingBasisGrid), zeros(size(translateIndex)) + i, zeros(size(translateIndex)) + k, translateIndex);
+            linearIndex = sub2ind(size(scalValsPerPoint), sampleIndex, newyTranlateIndex);
+            scalValsPerPoint(linearIndex) = fatherWav;
+
+
+            end % k = 1 : numYTranslations
             
-            % Divide the basis by the sqrt hist.
-            scalingBasis = scalVals./sqrtPEachSamp(s);
-            
-            % Incorporate the mother basis if necessary.
-            
-                
-            % scalVals  = accessAllTranslatesAndTensorProd(samps(s,:),wName,...
-            %      scalingShiftValsX,scalingShiftValsY,scalingShiftValsZ,startLevel);
-            
-            % % Divide the basis by the sqrt hist.
-            % scalingBasis = scalVals/sqrtPEachSamp(s);
-            tempScalValsSum(s,:) = scalingBasis;
-        end
-        c = (1/numSamps)*sum(tempScalValsSum,1)';
+        end % for i = 1 : numXTranslations
+
+        scalVals = bsxfun(@rdivide, scalValsPerPoint, sqrtPEachSamp);
+        scalingBasisGrid = sum(scalVals,1);
+        scalingBasisGrid = scalingBasisGrid';
+
+        c = (1/numSamps)*scalingBasisGrid;
         coeffs = c/norm(c);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
 
 %         initDensityDir = char(varargin{1});
@@ -249,7 +315,8 @@ switch(lower(initType{1}))
     case 'eig'
         %goodSampsIdx  = find((samps(:,1)>0) & (samps(:,2)>0));
         numSamps      = size(samps,1); %length(goodSampsIdx);%
-        numLevels  
+        numLevels     = length(startLevel:stopLevel);
+        % Calculate the arithmetic mean of the outer product.
         numTrans  = coeffsIdx(end);%length(scalingShiftVals);
         outerProd = zeros(numTrans);
         
