@@ -74,26 +74,22 @@ coeffsIdx = coefficientIndex(startLevel, stopLevel,...
     sampleSupport, wName,...
     scalingOnly);
 
-% The only working version for histogram
+% Only his
 switch(lower(initType{1}))
     case 'hist'
-        
-        % Determine if we need to increment up or down
+        % Determine if we need to count up or down
         if(startLevel <= stopLevel)
             inc = 1;
         else
             inc = -1;
         end
-        
-        % Error checking and defaults
         if(isempty(cell2mat(varargin(1))))
             error('Need samps to estimate histogram');
         else
             samps =  cell2mat(varargin(1));
         end
-        
-        % Calculate histogram of samples and corresponding sqrt of
-        % density value for each sample
+        % Get histogram of the samples and the corresponding sqrt of
+        % density value for each sample.
         if(isempty(cell2mat(varargin(2))))
             % Use Freedman-Diaconis rule to calculate the optimal bin width.
             h1 = 2*iqr(samps(:,1))*length(samps(:,1))^(-1/3);
@@ -105,25 +101,26 @@ switch(lower(initType{1}))
             bins =  cell2mat(varargin(2));
         end
         
-        % Normalize the bins and take sqrt
         [binCounts,idx] = hist3c(samps,bins);
-        sqrtP = sqrt(binCounts./sum(binCounts(:)));
+        % Normalize the bins and take sqrt.
+        sqrtP         = sqrt(binCounts./sum(binCounts(:)));
         sqrtPEachSamp = sqrtP(sub2ind(size(sqrtP),idx(:,1),idx(:,2)));
         numSamps      = length(samps);
         
-        % Translation range for starting level scaling function
+        % Translation range for the starting level scaling function.
         scalingTransRX    = translationRange(sampleSupport(1,:), wName, startLevel);
         scalingShiftValsX = [scalingTransRX(1):scalingTransRX(2)];
         scalingTransRY    = translationRange(sampleSupport(2,:), wName, startLevel);
         scalingShiftValsY = [scalingTransRY(1):scalingTransRY(2)];
         
-        % Set up basis functions
+        % Set up correct basis functions.
         [father, mother] = basisFunctions(wName);
         waveSupp = waveSupport(wName);
         
         % Set up scaling basis grid for each translate
         numXTranslations = length(scalingShiftValsX);
         numYTranslations = length(scalingShiftValsY);
+        scalingBasisGrid = zeros(numXTranslations,numYTranslations);
         numTranslations = numXTranslations * numYTranslations;
         
         % OPTIMIZATION FOUR: Single loop along translations
@@ -162,22 +159,19 @@ switch(lower(initType{1}))
             newyTranlateIndex = translateIndex + (i-1) * numXTranslations;
             linearIndex = sub2ind(size(scalValsPerPoint), sampleIndex, newyTranlateIndex);
             scalValsPerPoint(linearIndex) = fatherWav;
-            
         end % for i = 1 : numXTranslations
         
-        % Calculate scaling coefficients
+        % Calculate coefficients
         scalVals = bsxfun(@rdivide, scalValsPerPoint, sqrtPEachSamp);
         scalingBasisGrid = sum(scalVals,1);
         scalingBasisGrid = scalingBasisGrid';
-        basisGrid = scalingBasisGrid;
+        
+        waveletValsPerPoint = [];
         
         % MULTIRES COMPUTATION --------------------------------------------
-        waveletValsPerPoint = [];
         if(~scalingOnly)
             
-            % Increase resolution levels
             for j = startLevel:inc:stopLevel
-                % Translation range for resolution levels wavelet function
                 waveletTransRX    = translationRange(sampleSupport(1,:), wName, j);
                 waveletShiftValsX = [waveletTransRX(1):waveletTransRX(2)];
                 waveletTransRY    = translationRange(sampleSupport(2,:), wName, j);
@@ -186,9 +180,10 @@ switch(lower(initType{1}))
                 % Set up wavelet basis grid for each translate
                 numXTranslations_multires = length(waveletShiftValsX);
                 numYTranslations_multires = length(waveletShiftValsY);
+                %         			waveletBasisGrid = zeros(numXTranslations_multires,numYTranslations_multires);
                 numTranslations_multires = numXTranslations_multires * numYTranslations_multires;
                 
-                % Gives back new sample points (x,y) along each translate 
+                % Gives back new sample points (x,y) along each translate K
                 x = bsxfun(@minus, (2^j)*samps(:,1), waveletShiftValsX);
                 y = bsxfun(@minus, (2^j)*samps(:,2), waveletShiftValsY);
                 
@@ -200,12 +195,11 @@ switch(lower(initType{1}))
                 waveletValsPerPoint2 = zeros(numSamps,numTranslations_multires);
                 waveletValsPerPoint3 = zeros(numSamps,numTranslations_multires);
                 
-                % Loop over translations in x
-                for i = 1:numXTranslations_multires
+                for i = 1:numYTranslations_multires
                     % Find where points x and y exist together or intersect --> 1
                     intersections = bsxfun(@times, valid_x(:,i), valid_y);
                     
-                    % Sample indices are represented by rows
+                    % Sample indices are represented by rows.
                     % Relevant y translations are represented by columns
                     [sampleIndex, translateIndex] = find(intersections == 1);
                     
@@ -224,7 +218,7 @@ switch(lower(initType{1}))
                     motherWav2 = bsxfun(@times, 2^j * mother_x, father_y);
                     motherWav3 = bsxfun(@times, 2^j * mother_x, mother_y);
                     
-                    % Store father wavelet values
+                    % Save father wavelet values
                     newyTranlateIndex = translateIndex + (i-1) * numXTranslations_multires;
                     linearIndex = sub2ind(size(waveletValsPerPoint1), sampleIndex, newyTranlateIndex);
                     
@@ -232,26 +226,24 @@ switch(lower(initType{1}))
                     waveletValsPerPoint2(linearIndex) = motherWav2;
                     waveletValsPerPoint3(linearIndex) = motherWav3;
                     
-                end % for i = 1:numXTranslations_multires
+                end % for i = 1:numYTranslations_multires
                 
-                % Store wavelet values for every resolution
                 waveletValsPerPoint = [waveletValsPerPoint waveletValsPerPoint1 waveletValsPerPoint2 waveletValsPerPoint3];
                 
             end % for = j startLevel:inc:stopLevel
             
-            % Calculate wavelet coefficients
             wavVals = bsxfun(@rdivide, waveletValsPerPoint, sqrtPEachSamp);
             waveletBasisGrid = sum(wavVals,1);
             waveletBasisGrid = waveletBasisGrid';
-            basisGrid = [scalingBasisGrid;waveletBasisGrid];
             
         end % if(~scalingOnly)
         
-        % Calculate coefficients
-        c = (1/numSamps)*basisGrid;
+        if(~scalingOnly)
+            c = (1/numSamps)*[scalingBasisGrid;waveletBasisGrid];
+        else
+            c = (1/numSamps)*scalingBasisGrid;
+        end
         coeffs = c/norm(c);
-        
-        
         
     otherwise
         error('Unsupported initialization type!');

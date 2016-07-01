@@ -114,12 +114,11 @@ else
 end
 
 stInitCoeff = tic;
-% Calculate initial coefficients for gradient descent and
-% pass scaling and wavelet values for negativeLoglikelihood
-[coeffs, coeffsIdx, scalValsPerPoint, waveletValsPerPoint] = ...
-    initializeCoefficients(samps, scalingStartLevel, waveletStopLevel, ...
+% Initialize the coefficients for gradient descent
+[coeffs, coeffsIdx, scalValsPerPoint, waveletValsPerPoint] = initializeCoefficients(samps, scalingStartLevel, waveletStopLevel, ...
     sampleSupport, wName, scalingOnly,initType, ...
     samps, bins);
+
 stopInitCoeff = toc(stInitCoeff);
 disp(['Time in initializeCoefficients: ', num2str(stopInitCoeff)]);
 
@@ -130,18 +129,20 @@ else
     maxIter = cell2mat(varargin(3));
 end
 
+
+
 stNegLog = tic;
-% Calculate initial negative loglikelihood cost function value
+% Get initial value of the negative loglikelihood cost function
 [currCost, currGrad] = negativeLogLikelihood(samps, scalingStartLevel,...
     waveletStopLevel, coeffs,coeffsIdx,...
     scalingOnly, scalValsPerPoint, waveletValsPerPoint);
 stopNegLog = toc(stNegLog);
 disp(['Time in negativeLogLikelihood: ', num2str(stopNegLog)]);
 
-% Stores cost function value, direction, and gradient
+%
 nllTrack     = currCost;
-directionTrack     = [];
-gradientNTrack   = [];
+dirTrack     = [];
+gradNTrack   = [];
 
 iter    = 0;
 gradTol = 1e-4;
@@ -154,7 +155,7 @@ while( (iter<maxIter) && (norm(direction) >= gradTol))
     
     disp(['Iteration ' num2str(iter) ': nll = ' num2str(currCost)]);
     disp(['              Gradient Norm = ' num2str(norm(currGrad))]);
-    gradientNTrack = [gradientNTrack norm(currGrad)];
+    gradNTrack = [gradNTrack norm(currGrad)];
     
     % Direction is computed from the modified Newton update.
     % This assumes the Hessian of the Lagrangian is postive definite
@@ -175,7 +176,7 @@ while( (iter<maxIter) && (norm(direction) >= gradTol))
     direction         = temp1-temp2;
     disp(['              Direction = ' num2str(norm(direction))]);
     
-    % Optimial solution point (should equal one)
+    % Calculates 
     lambda            = invTerm*((sumSqOfCoeffs-1)-gradOfConstraints'*(.25)*currGrad);
     disp(['              lambda    = ' num2str(lambda)]);
     
@@ -189,11 +190,10 @@ while( (iter<maxIter) && (norm(direction) >= gradTol))
     
     % Additional check to see if we want to break out early.
     nllTrack = [nllTrack currCost];
-    directionTrack = [directionTrack norm(direction)];
+    dirTrack = [dirTrack norm(direction)];
     
 end % while( (iter<maxIter) & (norm(currGrad) >= gradTol))
 
-% Displays time stamps
 sec = etime(clock,t0);
 if(sec <= 60)
     disp(['Program execution took: ' num2str(sec) ' seconds.'])
@@ -202,3 +202,9 @@ elseif((sec > 60) && (sec <= 3600))
 else
     disp(['Program execution took: ' num2str(sec/3600) ' hours.'])
 end
+
+
+% save currentRunResults;
+% figure;
+% plot(nllTrack);
+% title(['Negative log likelihood'],'Fontsize',14);

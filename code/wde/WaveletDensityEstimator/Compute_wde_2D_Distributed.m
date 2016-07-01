@@ -39,12 +39,12 @@ saveFiles = 0;
 
 % OUTPUT DISPLAY SETTINGS -------------------------------------------------
 % Show progress bar
-dispLoading = 1;
+dispLoading = 0;
 F = findall(0,'type','figure','tag','TMWWaitbar'); delete(F);
 h = waitbar(0,'Computing coefficients and densities per category.');
 
 % Show shape points
-plotOrigShape = 1;
+plotOrigShape = 0;
 
 %--------------------------------------------------------------------------
 
