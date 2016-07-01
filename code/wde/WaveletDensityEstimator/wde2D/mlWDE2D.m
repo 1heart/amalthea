@@ -59,8 +59,9 @@
 %     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301
 %     USA
 %--------------------------------------------------------------------------
-function [coeffs, coeffsIdx, gradNTrack, dirTrack, currCost] = mlWDE2D(samps, wName, scalingStartLevel, ...
+function [coeffs, coeffsIdx] = mlWDE2D(samps, wName, scalingStartLevel, ...
                                                      waveletStopLevel, varargin)
+
 % Error checking and defaults                      
 if(~exist('wName'))
     wName = 'db1';
@@ -149,11 +150,8 @@ gradTol = 1e-4;
 direction = 99999;
 
 stNegLog = tic;
- ours = @negativeLogLikelihood;
-theirs = @negativeLogLikelihoodTrue;
-curr = ours;
 % Get initial value of the negative loglikelihood cost function
-[currCost, currGrad] = curr(samps, scalingStartLevel,...
+[currCost, currGrad] = negativeLogLikelihood(samps, scalingStartLevel,...
                                              waveletStopLevel, coeffs,coeffsIdx,...
                                              scalingOnly, scalValsPerPoint, waveletValsPerPoint);
 stopNegLog = toc(stNegLog);
@@ -167,7 +165,7 @@ dirTrack     = [];
 gradNTrack   = [];
 % Start gradient descent
 t0         = clock;   
-while( (iter<maxIter) & (norm(direction) >= gradTol))
+while( (iter<maxIter) && (norm(direction) >= gradTol))
     iter = iter + 1;
     
     disp(['Iteration ' num2str(iter) ': nll = ' num2str(currCost)]);
@@ -205,7 +203,7 @@ while( (iter<maxIter) & (norm(direction) >= gradTol))
     coeffs(:,iter+1) = coeffs(:,iter) + direction;
     
     % Get the update cost and gradient estimate.
-    [currCost, currGrad] = curr(samps, scalingStartLevel,...
+    [currCost, currGrad] = negativeLogLikelihood(samps, scalingStartLevel,...
                                                 waveletStopLevel, coeffs(:,iter+1), coeffsIdx,...
                                                 scalingOnly, scalValsPerPoint, waveletValsPerPoint);
     % Additional check to see if we want to break out early.
@@ -216,7 +214,7 @@ end % while( (iter<maxIter) & (norm(currGrad) >= gradTol))
 sec = etime(clock,t0);
 if(sec <= 60)
     disp(['Program execution took: ' num2str(sec) ' seconds.'])
-elseif((sec > 60) & (sec <= 3600))
+elseif((sec > 60) && (sec <= 3600))
     disp(['Program execution took: ' num2str(sec/60) ' minutes.'])
 else
     disp(['Program execution took: ' num2str(sec/3600) ' hours.'])

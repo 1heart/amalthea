@@ -22,10 +22,10 @@ wdeSet.gamma       = 1e-1;
 wdeSet.wName       = 'sym4'; %
 
 wdeSet.startLevel  = 2; %jo resolution
-wdeSet.stopLevel   = 4; %j resolution
-wdeSet.onlyScaling = 1;
+wdeSet.stopLevel   = 3; %j resolution
+wdeSet.onlyScaling = 0;
 wdeSet.iterations  =  12;
-wdeSet.wdePlotting = 0; % Plotting the density.
+wdeSet.wdePlotting = 1; % Plotting the density.
 
 wdeSet.delta          = .05;
 

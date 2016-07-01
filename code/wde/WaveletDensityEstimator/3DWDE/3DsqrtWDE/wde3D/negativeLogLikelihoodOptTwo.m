@@ -100,6 +100,7 @@ scalingBasisPerSample = bsxfun(@rdivide, scalValsPerPoint, basisValPerPoint);
 scalValsSum = sum(scalingBasisPerSample,1);
 
 currGrad = -2*(1/numSamps)*scalValsSum';
+disp('');
 
 
 

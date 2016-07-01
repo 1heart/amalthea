@@ -206,51 +206,8 @@ while( (iter < wdeSet.maxIterWhile) & (norm(direction) >= gradTol))
     tempMat           = -gradOfConstraints*(invTerm)*gradOfConstraints'*(.25);
     
     tempMat(linspace(1,numel(tempMat),length(tempMat))) = diag(tempMat) + 1;
-    
-%     
-% %     %%%%% Mark inserted code. 
-%     startTimeTemp = tic;
-% % 
-% %     %%%%%
-%     
-%     tempMat2 = tempMat;
-% 
-%     % Change this %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Mark
-%     for n = 1:size(tempMat,1)
-%         tempMat(n,n)=1+tempMat(n,n);
-%     end
-%     
-%     %     %%%%% Mark inserted code. 
-%     stopTimeTemp = toc(startTimeTemp);
-%     disp(stopTimeTemp);
-%     
-%     
-%     startTimeTemp2 = tic;
-%     
-%     tempMat2(linspace(1,numel(tempMat2),length(tempMat2))) = diag(tempMat2) + 1;
-%     
-%     stopTimeTemp2 = toc(startTimeTemp2);
-%     disp(stopTimeTemp2);
-%     norm(tempMat - tempMat2, 'fro')
-    
 
-% 
-%     %%%%%
-%     
-%     tempMat2 = tempMat; 
-%     %%%%%%%%%%%
-%     startTimeTemp2 = tic;
-%     tempMat2 = tempMat2 + diag( ones(size(tempMat2,1) ,1) );
-%     
-%     stopTimeTemp2 = toc(startTimeTemp2);
-%     disp(stopTimeTemp2);
-%     %%%%%%%%%%%%%%%%%%%%%%%%
-    
-%     norm(tempMat2 - tempMat, 'fro')
-    
     temp1             = -(.25)*(tempMat)*currGrad;
-    %temp1            = -(.25)*(identMat-gradOfConstraints*(invTerm)*gradOfConstraints'*(.25))*currGrad;
-%    temp2             = invApproxHessian*gradOfConstraints*invTerm*(sumSqOfCoeffs-1);
     temp2             = (.25)*gradOfConstraints*invTerm*(sumSqOfCoeffs-1);
     direction         = temp1-temp2;
     lambda            = invTerm*((sumSqOfCoeffs-1)-gradOfConstraints'*(.25)*currGrad);

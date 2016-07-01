@@ -48,10 +48,8 @@ saveFold = ['../ShapeCoefficients/', dataSetFold];
 % saveFoldExtra = [saveFoldExtra, dataSetFold, '/'];
 shapeFold = ['../Datasets/', dataSetFold, '/']; % Shape file folder. 
 
-saveFiles = 1;
-plotOrigShape = 0;
-
-wdeSet.stopLevel   = 4; %testing resolution levels
+saveFiles = 0;
+plotOrigShape = 1;
 
 % The variable name should be shapeCell. 
 load([shapeFold, shapeName]); % Load the shape file. 
@@ -70,15 +68,6 @@ wdeCell{1,3} = wdeSet;
 startTimeOverall = tic;
 F = findall(0,'type','figure','tag','TMWWaitbar'); delete(F);
 % h = waitbar(0,'Computing coefficients and densities per category.');
-
-
-
-
-
-
-
-
-
 
 % Loop through the shapes, resize them approriately, and estimate the
 % coeffients and densities and store them. 
@@ -102,7 +91,7 @@ for i = 1 : 1
     [coeffs, coeffsIdx] = mlWDE2DWrapper(currSh, wdeSet);
 
     wdeCell{i,1} = coeffs(:,end); 
-%     wdeCell{i,2} = pdf;
+%      wdeCell{i,2} = pdf;
             
 end
 
