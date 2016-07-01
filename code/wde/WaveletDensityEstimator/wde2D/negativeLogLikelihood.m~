@@ -72,36 +72,38 @@ function [currCost, currGrad] = negativeLogLikelihood(samps, coeffs,...
     scalingOnly,...
     scalValsPerPoint, waveletValsPerPoint)
 
-% OPTIMIZATION FOUR: Passed in scalValsPerPoint. Eliminated loops.
-% Only performs operations.
 numSamps = size(samps,1);
 motherValsPerPoint = 0;
+
+% OPTIMIZATION FOUR: Passed in scalValsPerPoint. Eliminated loops.
+% Only performs operations.
 
 % Calculates cost function
 fatherValsPerPoint = bsxfun(@times, scalValsPerPoint, coeffs(coeffsIdx(1,1):coeffsIdx(1,2))');
 fatherValsPerPoint = sum(fatherValsPerPoint,2);
+basisValPerPoint = fatherValsPerPoint;
 
-% Calculates cost function for multires
 if(~scalingOnly)
     motherValsPerPoint = bsxfun(@times, waveletValsPerPoint, coeffs(coeffsIdx(2,1):end)');
     motherValsPerPoint = sum(motherValsPerPoint,2);
+
+else
+    loglikelihood = log(basisValPerPoint.^2);
 end
 
-% Calculates cost function
 basisValPerPoint = fatherValsPerPoint + motherValsPerPoint;
 loglikelihood = log((basisValPerPoint).^2);
 currCost = -(1/numSamps)*sum(loglikelihood);
 
-% Calculates gradient
+
 scalingBasisPerSample = bsxfun(@rdivide, scalValsPerPoint, basisValPerPoint);
 scalValsSum = sum(scalingBasisPerSample,1);
 
-% Calculates gradient for multires
 if(~scalingOnly)
     waveletBasisPerSample = bsxfun(@rdivide, waveletValsPerPoint, basisValPerPoint);
     wavValsSum = sum(waveletBasisPerSample,1);
     currGrad = -2*(1/numSamps)*[scalValsSum wavValsSum]';
+    disp('');
 else
-    % Calculates gradient
     currGrad = -2*(1/numSamps)*scalValsSum';
 end

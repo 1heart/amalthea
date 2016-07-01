@@ -132,8 +132,7 @@ end
 
 stNegLog = tic;
 % Calculate initial negative loglikelihood cost function value
-[currCost, currGrad] = negativeLogLikelihood(samps, scalingStartLevel,...
-    waveletStopLevel, coeffs,coeffsIdx,...
+[currCost, currGrad] = negativeLogLikelihood(samps, coeffs,coeffsIdx,...
     scalingOnly, scalValsPerPoint, waveletValsPerPoint);
 stopNegLog = toc(stNegLog);
 disp(['Time in negativeLogLikelihood: ', num2str(stopNegLog)]);
@@ -183,8 +182,7 @@ while( (iter<maxIter) && (norm(direction) >= gradTol))
     coeffs(:,iter+1) = coeffs(:,iter) + direction;
     
     % Calculates the update cost and gradient estimate
-    [currCost, currGrad] = negativeLogLikelihood(samps, scalingStartLevel,...
-        waveletStopLevel, coeffs(:,iter+1), coeffsIdx,...
+    [currCost, currGrad] = negativeLogLikelihood(samps, coeffs(:,iter+1), coeffsIdx,...
         scalingOnly, scalValsPerPoint, waveletValsPerPoint);
     
     % Additional check to see if we want to break out early.
