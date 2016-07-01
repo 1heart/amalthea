@@ -62,9 +62,14 @@
 %     USA
 %--------------------------------------------------------------------------
 function sqrtP = plotWDE(supportVals, sampleSupport, wName, startLevel, stopLevel,...
-                         coeffs, coeffsIdx, scalingOnly, varargin)
+    coeffs, coeffsIdx, scalingOnly, varargin)
 
-numSamps      = length(supportVals);
+% Error checking and default
+if(isempty(varargin(3)))
+    wdePlotting = 1;
+else
+    wdePlotting = cell2mat(varargin(3));
+end
 
 % Determine if we need to count up or down.
 if(startLevel <= stopLevel)
@@ -73,6 +78,7 @@ else
     inc = -1;
 end
 
+% Translation range for starting level scaling function
 scalingTransRX    = translationRange(sampleSupport(1,:), wName, startLevel);
 scalingShiftValsX = [scalingTransRX(1):scalingTransRX(2)];
 scalingTransRY    = translationRange(sampleSupport(2,:), wName, startLevel);
@@ -87,6 +93,7 @@ numXTranslations = length(scalingShiftValsX);
 numYTranslations = length(scalingShiftValsY);
 numTranslations = numXTranslations * numYTranslations;
 
+% Gives back new sample points (x,y) for support values along each translate
 x = bsxfun(@minus, (2^startLevel)*supportVals(:,1), scalingShiftValsX);
 y = bsxfun(@minus, (2^startLevel)*supportVals(:,2), scalingShiftValsY);
 
@@ -94,6 +101,8 @@ y = bsxfun(@minus, (2^startLevel)*supportVals(:,2), scalingShiftValsY);
 valid_x = (x >= waveSupp(1) & x <= waveSupp(2));
 valid_y = (y >= waveSupp(1) & y <= waveSupp(2));
 
+% Initialize output
+numSamps      = length(supportVals);
 scalValsPerPoint = zeros(numSamps,numTranslations);
 
 % Loop along translations in x
@@ -123,14 +132,15 @@ for i = 1 : numXTranslations
     scalValsPerPoint(linearIndex) = fatherWav;
 end % for i = 1 : numXTranslations
 
+% Calculates density
 fatherValsPerPoint = bsxfun(@times, scalValsPerPoint, coeffs(coeffsIdx(1,1):coeffsIdx(1,2))');
 fatherValsPerPoint = sum(fatherValsPerPoint,2);
 
-
+% MULTIRESOLUTION ---------------------------------------------------------
 waveletValsPerPoint = [];
 motherValsPerPoint = 0;
 if(~scalingOnly)
-    
+    % Increases resolution levels
     for j = startLevel:inc:stopLevel
         waveletTransRX    = translationRange(sampleSupport(1,:), wName, j);
         waveletShiftValsX = [waveletTransRX(1):waveletTransRX(2)];
@@ -140,7 +150,6 @@ if(~scalingOnly)
         % Set up wavelet basis grid for each translate
         numXTranslations_multires = length(waveletShiftValsX);
         numYTranslations_multires = length(waveletShiftValsY);
-        %                   waveletBasisGrid = zeros(numXTranslations_multires,numYTranslations_multires);
         numTranslations_multires = numXTranslations_multires * numYTranslations_multires;
         
         % Gives back new sample points (x,y) along each translate K
@@ -151,6 +160,7 @@ if(~scalingOnly)
         valid_x = (x >= waveSupp(1) & x <= waveSupp(2));
         valid_y = (y >= waveSupp(1) & y <= waveSupp(2));
         
+        % Store wavelet function values
         waveletValsPerPoint1 = zeros(numSamps,numTranslations_multires);
         waveletValsPerPoint2 = zeros(numSamps,numTranslations_multires);
         waveletValsPerPoint3 = zeros(numSamps,numTranslations_multires);
@@ -182,21 +192,25 @@ if(~scalingOnly)
             newyTranlateIndex = translateIndex + (i-1) * numXTranslations_multires;
             linearIndex = sub2ind(size(waveletValsPerPoint1), sampleIndex, newyTranlateIndex);
             
+            % Store wavelet function values 
             waveletValsPerPoint1(linearIndex) = motherWav1;
             waveletValsPerPoint2(linearIndex) = motherWav2;
             waveletValsPerPoint3(linearIndex) = motherWav3;
             
         end % for i = 1:numYTranslations_multires
         
+        % Store wavelet values for every resolution
         waveletValsPerPoint = [waveletValsPerPoint waveletValsPerPoint1 waveletValsPerPoint2 waveletValsPerPoint3];
         
     end % for = j startLevel:inc:stopLevel
     
+    % Calculate density
     motherValsPerPoint = bsxfun(@times, waveletValsPerPoint, coeffs(coeffsIdx(2,1):end)');
     motherValsPerPoint = sum(motherValsPerPoint,2);
     
 end % if(~scalingOnly)
 
+% Calculate density
 basisValPerPoint = fatherValsPerPoint + motherValsPerPoint;
 
 % Reshape p to fit the domain.
@@ -204,13 +218,7 @@ xGrid = cell2mat(varargin(1));
 yGrid = cell2mat(varargin(2));
 sqrtP = reshape(basisValPerPoint,size(xGrid));
 
-
-if(isempty(varargin(3)))
-    wdePlotting = 1;
-else
-    wdePlotting = cell2mat(varargin(3));
-end
-
+% Plots squareroot density and density of current shape
 if(wdePlotting)
     f1 = figure; movegui(f1,'east');
     surf(xGrid,yGrid,sqrtP); shading flat;

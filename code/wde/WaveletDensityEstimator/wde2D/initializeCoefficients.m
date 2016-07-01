@@ -127,7 +127,7 @@ switch(lower(initType{1}))
         numTranslations = numXTranslations * numYTranslations;
         
         % OPTIMIZATION FOUR: Single loop along translations
-        % Gives back new sample points (x,y) along each translate K
+        % Gives back new sample points (x,y) along each translate
         x = bsxfun(@minus, (2^startLevel)*samps(:,1), scalingShiftValsX);
         y = bsxfun(@minus, (2^startLevel)*samps(:,2), scalingShiftValsY);
         

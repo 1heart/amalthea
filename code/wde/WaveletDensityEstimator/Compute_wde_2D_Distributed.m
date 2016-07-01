@@ -86,17 +86,16 @@ for i = 1 : numShapes
             
 end % for i = 1 : numShapes
 
+% Timestamp to estimate entire dataset
 stopStartTimeOverall = toc(startTimeOverall);
 disp(['Time looping over shapes: ', num2str(stopStartTimeOverall)]);
 
 F = findall(0,'type','figure','tag','TMWWaitbar'); delete(F);
 
-% FIND OUT HOW TO BEST HANDLE THIS
+% Save probability density estimation data
 if (saveFiles == 1)
     save([saveFold, shapeName '_Coeffs_r6_' wdeSet.wName '_res_'...
         num2str(wdeSet.startLevel), '_p', num2str(partNum)], 'wdeCell');
-    % save([saveFoldExtra, shapeName '_Coeffs_r6_' wdeSet.wName '_res_'...
-        % num2str(wdeSet.startLevel), '_p', num2str(partNum)], 'wdeCell');
     disp('Files saved successfully');
 end
     
