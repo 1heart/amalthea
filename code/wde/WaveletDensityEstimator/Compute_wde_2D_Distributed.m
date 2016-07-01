@@ -12,7 +12,7 @@ addpath('../ShapeCoefficients/');
 addpath('../ShapeProcessing_Code/');
 
 % PARARMETERS SETTINGS ---------------------------------------------------- 
-wdeSet = wde2DParameters_Test();
+wdeSet = wde2DParameters_Test('db1', 5, 5, 1);
 
 % DATASET SETTINGS --------------------------------------------------------
 % Brown, MPEG7, MPEG7, SweedishLeaf
@@ -23,7 +23,7 @@ shapeName = 'mpeg7Aligned';
 
 % Set which shape index to start with
 partNum = 2;
-minInd = 251;
+minInd = 1;
 maxInd = 500;
 wdeSet.minInd = minInd;
 wdeSet.maxInd = maxInd;
@@ -35,7 +35,7 @@ load([shapeFold, shapeName]);
 
 % SAVE SETTINGS -----------------------------------------------------------
 saveFold = ['../ShapeCoefficients/', dataSetFold];
-saveFiles = 0;
+saveFiles = 1;
 
 % OUTPUT DISPLAY SETTINGS -------------------------------------------------
 % Show progress bar
@@ -43,7 +43,7 @@ dispLoading = 0;
 F = findall(0,'type','figure','tag','TMWWaitbar'); delete(F);
 
 % Show shape points
-plotOrigShape = 1;
+plotOrigShape = 0;
 
 %--------------------------------------------------------------------------
 
@@ -59,7 +59,7 @@ wdeCell{1,3} = wdeSet;
 startTimeOverall = tic;
 
 % Loop through shapes to estimate densities
-for i = 1 : 1
+for i = 1 : numShapes
     
     % Shows progress updates
     if(dispLoading)
@@ -98,4 +98,3 @@ if (saveFiles == 1)
         num2str(wdeSet.startLevel), '_p', num2str(partNum)], 'wdeCell');
     disp('Files saved successfully');
 end
-    
