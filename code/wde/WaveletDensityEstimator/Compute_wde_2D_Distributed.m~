@@ -11,15 +11,14 @@ addpath('../RetrievalMetrics_Code/');
 addpath('../ShapeCoefficients/');
 addpath('../ShapeProcessing_Code/');
 
-% PARARMETERS SETTINGS ---------------------------------------------------- 
+% Load the wde parameters. 
 wdeSet = wde2DParameters_Test();
 
 % DATASET SETTINGS --------------------------------------------------------
-% Brown, MPEG7, MPEG7, SweedishLeaf
-dataSetFold = 'MPEG7'; 
+dataSetFold = 'MPEG7'; % Brown, MPEG7, MPEG7, SweedishLeaf
 
 % Brown_2D_ns99, Animal_All, mpeg7Aligned, mpeg7NoAligned
-shapeName = 'mpeg7Aligned'; 
+shapeName = 'mpeg7Aligned'; % Shape file name. 
 
 % Set which shape index to start with
 partNum = 2;
@@ -37,16 +36,12 @@ load([shapeFold, shapeName]);
 saveFold = ['../ShapeCoefficients/', dataSetFold];
 saveFiles = 0;
 
-% OUTPUT DISPLAY SETTINGS -------------------------------------------------
-% Show progress bar
+% Loading display settings
 dispLoading = 1;
+plotOrigShape = 1;
 F = findall(0,'type','figure','tag','TMWWaitbar'); delete(F);
 h = waitbar(0,'Computing coefficients and densities per category.');
 
-% Show shape points
-plotOrigShape = 1;
-
-%--------------------------------------------------------------------------
 
 % Pull shape info
 numShapes = numel(minInd : maxInd);
