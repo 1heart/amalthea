@@ -43,7 +43,7 @@ dispLoading = 0;
 F = findall(0,'type','figure','tag','TMWWaitbar'); delete(F);
 
 % Show shape points
-plotOrigShape = 0;
+plotOrigShape = 1;
 
 %--------------------------------------------------------------------------
 
@@ -59,7 +59,7 @@ wdeCell{1,3} = wdeSet;
 startTimeOverall = tic;
 
 % Loop through shapes to estimate densities
-for i = 1 : numShapes
+for i = 1 : 1
     
     % Shows progress updates
     if(dispLoading)
@@ -71,6 +71,11 @@ for i = 1 : numShapes
     % Pull and resize shape
     currShape = shapeCell{i,1};
     currShape = resizeShapesToSquareGrid(currShape, abs(wdeSet.xMin));
+    
+         % Plots current shape
+     if (plotOrigShape)
+         plot2DShape(currShape, 'r.');
+     end
 
     % Compute the coefficients and densities
     [coeffs, coeffsIdx, pdf] = mlWDE2DWrapper(currShape, wdeSet);
@@ -78,11 +83,6 @@ for i = 1 : numShapes
     % Store coefficients and densities
     wdeCell{i,1} = coeffs(:,end); 
     wdeCell{i,2} = pdf;
-
-     % Plots current shape
-     if (plotOrigShape)
-         plot2DShape(currShape, 'r.');
-     end
             
 end % for i = 1 : numShapes
 

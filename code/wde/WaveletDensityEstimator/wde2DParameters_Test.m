@@ -19,13 +19,13 @@ wdeSet.gamma       = 1e-1;
 %     case {'coif1';'coif2';'coif3';'coif4';'coif5';'coif6';'coif7';'coif7';'coif8';'coif9';'coif10'}
 
 % WDE free parameters
-wdeSet.wName       = 'sym4'; %
+wdeSet.wName       = 'sym4'; 
 
 wdeSet.startLevel  = 2; %jo resolution
-wdeSet.stopLevel   = 3; %j resolution
+wdeSet.stopLevel   = 4; %j resolution
 wdeSet.onlyScaling = 0;
 wdeSet.iterations  =  12;
-wdeSet.wdePlotting = 0; % Plotting the density.
+wdeSet.wdePlotting = 1; % Plotting the density.
 
 wdeSet.delta          = .05;
 

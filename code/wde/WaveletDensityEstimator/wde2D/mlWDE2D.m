@@ -169,8 +169,7 @@ while( (iter<maxIter) && (norm(direction) >= gradTol))
     for n = 1:size(tempMat,1)
         tempMat(n,n)=1+tempMat(n,n);
     end
-    temp1             = -(.25)*(tempMat)*currGrad;
-    temp2             = (.25)*gradOfConstraints*invTerm*(sumSqOfCoeffs-1);
+    temp1             = -(.25)*(tempMat)*currGrad;    temp2             = (.25)*gradOfConstraints*invTerm*(sumSqOfCoeffs-1);
     direction         = temp1-temp2;
     disp(['              Direction = ' num2str(norm(direction))]);
     
