@@ -174,8 +174,6 @@ for s = 1 : numSamps
     scalVals = kron(father(x),father(y));
     scalVals = kron(scalVals, father(z));
     scalVals  = (2^(1.5*startLevel))*scalVals';
-    
-
 
     %**********************************************************************
     % Weight the basis functions with the coefficients.

@@ -77,15 +77,7 @@ function [currCost, currGrad] = negativeLogLikelihood(samps,...
                                                                    sampleSupport,alpha,...
                                                                     scalValsPerPoint)
 
-numSamps      = size(samps,1);%length(goodSampsIdx);
-
-
-% Determine if we need to count up or down.
-if(startLevel <= stopLevel)
-    inc = 1;
-else
-    inc = -1;
-end
+numSamps      = size(samps,1);
 
 % OPTIMIZATION TWO: Passed in scalValsPerPoint. Eliminated loops.
 % Only performs operations.
@@ -100,6 +92,7 @@ scalingBasisPerSample = bsxfun(@rdivide, scalValsPerPoint, basisValPerPoint);
 scalValsSum = sum(scalingBasisPerSample,1);
 
 currGrad = -2*(1/numSamps)*scalValsSum';
+disp('');
 
 
 

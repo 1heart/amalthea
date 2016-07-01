@@ -183,6 +183,7 @@ switch(lower(initType{1}))
             
             scalVals  = kron(father(x),father(y));
             scalVals  = kron(scalVals, father(z));
+            scalVals  = (2^(1.5*startLevel))*scalVals';
             tempScalValsSum2(s,:) = scalVals;
             % disp(['Thing that shouldnt be the same: ' num2str(norm(testScalVals - scalVals))])
             
