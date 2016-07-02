@@ -1,10 +1,10 @@
 SAVE_PATH = './results/';
-LAMBDAS = [0];
-% LAMBDAS = [0 1e-2 1e-4 1e-6 1e-8];
-% DATASET_NAMES = {...
-%   'mpeg_7_haar_singleres', 'mpeg_7_haar_multires',...
-%   'mpeg_7_sym4_singleres', 'mpeg_7_sym4_singlres'};
-DATASET_NAMES = {'brown_123'};
+% LAMBDAS = [0];
+% DATASET_NAMES = {'brown_123'};
+LAMBDAS = [0 1e-2 1e-4 1e-6 1e-8];
+DATASET_NAMES = {...
+  'mpeg_7_haar_singleres', 'mpeg_7_haar_multires',...
+  'mpeg_7_sym4_singleres', 'mpeg_7_sym4_multires'};
 if ~exist('datasets')
   datasets = getDatasets(DATASET_NAMES, '~/amalthea/data/');
   get_dists_for_datasets;
