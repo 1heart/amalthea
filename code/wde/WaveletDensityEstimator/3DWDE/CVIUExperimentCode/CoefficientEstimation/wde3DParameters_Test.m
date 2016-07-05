@@ -21,9 +21,9 @@ wdeSet.gamma       = 1e-1;
 % WDE free parameters
 wdeSet.wName       = 'db4'; % )***
 
-wdeSet.startLevel  = 3; % ***
-wdeSet.stopLevel   = wdeSet.startLevel;
-wdeSet.onlyScaling = 1;
+wdeSet.startLevel  = 2; % ***
+wdeSet.stopLevel   = 3;
+wdeSet.scalingOnly = 0;
 wdeSet.iterations  =  100;
 wdeSet.wdePlotting = 0; % Plotting the density.
 wdeSet.erThr = 1e-8;           % Error tolerance in coefficient estimate. 

@@ -148,10 +148,17 @@ switch(lower(initType{1}))
         
         
         
-
-
+        
+        
     case 'hist'
-
+        
+        if(startLevel <= stopLevel)
+            inc = 1;
+        else
+            inc = -1;
+        end
+        
+        
         % Use Freedman-Diaconis rule to calculate the optimal bin width.
         h1 = 2*iqr(samps(:,1))*length(samps(:,1))^(-1/3);
         h2 = 2*iqr(samps(:,2))*length(samps(:,2))^(-1/3);
@@ -161,23 +168,23 @@ switch(lower(initType{1}))
         bins{2} = min(samps(:,2)) : h : max(samps(:,2))+h;
         bins{3} = min(samps(:,3)) : h : max(samps(:,3))+h;
         
-        % Compute a 3D histogram. 
+        % Compute a 3D histogram.
         [N, edges, mid, loc] = histcn(samps,bins{1}, bins{2}, bins{3});
         
-        % Compute the square root of the density. 
+        % Compute the square root of the density.
         sqrtP = sqrt(N / sum(N(:)));
         
-        % Get the square root of each sample. 
+        % Get the square root of each sample.
         sqrtPEachSamp = sqrtP(sub2ind(size(N), loc(:,1), loc(:,2), loc(:,3)));
         
-        % Get the number of samples. 
+        % Get the number of samples.
         numSamps = size(samps,1);
         
         % Set up correct basis functions.
         [father, mother] = basisFunctions(wName);
         waveSupp = waveSupport(wName);
-%         scalValsSum      = 0;
-%         mothValsSum      = 0;
+        %         scalValsSum      = 0;
+        %         mothValsSum      = 0;
         
         % Translation range for the starting level scaling function.
         scalingTransRX    = translationRange(sampleSupport(1,:), wName, startLevel);
@@ -186,7 +193,7 @@ switch(lower(initType{1}))
         scalingShiftValsY = scalingTransRY(1):scalingTransRY(2);
         scalingTransRZ    = translationRange(sampleSupport(3,:), wName, startLevel);
         scalingShiftValsZ = scalingTransRZ(1):scalingTransRZ(2);
-
+        
         % Set up scaling basis grid for each translate
         numXTranslations = length(scalingShiftValsX);
         numYTranslations = length(scalingShiftValsY);
@@ -204,54 +211,164 @@ switch(lower(initType{1}))
         valid_x = (x >= waveSupp(1) & x <= waveSupp(2));
         valid_y = (y >= waveSupp(1) & y <= waveSupp(2));
         valid_z = (z >= waveSupp(1) & z <= waveSupp(2));
-
+        
         scalValsPerPoint = zeros(numSamps,numTranslations);
         
-
-
         % Loop along translations in x
         for k = 1 : numYTranslations
             for i = 1 : numXTranslations
-
-            % Find where points x and y exist together or intersect --> 1
-            intersections = bsxfun(@times, valid_x(:,i), valid_y(:,k));
-            intersections = bsxfun(@times, intersections, valid_z);
-            
-            % Sample indices are represented by rows.
-            % Relevant y translations are represented by columns
-            [sampleIndex, translateIndex] = find(intersections == 1);
-            
-            % Calculate father wavelet for relevant points that fall under current x translation
-            x_at_translate = x(sampleIndex,i);
-            father_x = father(x_at_translate);
-
-            % Calculate father wavelet for relevant points that fall under all y translations
-            y_at_translate = y(sampleIndex,k);
-            father_y = father(y_at_translate);
-
-            % Calculate father wavelet for relevant points that fall under all z translations
-            z_at_translate = z(logical(intersections));
-            father_z = father(z_at_translate);
-            
-            % Calculate the father wavelet for all relevant points that fall under current translations
-            fatherWav = father_x .* father_y .* father_z;
-            fatherWav = (2^(1.5*startLevel))*fatherWav;
-
-            % Save father wavelet values
-            newyTranlateIndex = sub2ind(size(scalingBasisGrid), zeros(size(translateIndex)) + i, zeros(size(translateIndex)) + k, translateIndex);
-            linearIndex = sub2ind(size(scalValsPerPoint), sampleIndex, newyTranlateIndex);
-            scalValsPerPoint(linearIndex) = fatherWav;
-
-
+                
+                % Find where points x and y exist together or intersect --> 1
+                intersections = bsxfun(@times, valid_x(:,i), valid_y(:,k));
+                intersections = bsxfun(@times, intersections, valid_z);
+                
+                % Sample indices are represented by rows.
+                % Relevant y translations are represented by columns
+                [sampleIndex, translateIndex] = find(intersections == 1);
+                
+                % Calculate father wavelet for relevant points that fall under current x translation
+                x_at_translate = x(sampleIndex,i);
+                father_x = father(x_at_translate);
+                
+                % Calculate father wavelet for relevant points that fall under all y translations
+                y_at_translate = y(sampleIndex,k);
+                father_y = father(y_at_translate);
+                
+                % Calculate father wavelet for relevant points that fall under all z translations
+                z_at_translate = z(logical(intersections));
+                father_z = father(z_at_translate);
+                
+                % Calculate the father wavelet for all relevant points that fall under current translations
+                fatherWav = father_x .* father_y .* father_z;
+                fatherWav = (2^(1.5*startLevel))*fatherWav;
+                
+                % Save father wavelet values
+                newyTranlateIndex = sub2ind(size(scalingBasisGrid), zeros(size(translateIndex)) + i, zeros(size(translateIndex)) + k, translateIndex);
+                linearIndex = sub2ind(size(scalValsPerPoint), sampleIndex, newyTranlateIndex);
+                scalValsPerPoint(linearIndex) = fatherWav;
+                
+                
             end % k = 1 : numYTranslations
             
         end % for i = 1 : numXTranslations
-
+        
         scalVals = bsxfun(@rdivide, scalValsPerPoint, sqrtPEachSamp);
         scalingBasisGrid = sum(scalVals,1);
         scalingBasisGrid = scalingBasisGrid';
+        
+        
+        % MULTIRES OPTIMIZATION -----------------------------------------------------------------
+        waveletValsPerPoint = [];
+        
+        if(~scalingOnly)
+            
+            for j = startLevel:inc:stopLevel
+                
+                waveletTransRX    = translationRange(sampleSupport(1,:), wName, j);
+                waveletShiftValsX = [waveletTransRX(1):waveletTransRX(2)];
+                waveletTransRY    = translationRange(sampleSupport(2,:), wName, j);
+                waveletShiftValsY = [waveletTransRY(1):waveletTransRY(2)];
+                waveletTransRZ    = translationRange(sampleSupport(3,:), wName, j);
+                waveletShiftValsZ = [waveletTransRZ(1):waveletTransRZ(2)];
+                
+                % Set up wavelet basis grid for each translate
+                numXTranslations_multires = length(waveletShiftValsX);
+                numYTranslations_multires = length(waveletShiftValsY);
+                numZTranslations_multires = length(waveletShiftValsZ);
+                waveletBasisGrid = zeros(numXTranslations_multires, numYTranslations_multires, numZTranslations_multires);
+                numTranslations_multires = numXTranslations_multires * numYTranslations_multires...
+                    * numZTranslations_multires;
+                
+                % Gives back new sample points (x,y) along each translate K
+                x = bsxfun(@minus, (2^j)*samps(:,1), waveletShiftValsX);
+                y = bsxfun(@minus, (2^j)*samps(:,2), waveletShiftValsY);
+                z = bsxfun(@minus, (2^j)*samps(:,3), waveletShiftValsZ);
+                
+                % For each translate, sample values (x,y) that live under wavelet's support --> 1
+                valid_x = (x >= waveSupp(1) & x <= waveSupp(2));
+                valid_y = (y >= waveSupp(1) & y <= waveSupp(2));
+                valid_z = (z >= waveSupp(1) & z <= waveSupp(2));
 
-        c = (1/numSamps)*scalingBasisGrid;
+                waveletValsPerPoint1 = zeros(numSamps,numTranslations_multires);
+                waveletValsPerPoint2 = zeros(numSamps,numTranslations_multires);
+                waveletValsPerPoint3 = zeros(numSamps,numTranslations_multires);
+                waveletValsPerPoint4 = zeros(numSamps,numTranslations_multires);
+                waveletValsPerPoint5 = zeros(numSamps,numTranslations_multires);
+                waveletValsPerPoint6 = zeros(numSamps,numTranslations_multires);
+                waveletValsPerPoint7 = zeros(numSamps,numTranslations_multires);
+                
+                for k = 1 : numYTranslations
+                    
+                    for i = 1 : numXTranslations
+                        
+                        % Find where points x and y exist together or intersect --> 1
+                        intersections = bsxfun(@times, valid_x(:,i), valid_y(:,k));
+                        intersections = bsxfun(@times, intersections, valid_z);
+                        
+                        % Sample indices are represented by rows.
+                        % Relevant y translations are represented by columns
+                        [sampleIndex, translateIndex] = find(intersections == 1);
+                        
+                        % Calculate father wavelet for relevant points that fall under current x translation
+                        x_at_translate = x(sampleIndex,i);
+                        mother_x = mother(x_at_translate);
+                        father_x = father(x_at_translate);
+                        
+                        % Calculate father wavelet for relevant points that fall under all y translations
+                        y_at_translate = y(sampleIndex,i);
+                        mother_y = mother(y_at_translate);
+                        father_y = father(y_at_translate);
+                        
+                        % Calculate father wavelet for relevant points that fall under all y translations
+                        z_at_translate = z(logical(intersections));
+                        mother_z = mother(z_at_translate);
+                        father_z = father(z_at_translate);
+                        
+                        % Calculate the father wavelet for all relevant points that fall under current translations
+                        motherWav1 = father_x .* father_y .* mother_z;
+                        motherWav2 = father_x .* mother_y .* mother_z;
+                        motherWav3 = mother_x .* mother_y .* mother_z;
+                        motherWav4 = mother_x .* mother_y .* father_z;
+                        motherWav5 = mother_x .* father_y .* mother_z;
+                        motherWav6 = father_x .* mother_y .* father_z;
+                        motherWav7 = mother_x .* father_y .* father_z;
+                        
+                        % Save father wavelet values
+                        newyTranlateIndex = sub2ind(size(waveletBasisGrid), zeros(size(translateIndex)) + i, zeros(size(translateIndex)) + k, translateIndex);
+                        linearIndex = sub2ind(size(waveletValsPerPoint1), sampleIndex, newyTranlateIndex);
+                        
+                        waveletValsPerPoint1(linearIndex) = motherWav1;
+                        waveletValsPerPoint2(linearIndex) = motherWav2;
+                        waveletValsPerPoint3(linearIndex) = motherWav3;
+                        waveletValsPerPoint4(linearIndex) = motherWav4;
+                        waveletValsPerPoint5(linearIndex) = motherWav5;
+                        waveletValsPerPoint6(linearIndex) = motherWav6;
+                        waveletValsPerPoint7(linearIndex) = motherWav7;
+                        
+                    end
+                    
+                end
+                
+                waveletValsPerPoint = [waveletValsPerPoint waveletValsPerPoint1 waveletValsPerPoint2...
+                    waveletValsPerPoint3 waveletValsPerPoint4 waveletValsPerPoint5 waveletValsPerPoint6...
+                    waveletValsPerPoint7];
+                
+            end % for = j startLevel:inc:stopLevel
+            
+            wavVals = bsxfun(@rdivide, waveletValsPerPoint, sqrtPEachSamp);
+            waveletBasisGrid = sum(wavVals,1);
+            waveletBasisGrid = waveletBasisGrid';
+            
+        end % if(~scalingOnly)
+        % -----------------------------------------------------------------------------------------------------------------
+        
+        
+        
+        if(~scalingOnly)
+            c = (1/numSamps)*[scalingBasisGrid;waveletBasisGrid];
+        else
+            c = (1/numSamps)*scalingBasisGrid;
+        end
         coeffs = c/norm(c);
         
         
@@ -261,54 +378,7 @@ switch(lower(initType{1}))
         
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
 
-%         initDensityDir = char(varargin{1});
-%         strIdx=strfind(initDensityDir,'/');
-%         densityNames = initDensityDir(strIdx(3)+1:strIdx(4)-1);
-%         wFamName   = initDensityDir(strIdx(2)+1:strIdx(3)-1);
-%         % Load the another families coefficients.
-%         load([initDensityDir 'mdlTest_' densityNames '_j0Lv_' num2str(startLevel) ...
-%               '_OS_' num2str(scalingOnly) '_' wavFamName],'coeffs');
-%         db1Coeffs = coeffs(:,end);
-%         clear coeffs;
-%         
-%         transXDb1   = translationRange(sampleSupport(1,:), wFamName, startLevel);
-%         transYDb1   = translationRange(sampleSupport(2,:), wFamName, startLevel);
-%         transX      = translationRange(sampleSupport(1,:), wName, startLevel);
-%         transY      = translationRange(sampleSupport(2,:), wName, startLevel);
-%         
-%         wSupportDb1 = waveSupport(wFamName);
-%         wSupport    = waveSupport(wName);
-%         
-%         % Get end point of basis support for the current level.
-%         basisEndPtDb1 = wSupportDb1(2)/2^startLevel;
-%         basisEndPt    = wSupport(2)/2^startLevel;
-%         
-%         % Get the centroid position of the basis for the current level.
-%         basisCenterDb1 = basisEndPtDb1/2;
-%         basisCenter = basisEndPt/2;
-%     
-%         % Now get the position of all the basis for all the translation values.
-%         basisLocsXDb1 = [transXDb1(1):transXDb1(2)]'*(1/2^startLevel)+basisCenterDb1;
-%         basisLocsYDb1 = [transYDb1(1):transYDb1(2)]'*(1/2^startLevel)+basisCenterDb1;
-%         basisLocsX = [transX(1):transX(2)]'*(1/2^startLevel)+basisCenter;
-%         basisLocsY = [transY(1):transY(2)]'*(1/2^startLevel)+basisCenter;
-%                      
-%         % Interpolate to coefficients for this family.
-%         c = interp2(basisLocsXDb1,basisLocsYDb1,db1Coeffs',basisLocsX,basisLocsY,'spline');
-%         coeffs = c/norm(c);     
 
 
 

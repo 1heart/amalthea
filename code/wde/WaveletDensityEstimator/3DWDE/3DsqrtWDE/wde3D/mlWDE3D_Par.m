@@ -118,15 +118,15 @@ initDir = '';
 %     initDir = varargin(5);
 % end
 
-scalingOnly = 1;
 % initType = {'hist'};
 stInitCoeff = tic;
 % currInitCoeffs = @initializeCoefficientsOpt;
 currInitCoeffs = @initializeCoefficientsOptTwo;
 % Initialize the coefficients for gradient descent.
+disp('Entered initCoeffs');
 [coeffs, coeffsIdx, scalValsPerPoint] = currInitCoeffs(samps,...
                     wdeSet.startLevel, wdeSet.stopLevel, ...
-                     wdeSet.sampleSupp, wdeSet.wName, scalingOnly,...
+                     wdeSet.sampleSupp, wdeSet.wName, wdeSet.scalingOnly,...
                      initType, initDir);
                  
 %                  [coeffs_test, coeffsIdx_test, scalValsPerPoint] = initializeCoefficientsOptTwo(samps,...

@@ -39,10 +39,7 @@ partNum = 3;
 minInd = 601;
 maxInd = 900;
 
-wdeSet.wName       = 'db4'; % )***
-wdeSet.startLevel  = 2; % ***
 lastExt = '';
-
 
 expTypeFoldSaveLocal = '2DGL'; % 2DGL, 3DGL, 3DLBO
 
@@ -69,8 +66,6 @@ origShFn = 'SHREC15_WTM_Or_PN'; % Original shape file name.
 
 shNameToSave = 'SHREC15_WTM_Or_PN'; % Shape name to save.
 
-%%
-
 expFoldLocal = '~/Desktop/Folder/Wasserstein/ShapeCoefficients/'; 
 expFoldLocal = '~/Desktop/Folder/Wasserstein/ShapeCoefficients/'; 
 
@@ -89,7 +84,7 @@ load(loadFileName); % Load shape data.
 eval(['shapeCell = ' fileInfo.name ';']);
 
 saveFlag = 0;
-saveExternally = 1;
+saveExternally = 0;
 
 % Used to save the files.
 shNameToSave = [shNameToSave,'_3D_r1', '_WT_', wdeSet.wName, '_RL_'...
@@ -98,7 +93,6 @@ shNameToSave = [shNameToSave,'_3D_r1', '_WT_', wdeSet.wName, '_RL_'...
 % ----------------------- COMPUTE COEFFICIENTS ----------------------------
 
 shapeCell = shapeCell(minInd : maxInd,:);
-wdeSet.stopLevel   = wdeSet.startLevel;
 
 st = tic;
 wdeCell = computeCoefficientsV2_Par(shapeCell, wdeSet);                            

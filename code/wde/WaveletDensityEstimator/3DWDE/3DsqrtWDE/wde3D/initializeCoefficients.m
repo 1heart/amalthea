@@ -41,9 +41,9 @@
 %   Adrian M. Peter
 %
 % Reference:
-% A. Peter and A. Rangarajan, “Maximum likelihood wavelet density estimation 
-% with applications to image and shape matching,” IEEE Trans. Image Proc., 
-% vol. 17, no. 4, pp. 458–468, April 2008.
+% A. Peter and A. Rangarajan, â€œMaximum likelihood wavelet density estimation 
+% with applications to image and shape matching,â€ IEEE Trans. Image Proc., 
+% vol. 17, no. 4, pp. 458â€“468, April 2008.
 %--------------------------------------------------------------------------
 
 %--------------------------------------------------------------------------
@@ -205,41 +205,17 @@ switch(lower(initType{1}))
         c = (1/numSamps)*sum(tempScalValsSum,1)';
         coeffs = c/norm(c);
 
-%         initDensityDir = char(varargin{1});
-%         strIdx=strfind(initDensityDir,'/');
-%         densityNames = initDensityDir(strIdx(3)+1:strIdx(4)-1);
-%         wFamName   = initDensityDir(strIdx(2)+1:strIdx(3)-1);
-%         % Load the another families coefficients.
-%         load([initDensityDir 'mdlTest_' densityNames '_j0Lv_' num2str(startLevel) ...
-%               '_OS_' num2str(scalingOnly) '_' wavFamName],'coeffs');
-%         db1Coeffs = coeffs(:,end);
-%         clear coeffs;
-%         
-%         transXDb1   = translationRange(sampleSupport(1,:), wFamName, startLevel);
-%         transYDb1   = translationRange(sampleSupport(2,:), wFamName, startLevel);
-%         transX      = translationRange(sampleSupport(1,:), wName, startLevel);
-%         transY      = translationRange(sampleSupport(2,:), wName, startLevel);
-%         
-%         wSupportDb1 = waveSupport(wFamName);
-%         wSupport    = waveSupport(wName);
-%         
-%         % Get end point of basis support for the current level.
-%         basisEndPtDb1 = wSupportDb1(2)/2^startLevel;
-%         basisEndPt    = wSupport(2)/2^startLevel;
-%         
-%         % Get the centroid position of the basis for the current level.
-%         basisCenterDb1 = basisEndPtDb1/2;
-%         basisCenter = basisEndPt/2;
-%     
-%         % Now get the position of all the basis for all the translation values.
-%         basisLocsXDb1 = [transXDb1(1):transXDb1(2)]'*(1/2^startLevel)+basisCenterDb1;
-%         basisLocsYDb1 = [transYDb1(1):transYDb1(2)]'*(1/2^startLevel)+basisCenterDb1;
-%         basisLocsX = [transX(1):transX(2)]'*(1/2^startLevel)+basisCenter;
-%         basisLocsY = [transY(1):transY(2)]'*(1/2^startLevel)+basisCenter;
-%                      
-%         % Interpolate to coefficients for this family.
-%         c = interp2(basisLocsXDb1,basisLocsYDb1,db1Coeffs',basisLocsX,basisLocsY,'spline');
-%         coeffs = c/norm(c);        
+
+
+
+
+
+
+
+
+
+
+
     case 'eig'
         %goodSampsIdx  = find((samps(:,1)>0) & (samps(:,2)>0));
         numSamps      = size(samps,1); %length(goodSampsIdx);%
