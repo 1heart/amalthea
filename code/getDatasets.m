@@ -96,10 +96,11 @@ for i = 1:length(all_datasets)
     numCategories = dimensions(1); numShapesPerCategory = dimensions(2);
     labels = kron(1:numCategories, ones(1,numShapesPerCategory))';
     curr = setfield(curr, 'labels', labels);
+    curr = setfield(curr, 'wdeSet', wdeCell{1,3});
 
-    curr = setfield(curr, 'sampleSupp', wdeCell{1,3}.sampleSupp);
-    curr = setfield(curr, 'wName', wdeCell{1,3}.wName);
-    curr = setfield(curr, 'startLevel', wdeCell{1,3}.startLevel);
+    curr = setfield(curr, 'sampleSupp', curr.wdeSet.sampleSupp);
+    curr = setfield(curr, 'wName', curr.wdeSet.wName);
+    curr = setfield(curr, 'startLevel', curr.wdeSet.startLevel);
     datasets = [datasets curr];
   end
 end

@@ -13,13 +13,11 @@
 if ~exist('datasets') error('Datasets does not exist!'); end;
 
 for i = 1:length(datasets)
-  curr = datasets{i};
-  numTranslates = [];
-  % Get the number of translations for the scaling function of the start level for each dimension.
-  for j = 1:size(curr.sampleSupp,1)
-    numTranslates = [numTranslates diff(translationRange(curr.sampleSupp(j,:), curr.wName, curr.startLevel))+1];
+  numTranslatesCell = get_numtranslates_per_dataset(datasets{i}.wdeSet);
+  datasets{i} = setfield(datasets{i}, 'numTranslatesCell', numTranslatesCell);
+  distMatrices = {};
+  for j = 1:length(numTranslatesCell)
+    distMatrices = [distMatrices construct_dist_matrix(numTranslatesCell{i})];
   end
-
-  datasets{i} = setfield(datasets{i}, 'numTranslates', numTranslates);
-  datasets{i} = setfield(datasets{i}, 'distMatrix', {construct_dist_matrix(numTranslates)});
+  datasets{i} = setfield(datasets{i}, 'distMatrices', distMatrices);
 end
