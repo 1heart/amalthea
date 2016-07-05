@@ -1,11 +1,13 @@
 function [assignments] = lapjv_old(costMatrix)
 
+PREFIX = '~/amalthea/code/linassgn/linassgn_old/';
+
 inputFileName = 'temp_input';
 outputFileName = 'temp_output';
 
 writeMatrixToBinaryFile(costMatrix,inputFileName);
 
-[status shellText] = unix(['./linAssignBinFile ' inputFileName ' ./' outputFileName]);
+[status shellText] = unix([PREFIX 'linAssignBinFile ' inputFileName ' ./' outputFileName]);
 if status ~= 0
   error(shellText);
 end
