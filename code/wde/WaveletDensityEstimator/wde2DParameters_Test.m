@@ -1,4 +1,4 @@
-function wdeSet = wde2DParameters_Test(wName, startLevel, stopLevel, onlyScaling)
+function wdeSet = wde2DParameters_Test(wName, startLevel, stopLevel, onlyScaling, domainVal)
 
 % Define convergence threshold and other free parameters.
 wdeSet.convgThresh = 1e-4;
@@ -29,7 +29,7 @@ wdeSet.wdePlotting = 0; % Plotting the density.
 
 wdeSet.delta          = .05;
 
-domVal = 1;
+domVal = domainVal;
 wdeSet.xMin           = -domVal;
 wdeSet.xMax           = domVal;
 wdeSet.yMin           = -domVal;
