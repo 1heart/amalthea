@@ -67,34 +67,41 @@
 %     USA
 %--------------------------------------------------------------------------
 
-function [currCost, currGrad, currHessian] = negativeLogLikelihood(samps,...
-    startLevel,...
-    stopLevel,...
-    coeffs,...
+function [currCost, currGrad] = negativeLogLikelihood(samps, coeffs,...
+    coeffsIdx,...
     scalingOnly,...
-    scalValsPerPoint)
-
-numSamps = size(samps,1);
-
-% Determine if we need to count up or down.
-if(startLevel <= stopLevel)
-    inc = 1;
-else
-    inc = -1;
-end
+    scalValsPerPoint, waveletValsPerPoint)
 
 % OPTIMIZATION FOUR: Passed in scalValsPerPoint. Eliminated loops.
 % Only performs operations.
-fatherValsPerPoint = bsxfun(@times, scalValsPerPoint, coeffs');
-fatherValsPerPoint = sum(fatherValsPerPoint,2);
-scalingBasisPerSample = bsxfun(@rdivide, scalValsPerPoint, fatherValsPerPoint);
-scalValsSum = sum(scalingBasisPerSample,1);
-loglikelihood = log(fatherValsPerPoint.^2);
+numSamps = size(samps,1);
+motherValsPerPoint = 0;
 
+% Calculates cost function
+fatherValsPerPoint = bsxfun(@times, scalValsPerPoint, coeffs(coeffsIdx(1,1):coeffsIdx(1,2))');
+fatherValsPerPoint = sum(fatherValsPerPoint,2);
+
+% Calculates cost function for multires
+if(~scalingOnly)
+    motherValsPerPoint = bsxfun(@times, waveletValsPerPoint, coeffs(coeffsIdx(2,1):end)');
+    motherValsPerPoint = sum(motherValsPerPoint,2);
+end
+
+% Calculates cost function
+basisValPerPoint = fatherValsPerPoint + motherValsPerPoint;
+loglikelihood = log((basisValPerPoint).^2);
 currCost = -(1/numSamps)*sum(loglikelihood);
 
+% Calculates gradient
+scalingBasisPerSample = bsxfun(@rdivide, scalValsPerPoint, basisValPerPoint);
+scalValsSum = sum(scalingBasisPerSample,1);
+
+% Calculates gradient for multires
 if(~scalingOnly)
-    currGrad = -2*(1/numSamps)*[scalValsSum mothValsSum]';
+    waveletBasisPerSample = bsxfun(@rdivide, waveletValsPerPoint, basisValPerPoint);
+    wavValsSum = sum(waveletBasisPerSample,1);
+    currGrad = -2*(1/numSamps)*[scalValsSum wavValsSum]';
 else
-    currGrad = -2*(1/numSamps)*[scalValsSum]';
+    % Calculates gradient
+    currGrad = -2*(1/numSamps)*scalValsSum';
 end

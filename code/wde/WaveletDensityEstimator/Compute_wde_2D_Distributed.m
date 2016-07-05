@@ -1,5 +1,4 @@
-% Loads and sets everything up
-% WDE_2D Test Driver
+% Script to run 2D Wavelet Density
 clear; clc; close all;
 
 warning off;
@@ -11,110 +10,92 @@ addpath('../Plotting_Code/');
 addpath('../RetrievalMetrics_Code/');
 addpath('../ShapeCoefficients/');
 addpath('../ShapeProcessing_Code/');
-% 
-% % Parallel pool.
-% numWorkers = 2;
-% if (isempty(gcp('nocreate')))
-%     parpool('local', numWorkers);
-%     clc;
-% else
-%     workers = gcp('nocreate');
-%     if (workers.NumWorkers < numWorkers)
-%         delete(workers);
-%         workers = parpool('local', numWorkers);
-%         clc
-%     end
-% end
 
-% Load the wde parameters. 
+% PARARMETERS SETTINGS ---------------------------------------------------- 
 wdeSet = wde2DParameters_Test();
 
-% -------------------------------------------------------------------------
-dataSetFold = 'MPEG7'; % Brown, MPEG7, MPEG7, SweedishLeaf
+% DATASET SETTINGS --------------------------------------------------------
+% Brown, MPEG7, MPEG7, SweedishLeaf
+dataSetFold = 'MPEG7'; 
 
 % Brown_2D_ns99, Animal_All, mpeg7Aligned, mpeg7NoAligned
-shapeName = 'mpeg7Aligned'; % Shape file name. 
+shapeName = 'mpeg7Aligned'; 
 
+% Set which shape index to start with
 partNum = 2;
 minInd = 251;
 maxInd = 500;
 wdeSet.minInd = minInd;
 wdeSet.maxInd = maxInd;
 wdeSet.partNum = partNum;
-% -------------------------------------------------------------------------
 
+% Load shape file 
+shapeFold = ['../Datasets/', dataSetFold, '/'];
+load([shapeFold, shapeName]);
+
+% SAVE SETTINGS -----------------------------------------------------------
 saveFold = ['../ShapeCoefficients/', dataSetFold];
-% saveFoldExtra = 'Z:/Users/mmoyou/Experiments/Wasserstein/ShapeCoefficientsWholeDataset/';
-% saveFoldExtra = [saveFoldExtra, dataSetFold, '/'];
-shapeFold = ['../Datasets/', dataSetFold, '/']; % Shape file folder. 
+saveFiles = 0;
 
-saveFiles = 1;
-plotOrigShape = 0;
+% OUTPUT DISPLAY SETTINGS -------------------------------------------------
+% Show progress bar
+dispLoading = 0;
+F = findall(0,'type','figure','tag','TMWWaitbar'); delete(F);
 
-wdeSet.stopLevel   = 4; %testing resolution levels
+% Show shape points
+plotOrigShape = 1;
 
-% The variable name should be shapeCell. 
-load([shapeFold, shapeName]); % Load the shape file. 
+%--------------------------------------------------------------------------
 
-% Get the number of categories. 
-% numShapes = size(shapeCell,1);
+% Pull shape info
 numShapes = numel(minInd : maxInd);
-
 shapeCell = shapeCell(minInd : maxInd,:);
 
-% Initialize a cell to hold the coefficients and densities. The third 
-% column are the parameters.
+% Cell to store coefficients, densities, and parameters.
 wdeCell = cell(numShapes,3);
 wdeCell{1,3} = wdeSet;
 
+% Timestamp to estimate entire dataset
 startTimeOverall = tic;
-F = findall(0,'type','figure','tag','TMWWaitbar'); delete(F);
-% h = waitbar(0,'Computing coefficients and densities per category.');
 
-
-
-
-
-
-
-
-
-
-% Loop through the shapes, resize them approriately, and estimate the
-% coeffients and densities and store them. 
-for i = 1 : 5
-    % Progress updates
-%     waitbar(i/numShapes, h);
-%     disp(['Running shape ', num2str(i)]);
+% Loop through shapes to estimate densities
+for i = 1 : 1
     
-    currSh = shapeCell{i,1}; % Current category. 
+    % Shows progress updates
+    if(dispLoading)
+        h = waitbar(0,'Computing coefficients and densities per category.');
+        waitbar(i/numShapes, h);
+        disp(['Running shape ', num2str(i)]);
+    end
 
-    % Resize the shape.
-    currSh = resizeShapesToSquareGrid(currSh, abs(wdeSet.xMin));
-
-    % Plots shape
-     if (plotOrigShape == 1)
-         plot2DShape(currSh, 'r.');
+    % Pull and resize shape
+    currShape = shapeCell{i,1};
+    currShape = resizeShapesToSquareGrid(currShape, abs(wdeSet.xMin));
+    
+         % Plots current shape
+     if (plotOrigShape)
+         plot2DShape(currShape, 'r.');
      end
 
-    % Compute the coefficients and densities. 
-    [coeffs, coeffsIdx, pdf] = mlWDE2DWrapper(currSh, wdeSet);
+    % Compute the coefficients and densities
+    [coeffs, coeffsIdx, pdf] = mlWDE2DWrapper(currShape, wdeSet);
 
+    % Store coefficients and densities
     wdeCell{i,1} = coeffs(:,end); 
     wdeCell{i,2} = pdf;
             
-end
+end % for i = 1 : numShapes
 
+% Timestamp to estimate entire dataset
 stopStartTimeOverall = toc(startTimeOverall);
 disp(['Time looping over shapes: ', num2str(stopStartTimeOverall)]);
 
 F = findall(0,'type','figure','tag','TMWWaitbar'); delete(F);
 
+% Save probability density estimation data
 if (saveFiles == 1)
     save([saveFold, shapeName '_Coeffs_r6_' wdeSet.wName '_res_'...
         num2str(wdeSet.startLevel), '_p', num2str(partNum)], 'wdeCell');
-    % save([saveFoldExtra, shapeName '_Coeffs_r6_' wdeSet.wName '_res_'...
-        % num2str(wdeSet.startLevel), '_p', num2str(partNum)], 'wdeCell');
     disp('Files saved successfully');
 end
     
