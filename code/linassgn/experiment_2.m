@@ -27,9 +27,9 @@ for i = 1:length(datasets)
         count = count + 1;
         if (DISP) disp([num2str(100 * count / total) '%']); end;
           % TODO: change back to linassgn
-          pdistMatrix(i,j) = sphere_dist(ds.data(i,:), ds.data(j,:));
-        % pdistMatrix(i,j) = sphere_dist_linassgn(ds.data(i,:), ds.data(j,:), ds.distMatrices, lambda, ds.multires_i);
-        pdistMatrix(j,i) = pdistMatrix(i,j);
+          pairwise_dists(i,j) = sphere_dist(ds.data(i,:), ds.data(j,:));
+        % pairwise_dists(i,j) = sphere_dist_linassgn(ds.data(i,:), ds.data(j,:), ds.distMatrices, lambda, ds.multires_i);
+        pairwise_dists(j,i) = pairwise_dists(i,j);
       end
     end
     save([SAVE_PATH ds.name '_lambda_' num2str(lambda) '_pdists'], 'pairwise_dists');
