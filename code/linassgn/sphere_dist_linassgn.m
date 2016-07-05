@@ -46,6 +46,7 @@ if (size(multires_i,2) ~= 2) error('Misformatted indices for multires!'); end;
 if (size(x,2) ~= 1) x = x'; end; if (size(y,2) ~= 1) y = y'; end; % Make vectors column vectors
 
 x_new = []; x_new_reverse = [];
+% TODO: only do one linassgn
 for res_level = 1:size(multires_i, 1)
   curr_range = multires_i(res_level, 1):multires_i(res_level, 2);
   x_curr = x(curr_range); y_curr = y(curr_range);

@@ -23,9 +23,12 @@ for i = 1:length(datasets)
     count = 0; total = n * (n-1) / 2;
     for j = 1:n
       for k = j+1:n
+        % TODO: change to pdist
         count = count + 1;
         if (DISP) disp([num2str(100 * count / total) '%']); end;
-        pdistMatrix(i,j) = sphere_dist_linassgn(ds.data(i,:), ds.data(j,:), ds.distMatrices, lambda, ds.multires_i);
+          % TODO: change back to linassgn
+          pdistMatrix(i,j) = sphere_dist(ds.data(i,:), ds.data(j,:));
+        % pdistMatrix(i,j) = sphere_dist_linassgn(ds.data(i,:), ds.data(j,:), ds.distMatrices, lambda, ds.multires_i);
         pdistMatrix(j,i) = pdistMatrix(i,j);
       end
     end
