@@ -23,16 +23,16 @@ SAVE_FOLD = './saved_results/';
 settingsArr = [];
 
 % Haar
-settingsArr = [settingsArr wde2DParameters_Test('db1', 5, 5, 1)];
+settingsArr = [settingsArr wde2DParameters_Test('db1', 5, 5, 1,1)];
 
 % Haar multires
-settingsArr = [settingsArr wde2DParameters_Test('db1', 2, 4, 0)];
+settingsArr = [settingsArr wde2DParameters_Test('db1', 2, 3, 0, 0.5)];
 
 % Sym4
-settingsArr = [settingsArr wde2DParameters_Test('sym4', 3, 3, 1)];
+settingsArr = [settingsArr wde2DParameters_Test('sym4', 3, 3, 1, 1)];
 
 % Sym4 multires
-settingsArr = [settingsArr wde2DParameters_Test('sym4', 2, 4, 0)];
+settingsArr = [settingsArr wde2DParameters_Test('sym4', 2, 3, 0, 0.5)];
 
 for i = 1:length(settingsArr)
 	currWdeSet = settingsArr(i);
