@@ -1,3 +1,4 @@
+diary('multires_2dwde');
 % Script to run 2D Wavelet Density
 clear; clc; close all;
 warning off;
@@ -23,7 +24,7 @@ SAVE_FOLD = './saved_results/';
 settingsArr = [];
 
 % Haar
-settingsArr = [settingsArr wde2DParameters_Test('db1', 5, 5, 1,1)];
+settingsArr = [settingsArr wde2DParameters_Test('db1', 4, 4, 1,1)];
 
 % Haar multires
 settingsArr = [settingsArr wde2DParameters_Test('db1', 2, 3, 0, 0.5)];
@@ -41,3 +42,4 @@ for i = 1:length(settingsArr)
         num2str(currWdeSet.startLevel)];
     save(CURR_SAVE_PATH, 'currWdeCell');
 end
+diary off;
