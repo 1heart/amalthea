@@ -1,0 +1,315 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Wavelet Density Estimatior Optimization
+\end_layout
+
+\begin_layout Author
+Yixin Lin, Glizela Taino, Mark Moyou, and Dr.
+ Adrian Peter
+\end_layout
+
+\begin_layout Standard
+The Wavelet Density Estimation is a toolbox created by Dr.
+ Adrian M.
+ Peter and Dr.
+ Anand Rangarajan [CITATION].
+ It estimates probabilty density functions of sample data whose function
+ are unknown.
+ It does this by using Wavelets which are the basis function for the squared
+ finite integrable function space.
+ It's used in applications such as 1D, 2D, and 3D shape matching.
+ The coefficients that are used to scale the basis functions act as feature
+ representations for the shapes.
+ These feature representations are constrained to one which conviniently
+ map them onto a unit hypersphere.
+ The geometry of the hypersphere can be easily manipulated for shape retrieval,
+ in effectively recognizing similar and dissimilar shapes based on distance
+ between coefficient vectors.
+ The Wavelet Density Estimator is essential in extracting shape densities
+ as features representations for various shapes.
+ Densities have proven to be a distinct representation for various non rigid
+ shapes according to (SOME RESEARCH PAPER THAT SHOWS DENSITIES ARE GOOD
+ REPRESENTATIONS) [CITIATION].
+ There are a lot of computation involved in predicting the densities for
+ a sample point set and the code is designed to execute necessary computation.
+ However, the issue with this code is the time it takes to process large
+ databases.
+ Databases such as Brown, Sweedish Leaf, and MPEG7 have 99, 1125, an 1400
+ shapes, respectively, and can take _________ amount of time to process
+ per shape with a relatievly low resolution.
+ Most of the time is spent in two functions that calcualte the initial estimated
+ coefficients and the negative likelihood with ________ amount of time on
+ average per shape.
+ This is due to the design and structure of implenetation.
+ The code is designed to perform superfluous and redundant computations
+ to solve for basis functions for every sample point individually, when
+ in fact the computation returns a value of zero when the sample point falls
+ out of the wavelet's support.
+ And when calculating the negative loglikelihood the code performs the same
+ computation to find the basis functions for every sample point and implements
+ a different equation for the cost and gradient.
+ As a solution to this probem we only calculated the wavelet basis function
+ for relevant sample points under specified basis funcitons.
+ This cuts computation and time considerablly to ________, respecitvly.
+ We would save these values per point and pass it along in calculating the
+ negative loglikelihood.
+ This eliminates _______ lines of code from that function and cuts run time
+ down to _________ per shape.
+ After implementing optimization, the it takes _________.
+ As wavelet density coeffients prove to be distinctly representative of
+ their shape and can be useful in shape retrieval, the computational time
+ to extract these coefficients become ever more important.
+ If we wish to see timely growth in this area of research, _____ hours for
+ a database of _____ shapes will not help in achieving this outlook.
+ And if we wish to see wavelet density coefficiets used more commonly as
+ representation, the wavelet density estimator must work more efficiently.
+ In this report we will get a basic understanding of wavelets, how it's
+ used in density estimation, and why it makes a good feature representation.
+ Then we will delve into the code to expand its inefficiency, explain our
+ solution to the problem, and lastly we will go over the results of the
+ optimization.
+ 
+\end_layout
+
+\begin_layout Section*
+Wavelet Density Estimation
+\end_layout
+
+\begin_layout Standard
+In order to create our feature representation we have to estimate the probabilit
+y density function of sample points that make up a shape.
+ Wavelets act as the basis function of the function space 
+\begin_inset Formula $L^{2}$
+\end_inset
+
+.
+ An 
+\begin_inset Formula $L^{2}$
+\end_inset
+
+ function is a function that consists of real numbers that is squared integrable
+, or finite.
+ Probabilty density functions fall under this function space, therefore
+ allowing us to use wavelets for density estimation using a linear combination
+ of these basis functions.
+ The equation for 1D density estimation is 
+\begin_inset Formula 
+\[
+p(x)=\underset{j_{o},k}{\sum}\alpha_{j_{o},k}\phi_{j_{o},k}(x)+\underset{j\geq j_{o},k}{\overset{j_{1}}{\sum}}\beta_{j,k}\psi_{j,k}(x)
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\phi(x)$
+\end_inset
+
+ and 
+\begin_inset Formula $\psi(x)$
+\end_inset
+
+ are the scaling and wavelet basis functions, also known as the 
+\begin_inset Quotes eld
+\end_inset
+
+father
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+mother
+\begin_inset Quotes erd
+\end_inset
+
+ wavelets, respectively.
+ The functions can also be set to some starting resolution level that determines
+ its dialation and contraction.
+ To extend to multiresolutions, we incorporate the wavelet basis function
+ with a starting, 
+\begin_inset Formula $j_{o}$
+\end_inset
+
+, and stopping, 
+\begin_inset Formula $j$
+\end_inset
+
+, resolution level.
+ In order to form a basis, we need to make multiple copies of the function
+ over different translates, 
+\begin_inset Formula $k$
+\end_inset
+
+.
+ These functions are scaled by their scaling and wavelet basis function
+ coefficients, 
+\begin_inset Formula $\alpha_{j_{o},k}$
+\end_inset
+
+ and 
+\begin_inset Formula $\beta_{j,k}$
+\end_inset
+
+.
+ To retain prorties of true denities, such as non-negativety and should
+ integrate to one, we compute the squareroot of the probabilty density function
+ 
+\begin_inset Formula 
+\[
+\sqrt{p(x)}=\underset{j_{o},k}{\sum}\alpha_{j_{o},k}\phi_{j_{o},k}(x)+\underset{j\geq j_{o},k}{\overset{j_{1}}{\sum}}\beta_{j,k}\psi_{j,k}(x)
+\]
+
+\end_inset
+
+Since we optimized for multiresolution 2D wavelet density estimation, we
+ consider the second dimension with 
+\begin_inset Formula $\mathbf{x}=(x_{1},x_{2})$
+\end_inset
+
+ and 
+\series bold
+
+\begin_inset Formula $\mathbf{k}=(k_{1},k_{2})$
+\end_inset
+
+
+\series default
+.
+ We also extend the equation to 
+\begin_inset Formula 
+\[
+\sqrt{p(\mathbf{x})}=\underset{j_{o},\mathbf{k}}{\sum}\alpha_{j_{o},\mathbf{k}}\phi_{j_{o},\mathbf{k}}(\mathbf{x})+\underset{j\geq j_{o},\mathbf{k}}{\overset{j_{1}}{\sum}}\overset{3}{\underset{w=1}{\sum}}\beta_{j,\mathbf{k}}^{w}\psi_{j,\mathbf{k}}^{w}(\mathbf{x})
+\]
+
+\end_inset
+
+where we calculate for the basis functions by using the tensor product method
+ 
+\begin_inset Formula 
+\[
+\phi_{j_{o},\mathbf{k}}(\mathbf{x})=2^{j_{o}}\phi(2^{j_{o}}x_{1}-k_{1})\phi(2^{j_{o}}x_{2}-k_{2})
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\psi_{j,\mathbf{k}}^{1}(\mathbf{x})=2^{j}\phi(2^{j}x_{1}-k_{1})\psi(2^{j}x_{2}-k_{2})
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\psi_{j,\mathbf{k}}^{2}(\mathbf{x})=2^{j}\psi(2^{j}x_{1}-k_{1})\phi(2^{j}x_{2}-k_{2})
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\psi_{j,\mathbf{k}}^{3}(\mathbf{x})=2^{j}\psi(2^{j}x_{1}-k_{1})\psi(2^{j}x_{2}-k_{2})
+\]
+
+\end_inset
+
+Intuitively, the scaling and wavelet basis function coefficients determine
+ the height of its basis function.
+ Therefore, our goal is to obtain the coefficients that uniquely define
+ the probabilty denisty function of a shape and use as a feature representation
+ in shape retrieval.
+ In order to calculate coefficients we perform the follow equations
+\begin_inset Formula 
+\[
+\alpha_{j_{o},\mathbf{k}}=\bigg(\frac{1}{N}\bigg)\overset{N}{\underset{i=1}{\sum}}\frac{\phi_{j_{o},\mathbf{k}}(\mathbf{x})}{\sqrt{p(\mathbf{x})}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\beta_{j_{o},k}=\bigg(\frac{1}{N}\bigg)\underset{i=1}{\overset{N}{\sum}}\frac{\psi_{j,\mathbf{k}(\mathbf{x})}}{\sqrt{p(\mathbf{x})}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
