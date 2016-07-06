@@ -21,17 +21,9 @@ for i = 1:length(datasets)
     if (DISP) disp(['Starting lambda ' num2str(lambda)]); end;
     pairwise_dists = zeros(n);
     count = 0; total = n * (n-1) / 2;
-    for j = 1:n
-      for k = j+1:n
-        % TODO: change to pdist
-        count = count + 1;
-        if (DISP) disp([num2str(100 * count / total) '%']); end;
-          % TODO: change back to linassgn
-          % pairwise_dists(i,j) = sphere_dist(ds.data(i,:), ds.data(j,:));
-        pairwise_dists(i,j) = sphere_dist_linassgn(ds.data(i,:), ds.data(j,:), ds.distMatrices, lambda, ds.multires_i);
-        pairwise_dists(j,i) = pairwise_dists(i,j);
-      end
-    end
+    curr_dist_func = @(x,Y) sphere_dist_linassgn_mtx(x, Y, ds.distMatrices, lambda, ds.multires_i);
+    % pairwise_dists = squareform(pdist(ds.data, curr_dist_func));
+    pairwise_dists = squareform(pdist(ds.data));
     save([SAVE_PATH ds.name '_lambda_' num2str(lambda) '_pdists'], 'pairwise_dists');
     bullseye_val = bullsEyeScore(pairwise_dists, ds.labels, numShapesPerCategory);
     save([SAVE_PATH ds.name '_lambda_' num2str(lambda) '_bullseye'], 'bullseye_val');
