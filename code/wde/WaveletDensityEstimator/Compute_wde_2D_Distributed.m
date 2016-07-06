@@ -41,6 +41,7 @@ saveFiles = 1;
 % Show progress bar
 dispLoading = 0;
 F = findall(0,'type','figure','tag','TMWWaitbar'); delete(F);
+h = waitbar(0,'Computing coefficients and densities per category.');
 
 % Show shape points
 plotOrigShape = 0;
@@ -63,7 +64,6 @@ for i = 1 : numShapes
     
     % Shows progress updates
     if(dispLoading)
-        h = waitbar(0,'Computing coefficients and densities per category.');
         waitbar(i/numShapes, h);
         disp(['Running shape ', num2str(i)]);
     end
