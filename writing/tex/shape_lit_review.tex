@@ -34,4 +34,20 @@ Kazhdan et al.\cite{kazhdan2003rotation} propose an approach that can transform 
 
 Another highly cited paper is the the work by Novotni and Klein\cite{novotni20033d}, which uses 3D Zernike descriptors instead of spherical harmonics to obtain rotational invariance. This is an improvement over spherical harmonics because spherical harmonics cannot detect internal rotations of the object.
 
+\subsection{Local features}
+
+An approach that has some similarities with our work is that of Shum et al., which presents a way to measure similarity between 3D shapes. They map local curvatures a distribution on a sphere, and then construct a distance metric between these spherical approximations of 3D shapes. However, this requires closed surfaces.
+
+Ohbuchi et al.\cite{ohbuchi2008salient} use SIFT features extracted from range images and put into a bag-of-features representation. The range images are sampled uniformly from the view sphere.
+
+Shilane and Funkhouser\cite{shilane2006selecting} proposed a scheme for selecting the distinctive local feature descriptors of a set of such feature descriptors, find the ones that help distinguish them the best, and finally using only those descriptors (as opposed to the full set), which leads to faster performance at a low cost.
+
+A paper similar in approach is by Bai et al.\cite{bai2009integrating}, which combines contour, skeleton, global, and local features as a feature. This achieves good results on MPEG-7 without requiring many training samples.
+
+\subsection{View-based features}
+
+The idea of view-based features is that much of intrinsic information of a 3D shape can be encoded into multiple 2D views from different angles of that shape. Therefore, it's possible to compare two shapes by simply comparing the views.
+
+A recent paper by Zhu et al.\cite{zhu2016deep} uses deep learning to learn a feature representation of a shape using autoencoders on 2D views of a 3D shape. They combine this with the local descriptors by the previous Ohbuchi et al\cite{ohbuchi2008salient} to obtain state-of-the-art results. 
+
 \end{document}
