@@ -89,13 +89,13 @@ key "peter2008WDE"
 \end_inset
 
 .
- It estimates probabilty density functions of sample data whose function
+ It estimates probability density functions of sample data whose function
  are unknown.
  It does this by using Wavelets theory and applying it to density estimation.
  It's used in applications such as 1D, 2D, and 3D shape matching.
  The coefficients that are used to scale the basis functions act as feature
  representations for a shape.
- These feature representations are constrained to one which conviniently
+ These feature representations are constrained to one which conveniently
  map them onto a unit hypersphere.
  The geometry of the hypersphere can be easily manipulated for shape retrieval,
  in effectively recognizing similar and dissimilar shapes based on distance
@@ -103,26 +103,26 @@ key "peter2008WDE"
  The Wavelet Density Estimator code they developed is essential in extracting
  shape densities as features representations for various shapes.
  Computation involved for a sample point set can be very complicated.
- Thereofore, the code is designed to execute the necessary computation.
+ Therefore, the code is designed to execute the necessary computation.
  However, the issue with this code is the time it takes to process large
  databases.
- Databases such as Brown, Sweedish Leaf, and MPEG7 have 99, 1125, an 1400
- shapes, respectively, and can take days to process even with a relatievly
+ Databases such as Brown, Swedish Leaf, and MPEG7 have 99, 1125, an 1400
+ shapes, respectively, and can take days to process even with a relatively
  low resolution.
- This is due to the design and structure of the implenetation.
+ This is due to the design and structure of the implementation.
  The code is designed to perform superfluous and redundant computations
  to solve for basis functions
 \backslash
  values for every sample point individually.
- As a solution to this probem we only calculated the basis functions for
- relevant sample points under specified basis funcitons with the hope to
+ As a solution to this problem we only calculated the basis functions for
+ relevant sample points under specified basis functions with the hope to
  cut computation and time considerably.
- As wavelet density coeffients prove to be distinctly representative of
+ As wavelet density coefficients prove to be distinctly representative of
  their shape and can be useful in shape retrieval, the computational time
  to extract these coefficients become ever more important.
  If we wish to see timely growth in this area of research, hours for coefficient
  extraction for a database will not help in achieving this outlook.
- If we wish to see wavelet density coefficiets used more commonly as representat
+ If we wish to see wavelet density coefficients used more commonly as represent
 ion, the wavelet density estimator must work more efficiently.
  In this report we will get a basic understanding of wavelets and how it's
  used in density estimation.
@@ -137,7 +137,7 @@ Wavelet Density Estimation
 \end_layout
 
 \begin_layout Standard
-In order to create our feature representation we have to estimate the probabilit
+In order to create our feature representation we have to estimate the probability
 y density function of sample points that make up a shape.
  Wavelets act as the basis function of the function space 
 \begin_inset Formula $L^{2}$
@@ -150,7 +150,7 @@ y density function of sample points that make up a shape.
 
  function is a function that consists of real numbers that is squared integrable
 , or finite.
- Probabilty density functions fall under this function space, therefore
+ Probability density functions fall under this function space, therefore
  allowing us to use wavelets for density estimation using a linear combination
  of these basis functions.
  The equation for 1D density estimation is 
@@ -187,8 +187,8 @@ mother
 
  wavelets, respectively.
  The functions can also be set to some starting resolution level that determines
- its dialation and contraction.
- To extend to multiresolutions, we incorporate the wavelet basis function
+ its dilation and contraction.
+ To extend to multiple resolutions, we incorporate the wavelet basis function
  with a starting, 
 \begin_inset Formula $j_{o}$
 \end_inset
@@ -214,8 +214,8 @@ mother
 \end_inset
 
 .
- To retain prorties of true denities, such as non-negativety and should
- integrate to one, we compute the squareroot of the probabilty density function
+ To retain properties of true densities, such as non-negativity and should
+ integrate to one, we compute the square root of the probability density function
  
 \begin_inset Formula 
 \begin{equation}
@@ -224,7 +224,7 @@ mother
 
 \end_inset
 
-Since we optimized for multiresolution 2D wavelet density estimation, we
+Since we optimized for multi-resolution 2D wavelet density estimation, we
  consider the second dimension with 
 \begin_inset Formula $\mathbf{x}=(x_{1},x_{2})\in\mathbb{R}^{2}$
 \end_inset
@@ -286,7 +286,7 @@ A mathematical advantage in using wavelets is its compact support, meaning
  Intuitively, the scaling and wavelet basis function coefficients determine
  the height of its basis function.
  Therefore, our goal is to obtain the coefficients which uniquely define
- the probabilty denisty function of a shape and use as a feature representation
+ the probability density function of a shape and use as a feature representation
  in shape retrieval.
  In order to calculate coefficients we use the following equations 
 \begin_inset Formula 
@@ -304,7 +304,7 @@ A mathematical advantage in using wavelets is its compact support, meaning
 
 \end_inset
 
-As we estimate the coefficients of our probabilty density function, we use
+As we estimate the coefficients of our probability density function, we use
  a loss function to determine whether our coefficients are as close to optimal
  as possible.
  To do this we try to minimize a negative loglikelihood objective function
@@ -330,7 +330,7 @@ where
 
 \end_inset
 
-In order for maintain essential properties of density estimation, we contrain
+In order for maintain essential properties of density estimation, we constrain
  the coefficients to one
 \begin_inset Formula 
 \begin{equation}
@@ -339,8 +339,8 @@ In order for maintain essential properties of density estimation, we contrain
 
 \end_inset
 
-This constraint conviniently maps our feature representation into a unit
- hypersphere which allows us to take advantage of its geomtric properties
+This constraint conveniently maps our feature representation into a unit
+ hypersphere which allows us to take advantage of its geometric properties
  to signify similarity and dissimilarity between shapes in shape retrieval.
  
 \end_layout
@@ -354,7 +354,7 @@ Now that we have an overview of wavelet density estimation and the equations
  used, we can delve into our optimization.
  Our ultimate goal is to estimate a 2D density function on a given point
  set shape representation.
- We then use the coefficients that uniquely charaterize the density function
+ We then use the coefficients that uniquely characterize the density function
  as our feature vector.
  Originally, for a data base such as MPEG7 made up of 1400 shapes with a
  domain of [-0.5,0.5], resolution level 2 to 3, and 1344 translates it would
@@ -363,7 +363,7 @@ Now that we have an overview of wavelet density estimation and the equations
  even slower runtime.
  We want to optimize this code for speed.
  The bottleneck occurs when calculating the initial coefficients and negative
- log likeihood cost value with its gradient.
+ log likelihood cost value with its gradient.
  
 \end_layout
 
@@ -394,8 +394,7 @@ reference "eq:waveletCoeff"
 \end_layout
 
 \begin_layout Standard
-The reason for this bottleneck is because of the way the code executes computati
-on.
+The reason for this bottleneck is because of the way the code executes computation.
  Given a point set shape representation, it covers the shape with basis
  functions at each translation.
  Each function has a coefficient that needs to be calculated.
@@ -420,7 +419,7 @@ s return the value of zero.
  It would return zero because a specified observed sample point does not
  contribute to most basis functions, or does not exist under the compact
  support of the basis function at specific translations.
- Therefore, our solution was to find an appoarch that would require less
+ Therefore, our solution was to find an approach that would require less
  computation and, overall, work more effectively and efficiently.
  
 \end_layout
@@ -472,7 +471,7 @@ reference "eq:costFunction"
 
 \end_inset
 
-) and the function's gardient (
+) and the function's gradient (
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:gradient"
@@ -482,7 +481,7 @@ reference "eq:gradient"
 ).
  We use these equations to check whether we have found the most optimal
  coefficient values and which direction in which to descend.
- The orginal time spent for this computation was around 2 of the 16.8 hours.
+ The original time spent for this computation was around 2 of the 16.8 hours.
  
 \end_layout
 
@@ -492,7 +491,7 @@ s.
  It would take a single point and calculate the basis function over all
  translations resulting in needless computation.
  It does this to attain a matrix of the basis function values to perform
- the appropriate operations to solve for the cost value and gardient.
+ the appropriate operations to solve for the cost value and gradient.
  
 \end_layout
 
@@ -513,13 +512,13 @@ Results
 \begin_layout Standard
 As mentioned above, our goal is to estimate a density function of a 2D shape
  using wavelets.
- This allows us to extract the coefficients as our feature representaion
+ This allows us to extract the coefficients as our feature representation
  to be used in shape retrieval on a unit hypersphere.
  However, with MPEG7 containing 1400 shapes, domain [-0.5,0.5], resolution
  level 2 to 3, and 1344 translates it would take about 16.8 hours to calculate
  the coefficients.
- After our optimization implementation to the two areas where the code bottlenec
-ks, we yield fantastic results.
+ After our optimization implementation to the two areas where the code bottlenecks
+ , we yield fantastic results.
 \end_layout
 
 \begin_layout Standard
@@ -533,8 +532,8 @@ s was about 1.8 hours.
  it of loops.
  We essentially do away with 61% of lines of code.
  The run time was promising as well.
- To calculate the cost value and gradient for seven iteratons, computation
- time went from 13.9 hours to 0.089 hours, or around 5 mintues for the entire
+ To calculate the cost value and gradient for seven iterations, computation
+ time went from 13.9 hours to 0.089 hours, or around 5 minutes for the entire
  dataset.
  The optimized computation runs 99% faster.
  Overall, to estimate the wavelet densities of a database of 2D shapes with
@@ -545,7 +544,7 @@ s was about 1.8 hours.
 \begin_layout Standard
 With this optimization, we hope that we can spend less time waiting for
  the wavelet density coefficient values to be estimated and more time in
- developing new and better methods of shape retrieval using wavelet denisty
+ developing new and better methods of shape retrieval using wavelet density
  coefficients as feature vectors.
  
 \end_layout
