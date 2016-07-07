@@ -1,8 +1,10 @@
 DEBUG = 1;
-datasets = getDatasets({'mpeg7_123'});
+datasets = getDatasets({'mpeg_7_haar_multires'});
 branchingFactors = [10 7 5 2 2];
 % datasets = getDatasets({'shrec11_125'});
 % branchingFactors = [30];
+% datasets = getDatasets({'brown_125'});
+% branchingFactors = [11];
 
 D = datasets{1}.data;
 [n d] = size(D);
@@ -20,5 +22,5 @@ for i = 1:n
   end
 end
 if DEBUG textprogressbar(' done.'); end;
-metricObject = metrics_shrec(distMatrix, L, 1);
-
+% metricObject = metrics_shrec(distMatrix, L, 1);
+bullsEyeScore(distMatrix, L, datasets{1}.dimensions(2))
