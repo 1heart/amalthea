@@ -8,7 +8,7 @@ DATASET_NAMES = {...
   'mpeg_7_sym4_singleres', 'mpeg_7_sym4_multires'...
   };
 if ~exist('datasets')
-  datasets = getDatasets(DATASET_NAMES, '~/amalthea/data/');
+  datasets = getDatasets(DATASET_NAMES, '~/amalthea/data/new_coeffs/');
   get_dists_for_datasets;
 end
 

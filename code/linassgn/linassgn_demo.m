@@ -12,7 +12,8 @@
 % -------------------------------------------------------------------------
 
 DISP = 1; % Display results boolean
-lambdas = [0 1e-8 1e-4 1e-1];
+% lambdas = [1e-2 3e-2 5e-2 1e-1 1];
+lambdas = [1 1e-1 5e-2 3e-2 1e-2];
 viewangles = [180 80];
 
 % Circle square demo
@@ -28,17 +29,22 @@ viewangles = [180 80];
 
 % MPEG7 datasets
 
-prefix = '/Users/yixin/amalthea/data/';
-load([prefix 'Coefficients/MPEG7_raw/apple.mat']);
-load([prefix 'Coefficients/MPEG7_raw/bird.mat']);
+% prefix = '/Users/yixin/amalthea/data/';
+% load([prefix 'Coefficients/MPEG7_raw/apple.mat']);
+% load([prefix 'Coefficients/MPEG7_raw/bird.mat']);
+datasets = getDatasets({'mpeg_7_haar_singleres', 'mpeg_7_haar_multires', 'mpeg_7_sym4_singleres', 'mpeg_7_sym4_multires'}, '~/amalthea/data/new_coeffs/');
 
-m = 42; n = 42;
+m = 34; n = 34;
 distMatrix = construct_dist_matrix([m n]);
 
+a = 1; b = 451;
+
 imgs = { ...
-  apple01, ...
+  datasets{2}.data(a,:)',
+  datasets{2}.data(b,:)',
+  % apple01, ...
   % apple02, ...
-  bird01, ...
+  % bird01, ...
 };
 
 for i = 1:length(imgs)
@@ -58,18 +64,18 @@ for i = 1:length(imgs)
         subplot(2, length(lambdas), k);
         curr = warped_imgs{k};
         curr = reshape(curr, [m n]);
-        surf(curr); shading interp; colormap pink; % TODO: change this
+        surf(curr); shading interp; colormap pink; grid off; axis off; % TODO: change this
         view(viewangles);
         sphdist = sphere_dist(curr(:)/norm(curr(:)), target(:)/norm(target(:)));
         title(['Lambda = ' num2str(lambdas(k))]);
         xlabel(['sphere dist=' num2str(sphdist)]);
       end
       subplot(2, k, k + 1);
-      surf(source); shading interp; colormap pink; % TODO: change this
+      surf(source); shading interp; colormap pink; grid off; axis off;% TODO: change this
       view(viewangles);
       title('Source');
       subplot(2, k, k + 2);
-      surf(target); shading interp; colormap pink; % TODO: change this
+      surf(target); shading interp; colormap pink; grid off; axis off; % TODO: change this
       view(viewangles);
       title('Target');
       curr = source(:);
