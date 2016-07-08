@@ -23,4 +23,8 @@ for i = 1:n
 end
 if DEBUG textprogressbar(' done.'); end;
 % metricObject = metrics_shrec(distMatrix, L, 1);
+
+bullsEyeScore(acos(D * D'), L, datasets{1}.dimensions(2))
+
 bullsEyeScore(distMatrix, L, datasets{1}.dimensions(2))
+
