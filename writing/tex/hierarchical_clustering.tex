@@ -5,15 +5,15 @@
 
 \section{Introduction to hierarchical clustering}
 
-% TODO: write intro
+The idea behind hierarchical clustering is to capture the different abstraction layers in a hierarchy, i.e. moving from the broadest levels of differences down to finer distinctions. The idea is to not only speed up the retrieval process (which drops from a linear amount of comparisons to logarithmic) but also to increase the accuracy of retrieval. The standard approach is to cluster at different levels of dissimilarity (generally by using Euclidean distance) and build a tree from this. We explore an alternative approach by generalizing $k-$means to a hypersphere, though many of the paradigms of hierarchical clustering also apply.
 
 \section{Divisive and agglomerative clustering}
 
 % TODO: revise
 
-Divisive clustering is also known as the ``top down'' method. This takes
+Divisive clustering\cite{schutze2008introduction} is also known as the ``top down'' method. This takes
 in a data set as one large cluster. Then as it moves down the hierarchy,
-it recusively splits the data until it reaches the leaves of the tree, i.e. each
+it recursively splits the data until it reaches the leaves of the tree, i.e. each
 observation is its own singleton cluster.
 
 Agglomerative clustering can be thought to do the opposite of divisive
@@ -22,15 +22,12 @@ a data set and it initially looks at each observation as its own singleton
 cluster. Then, based on its linkage criterion, it will merge recursively
 to form new clusters until all the data is in one large cluster.
 
-A dendrogram can be used in both cases to record and visualize the hierarchical nature of the
+A dendrogram\cite{langfelder2008defining} can be used in both cases to record and visualize the hierarchical nature of the
 clusters and their distance to each other.
-
-% Add references
-
 
 \section{Cluster Dissimilarity Measurements}
 
-% Revise
+% TODO: Revise
 
 In forming clusters, a measurement must be made to determine which
 clusters split or merge in regards to divisive or agglomerative clustering,
@@ -38,9 +35,7 @@ respectively. There are many different ways to measure dissimilarity
 but this paper will explore single linkage, complete linkage, and
 centroid linkage. Each of the measurements below refer to ways in
 measuring distances between $k$ number of clusters $c_{i=1\dots k}$
-in relationship with specific points $x_{i=1\dots k}$ in those clusters.
-
-% Motivation behind linkage
+in relationship with specific points $x_{i=1\dots k}$ in those clusters. Because different linkage patterns will result in different clusters being formed, it is an important parameter to vary in hierarchical clustering.
 
 \subsection{Single Linkage}
 
@@ -70,7 +65,7 @@ D(c_{1},c_{2})=\underset{x_{1}\in c_{1},x_{2}\in c_{2}}{max}D(x_{1},x_{2})
 \subsection{Centroid Linkage}
 
 Using centroid linkage involves taking the average of all points in
-a cluster and assigning that value as the mean cenroid. Then
+a cluster and assigning that value as the mean centroid. Then
 the centroids with the shortest distances are merged together.
 Centroid linkage is defined as
 \begin{equation}
@@ -87,8 +82,7 @@ D\left(
 \section{Clustering implementations}
 
 We developed both hierarchical divisive and agglomerative clustering
-functions to test which would organize data the fastest.
-% TODO: Reframe/elaborate "organize the fastest"
+functions to explore which approach clustered more effectively and efficiently (i.e. algorithm time complexity).
 In our particular
 application, instead of flat clustering, we had to cluster over the
 curved surface of a sphere. In order to do this, we utilized the SPKmeans
@@ -101,7 +95,7 @@ we did a slightly different variation hoping its run time would be
 slightly better than the traditional method. In our code, intuitively,
 we initiated each point as its own cluster with its own centroid.
 Then we recursively merged two clusters together based on centroid
-linkage to form a new cluster with its own cluster centroid everytime.
+linkage to form a new cluster with its own cluster centroid each time.
 This process stops when there is a single point to represent the entire
 data's average centroid.
 
@@ -116,8 +110,7 @@ the number of data points. For the agglomerative case, we asked SPKmeans to
 return the $n/2$ clusters. This means means we had to call SPKmeans
 at every level which is $l=\lceil\log_{2}n\rceil$.
 
-% Diagram
-
+% TODO: Diagram
 
 As a benchmark, we also used the MATLAB \texttt{linkage} function to construct a pairwise-distance based tree (merging nodes together by single-linkage) and compared the results.
 
