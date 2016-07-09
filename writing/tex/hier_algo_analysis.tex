@@ -61,9 +61,9 @@ $$ T_{div}(n) = 2T(\frac{n}{2}) + nkdi $$
 
 for some constant $c$, since we divide the problem size into two for every recursive call and we have two subproblems each time. But we choose $k=2$ each time, since the number of means we choose to cluster with is always the branching factor.
 
-% TODO: explain master theorem
+Problems of this form are solvable using a highly prominent and useful algorithm called the master theorem\cite{thomas2001introduction}, which (given certain assumptions about the corresponding recurrence relation) gives the time complexity of many common recursive algorithms.
 
-We use the master theorem \cite{thomas2001introduction} to solve this recurrence relation:
+We use the master theorem to solve this recurrence relation:
 
 \begin{table}[ht]
 \centering
@@ -90,6 +90,6 @@ and so, by the master theorem: $ T_{div}(n) = \Theta(n\log(n)di)$. \qedsymbol
 
 \subsubsection{Conclusion}
 
-% TODO: explain results
+As we demonstrate with our complexity proofs, the divisive complexity algorithm is actually faster (linearithmic versus quadratic), which guides our use of the divisive algorithm in our experiments.
 
 \end{document}
