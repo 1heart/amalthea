@@ -1,4 +1,4 @@
-function wdeSet = wde2DParameters_Test()
+function wdeSet = wde2DParameters_Test(wName, startLevel, stopLevel, onlyScaling, domainVal)
 
 % Define convergence threshold and other free parameters.
 wdeSet.convgThresh = 1e-4;
@@ -19,17 +19,17 @@ wdeSet.gamma       = 1e-1;
 %     case {'coif1';'coif2';'coif3';'coif4';'coif5';'coif6';'coif7';'coif7';'coif8';'coif9';'coif10'}
 
 % WDE free parameters
-wdeSet.wName       = 'sym4'; 
+wdeSet.wName       = wName; 
 
-wdeSet.startLevel  = 2; %jo resolution
-wdeSet.stopLevel   = 4; %j resolution
-wdeSet.onlyScaling = 0;
+wdeSet.startLevel  = startLevel; %jo resolution
+wdeSet.stopLevel   = stopLevel; %j resolution
+wdeSet.onlyScaling = onlyScaling;
 wdeSet.iterations  =  12;
-wdeSet.wdePlotting = 1; % Plotting the density.
+wdeSet.wdePlotting = 0; % Plotting the density.
 
 wdeSet.delta          = .05;
 
-domVal = 1;
+domVal = domainVal;
 wdeSet.xMin           = -domVal;
 wdeSet.xMax           = domVal;
 wdeSet.yMin           = -domVal;

@@ -46,13 +46,15 @@ if (size(multires_i,2) ~= 2) error('Misformatted indices for multires!'); end;
 if (size(x,2) ~= 1) x = x'; end; if (size(y,2) ~= 1) y = y'; end; % Make vectors column vectors
 
 x_new = []; x_new_reverse = [];
+% TODO: only do one linassgn
 for res_level = 1:size(multires_i, 1)
   curr_range = multires_i(res_level, 1):multires_i(res_level, 2);
   x_curr = x(curr_range); y_curr = y(curr_range);
   x_new = [x_new; linassgn_warp(x_curr, y_curr, distMatrices{res_level}, lambdas)];
-  x_new_reverse = [x_new_reverse; linassgn_warp(x_curr, y_curr, distMatrices{res_level}, lambdas)];
+  % x_new_reverse = [x_new_reverse; linassgn_warp(x_curr, y_curr, distMatrices{res_level}, lambdas)];
 end
 
-d = min(sphere_dist(x_new, y), sphere_dist(x_new_reverse, y)); % Take the distance between y and the modified x
+% d = min(sphere_dist(x_new, y), sphere_dist(x_new_reverse, y)); % Take the distance between y and the modified x
+d = sphere_dist(x_new, y);
 
 end
