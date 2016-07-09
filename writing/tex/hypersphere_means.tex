@@ -4,7 +4,7 @@
 
 \section{Hypersphere means}
 
-% TODO: add intro + motivation (why can't we take Euclidean mean)
+A basic operation in Euclidean space is the act of taking the mean of a set of points. For example, $k$-means, which is a fundamental clustering algorithm, depends on this operation. However, this simple averaging procedure must be adapted to work on manifolds. To see intuitively why this is true, imagine two vectors on the hypersphere. The straight Euclidean mean of the two vectors actually ends up inside the sphere, not on the surface! Taking the Euclidean mean almost certainly results in a vector not on the manifold, so we require some tools from differential geometry to find means on manifolds.
 
 \subsection{Karcher Mean}
 
@@ -39,7 +39,7 @@ the manifold.
 \end{equation}
 where $\tilde{\rho}=\rho_{2}-\langle\rho_{2},\rho_{1}\rangle\rho_{1}$.
 Karcher mean, as we have mentioned before, is calculated in a way
-to obey the curvature of the hypershere.
+to obey the curvature of the hypersphere.
 
 \subsection{Spherical mean}
 
