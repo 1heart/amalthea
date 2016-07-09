@@ -5,7 +5,7 @@
 
 \section{Introduction to wavelet density estimation}
 
-Wavelet density estimation was a promising technique for shape matching, as explored by Peter and Rangarajan in their 2008 paper\cite{peter2008WDE}. Generally, the goal is to estimate a probability density function over the shape points and use that representation to compare shapes. The density is estimated by expansion into a wavelet basis form, which has a theory with strong mathematical foundations and provides several advantages over competing function bases (e.g. the Fourier basis, or simple histograms). 
+Wavelet density estimation was a promising technique for shape matching, as explored by Peter and Rangarajan in their 2008 paper\cite{peter2008maximum}. Generally, the goal is to estimate a probability density function over the shape points and use that representation to compare shapes. The density is estimated by expansion into a wavelet basis form, which has a theory with strong mathematical foundations and provides several advantages over competing function bases (e.g. the Fourier basis, or simple histograms). 
 
 This wavelet density estimation framework can be applied for any dimensional data (e.g. 1D, 2D, and 3D shapes) by using the tensor product (multidimensional) forms of the 1D wavelet bases. The coefficients of this functional basis (of the probability density function) form our feature representation, and also conveniently map to the unit hypersphere due to constraints we impose during density estimation. This manifold geometry allows us to use a simple, efficient, and well-defined distance metric as our shape dissimilarity measure.
 
