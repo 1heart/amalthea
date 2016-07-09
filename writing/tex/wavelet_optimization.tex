@@ -12,8 +12,7 @@ This wavelet density estimation framework can be applied for any dimensional dat
 \section{Implementation and our optimization}
 
 The wavelet density estimator code by Peter and Rangarajan accurately constructs the coefficient vectors and thus estimates the densities, but because of the sheer complexity of the procedure, there was significant room to improve the runtime. A full estimation over the standard shape databases can take multiple days even with relatively low resolution.
-% TODO: cite databases
-For instance, the Brown database has 99 shapes, the Swedish Leaf database has 1125 shapes, and the MPEG7 database has 1400 shapes, which are quite large already; the Princeton ModelNet database is orders of magnitude larger, at 127,915 shapes. At these scales, the inefficiency of the Peter-Rangarajan code is obvious (i.e. ModelNet estimation becomes intractable). Optimization is thus a primary priority.
+For instance, the Brown database\cite{sebastian2004recognition} has 99 shapes, the Swedish Leaf database\cite{soderkvist2001computer} has 1125 shapes, and the MPEG7 database\cite{jeannin1999description, bober2001mpeg} has 1400 shapes, which are quite large already; the Princeton ModelNet database is orders of magnitude larger, at 127,915 shapes. At these scales, the inefficiency of the Peter-Rangarajan code is obvious (i.e. ModelNet estimation becomes intractable). Optimization is thus a primary priority.
 
 THe Peter-Rangarajan follows the full mathematical implementation, which means there exist superfluous calculations. For instance, they loop over every sample point and evaluate every basis function individually. We added an optimization of only calculating the basis functions
 for relevant sample points under specified basis functions with the
@@ -140,9 +139,8 @@ Given a point set shape representation, the wavelet density estimation framework
 shape with basis functions at each translation. Each function has
 a coefficient that needs to be calculated. The bottleneck exists because of the way the code structures the computation: it
 code computes equations (\ref{eq:multiRes2D}) for a \emph{single
-point over all translations} using a a Kronecker
-tensor product.
-% TODO: cite kronecker product
+point over all translations} using a Kronecker
+tensor product. \cite{van2000ubiquitous}
  This means that if we have 1344 translations,
 it would perform 1344 operations for a single point. If a shape is made up of 4007 sample
 points, then it would be performing a total of 5,385,408 operations
