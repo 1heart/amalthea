@@ -50,12 +50,16 @@ The layout of this paper is as follows:
 
 \part{Clustering on a sphere}
 
+  Traditional clustering is done in Euclidean space, but this fails for a variety of reasons on a manifold. For instance, traditional $k$-means fails on a hypersphere because Euclidean means will inevitably leave the manifold (for example, taking the mean of two vectors at an obtuse angle will result in a mean that exists inside the sphere).
+
+  We thus use differential geometry techniques to investigate clustering on a hypersphere, which is the manifold upon which our feature representations live. First, we investigate ways to generate Gaussian-distributed data on spherical surfaces, using the Von Mises distribution (later generalized to the Von Mises-Fisher distribution for $n$-d spheres). Then we extend $k$-means to hypersphere manifolds, which first requires the investigation of hypersphere distances and means.
+
   % TODO: write intro for clustering on a sphere
 
   \subfile{tex/von_mises}
+  \subfile{tex/hypersphere_means}
   \subfile{tex/k_means}
   \subfile{tex/spherical_k_means}
-  \subfile{tex/hypersphere_means}
 
 \part{Hierarchical clustering}
 
