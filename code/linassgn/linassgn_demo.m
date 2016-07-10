@@ -13,8 +13,10 @@
 
 DISP = 1; % Display results boolean
 % lambdas = [1e-2 3e-2 5e-2 1e-1 1];
-lambdas = [1 1e-1 5e-2 3e-2 1e-2];
-viewangles = [180 80];
+lambdas = [1 1e-1 5e-2 1e-2 1e-3];
+viewangles = [180 85];
+curr_colormap = jet;
+plot_settings = @(curr) surf(curr);
 
 % Circle square demo
 % m = 36; n = 36;
@@ -37,7 +39,7 @@ datasets = getDatasets({'mpeg_7_haar_singleres', 'mpeg_7_haar_multires', 'mpeg_7
 m = 34; n = 34;
 distMatrix = construct_dist_matrix([m n]);
 
-a = 1; b = 451;
+a = 21; b = 421;
 
 imgs = { ...
   datasets{2}.data(a,:)',
@@ -64,21 +66,18 @@ for i = 1:length(imgs)
         subplot(2, length(lambdas), k);
         curr = warped_imgs{k};
         curr = reshape(curr, [m n]);
-        surf(curr); shading interp; colormap pink; grid off; axis off; % TODO: change this
-        view(viewangles);
+        surf(curr); shading interp; colormap(curr_colormap); grid off; axis off; view(viewangles);
         sphdist = sphere_dist(curr(:)/norm(curr(:)), target(:)/norm(target(:)));
         title(['Lambda = ' num2str(lambdas(k))]);
         xlabel(['sphere dist=' num2str(sphdist)]);
       end
       subplot(2, k, k + 1);
-      surf(source); shading interp; colormap pink; grid off; axis off;% TODO: change this
+      surf(source); shading interp; colormap(curr_colormap); grid off; axis off; view(viewangles);
       view(viewangles);
       title('Source');
       subplot(2, k, k + 2);
-      surf(target); shading interp; colormap pink; grid off; axis off; % TODO: change this
-      view(viewangles);
+      surf(target); shading interp; colormap(curr_colormap); grid off; axis off; view(viewangles);
       title('Target');
-      curr = source(:);
       sphdist = sphere_dist(curr(:)/norm(curr(:)), target(:)/norm(target(:)));
       xlabel(['sphere dist=' num2str(sphdist)]);
     end
