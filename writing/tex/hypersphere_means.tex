@@ -6,7 +6,7 @@
 
 A basic operation in Euclidean space is the act of taking the mean of a set of points. For example, $k$-means, which is a fundamental clustering algorithm, depends on this operation. However, this simple averaging procedure must be adapted to work on manifolds. To see intuitively why this is true, imagine two vectors on the hypersphere. The straight Euclidean mean of the two vectors actually ends up inside the sphere, not on the surface! Taking the Euclidean mean almost certainly results in a vector not on the manifold, so we require some tools from differential geometry to find means on manifolds.
 
-\subsection{Karcher Mean}
+\subsection{Karcher mean}
 
 The Karcher mean is a geometric mean of various matrices and an extension
 of the well known geometric mean of two matrices. It is also referred
@@ -62,7 +62,7 @@ types of situations in where the angles are either identical, orthogonal,
 opposite, two random angles, or multiple random angles as shown in
 Figure \ref{fig:Different-test-cases}. 
 
-We found that Karcher mean and Spherical K-means produced the same
+We found that Karcher mean and Spherical $k$-means produced the same
 results as long as the step size for Karcher mean was set to one.
 But both approaches failed in the case where the angles were opposite. 
 

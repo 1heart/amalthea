@@ -3,105 +3,6 @@
 
 \begin{document}
 
-\section{Introduction to wavelet density estimation}
-
-Wavelet density estimation was a promising technique for shape matching, as explored by Peter and Rangarajan in their 2008 paper \cite{peter2008maximum}. Generally, the goal is to estimate a probability density function over the shape points and use that representation to compare shapes. The density is estimated by expansion into a wavelet basis form, which has a theory with strong mathematical foundations and provides several advantages over competing function bases (e.g. the Fourier basis, or simple histograms). 
-
-This wavelet density estimation framework can be applied for any dimensional data (e.g. 1D, 2D, and 3D shapes) by using the tensor product (multidimensional) forms of the 1D wavelet bases. The coefficients of this functional basis (of the probability density function) form our feature representation, and also conveniently map to the unit hypersphere due to constraints we impose during density estimation. This manifold geometry allows us to use a simple, efficient, and well-defined distance metric as our shape dissimilarity measure.
-
-
-
-
-\section{Wavelet density estimation}
-
-Our feature representation is formed by estimation of the probability density function of the shape, which we model as sample points from a distribution. 
-
-First, we must explain the use of wavelets as the foundation of our density estimation framework. An $L^{2}$ function, also known as a square-integrable function, is a real- or complex-valued function whose square integrates to a finite number. Probability density functions fall
-under this function space, therefore allowing us to use wavelets for
-density estimation using a linear combination of these basis functions. In other words, wavelet density estimation  as a paradigm is built on strong mathematical foundations.
-
-
-The equation for 1D wavelet density estimation is 
-\begin{equation}
-p(x)=\underset{j_{o},k}{\sum}\alpha_{j_{o},k}\phi_{j_{o},k}(x)+\underset{j\geq j_{o},k}{\overset{j_{1}}{\sum}}\beta_{j,k}\psi_{j,k}(x)\label{eq:WDE}
-\end{equation}
-where $\phi(x)$ and $\psi(x)$ are the scaling and wavelet basis
-functions, also known as the ``father'' and ``mother'' wavelets,
-respectively. The functions can also be set to some starting resolution
-level that determines its dilation and contraction. To extend to multiple
-resolutions, we incorporate the wavelet basis function with a starting ($j_{o}$) and stopping ($j$) resolution level. In order to form a
-basis, we need to make multiple copies of the function over different
-translates, $k$. These functions are scaled by their scaling and
-wavelet basis function coefficients, $\alpha_{j_{o},k}$ and $\beta_{j,k}$.
-To easily retain properties of true densities, such as non-negativity and
-integration to one, we compute the square root of the probability
-density function 
-\begin{equation}
-\sqrt{p(x)}=\underset{j_{o},k}{\sum}\alpha_{j_{o},k}\phi_{j_{o},k}(x)+\underset{j\geq j_{o},k}{\overset{j_{1}}{\sum}}\beta_{j,k}\psi_{j,k}(x)\label{eq:sqrtWDE}
-\end{equation}
-Since we optimized for 2D wavelet density estimation,
-we consider the second dimension with $\mathbf{x}=(x_{1},x_{2})\in\mathbb{R}^{2}$
-and \textbf{$\mathbf{k}=(k_{1},k_{2})\in\mathbb{Z}^{2}$}. We also
-extend the equation to 
-\begin{equation}
-\sqrt{p(\mathbf{x})}=\underset{j_{o},\mathbf{k}}{\sum}\alpha_{j_{o},\mathbf{k}}\phi_{j_{o},\mathbf{k}}(\mathbf{x})+\underset{j\geq j_{o},\mathbf{k}}{\overset{j_{1}}{\sum}}\overset{3}{\underset{w=1}{\sum}}\beta_{j,\mathbf{k}}^{w}\psi_{j,\mathbf{k}}^{w}(\mathbf{x})\label{eq:sqrtWDE2Dmultires}
-\end{equation}
-where we calculate for the basis functions by using the tensor product
-method 
-\[
-\phi_{j_{o},\mathbf{k}}(\mathbf{x})=2^{j_{o}}\phi(2^{j_{o}}x_{1}-k_{1})\phi(2^{j_{o}}x_{2}-k_{2})
-\]
-\[
-\psi_{j,\mathbf{k}}^{1}(\mathbf{x})=2^{j}\phi(2^{j}x_{1}-k_{1})\psi(2^{j}x_{2}-k_{2})
-\]
-\[
-\psi_{j,\mathbf{k}}^{2}(\mathbf{x})=2^{j}\psi(2^{j}x_{1}-k_{1})\phi(2^{j}x_{2}-k_{2})
-\]
-\begin{equation}
-\psi_{j,\mathbf{k}}^{3}(\mathbf{x})=2^{j}\psi(2^{j}x_{1}-k_{1})\psi(2^{j}x_{2}-k_{2})\label{eq:multiRes2D}
-\end{equation}
-A mathematical advantage in using wavelets is its compact support,
-meaning they are nonzero on a small domain. Any point falling outside
-of the basis function's support does not contribute to the basis function
-value at that translation.
-
-Intuitively, the scaling and wavelet basis
-function coefficients determine the height of its basis function.
-These coefficients thus uniquely define
-the probability density function of a shape, which means we can use them as our feature representation
-in shape retrieval. In order to calculate coefficients we use the
-following equations:
-\begin{equation}
-\alpha_{j_{o},\mathbf{k}}=\bigg(\frac{1}{N}\bigg)\overset{N}{\underset{i=1}{\sum}}\frac{\phi_{j_{o},\mathbf{k}}(\mathbf{x})}{\sqrt{p(\mathbf{x})}}\label{eq:scalingCoeff}
-\end{equation}
-\begin{equation}
-\beta_{j_{o},k}=\bigg(\frac{1}{N}\bigg)\underset{i=1}{\overset{N}{\sum}}\frac{\psi_{j,\mathbf{k}(\mathbf{x})}}{\sqrt{p(\mathbf{x})}}\label{eq:waveletCoeff}
-\end{equation}
-
-As we estimate the coefficients of our probability density function,
-we use a loss function to determine whether our coefficients are as
-close to optimal as possible. To do this we try to minimize a negative
-loglikelihood objective function with respect to the coefficients
-\begin{equation}
--\log p(X;\{\alpha_{j_{o},k}\beta_{j,k}\})=-\frac{1}{N}\underset{i=1}{\overset{N}{\sum}}\log\Bigg[\underset{j_{o},k}{\sum}\alpha_{j_{o},k}\phi_{j_{o},k}(x_{i})+\underset{j\geq j_{o},k}{\overset{j_{1}}{\sum}}\beta_{j,k}\psi_{j.k}(x_{i})\Bigg]^{2}\label{eq:costFunction}
-\end{equation}
-where $X=\{x_{i}\}_{i=1}^{N}$. To determine the direction
-of the gradient descent, we compute the following expression:
-% TODO: find correct equation
-\begin{equation}
--2\bigg(\frac{1}{N}\bigg)\sum\frac{\phi_{j_{o},\mathbf{k}}(\mathbf{x})}{\sum\alpha_{j_{o},\mathbf{k}}\phi_{j_{o},\mathbf{k}}(\mathbf{x})}\label{eq:gradient}
-\end{equation}
-In order for maintain essential properties of density estimation,
-we constrain the coefficients to one
-\begin{equation}
-\underset{j_{o},k}{\sum}\alpha_{j_{o},k}^{2}+\underset{j\geq j_{o},k}{\overset{j_{1}}{\sum}}\beta_{j,k}^{2}=1\label{eq:constraint}
-\end{equation}
-This constraint conveniently maps our feature representation into
-a unit hypersphere which allows us to take advantage of its geometric
-properties to signify similarity and dissimilarity between shapes
-in shape retrieval. 
-
-
 \section{Implementation and our optimization}
 
 The wavelet density estimator code by Peter and Rangarajan accurately constructs the coefficient vectors and thus estimates the densities, but because of the sheer complexity of the procedure, there was significant room to improve the runtime. A full estimation over the standard shape databases can take multiple days even with relatively low resolution.
@@ -127,7 +28,7 @@ bottleneck: the calculation of the initial coefficients and negative
 log likelihood cost value with its gradient. 
 
 
-\subsection*{Initializing Coefficients}
+\subsection{Initializing Coefficients}
 
 This function calculates equations (\ref{eq:scalingCoeff})
 and (\ref{eq:waveletCoeff}) to compute initial coefficients
@@ -161,7 +62,7 @@ under each translation using equation (\ref{eq:scalingCoeff}) and
 (\ref{eq:waveletCoeff}). 
 
 
-\subsection*{Negative Log Likelihood}
+\subsection{Negative log likelihood}
 
 The second area where the bottleneck occurs is in computing for the
 negative log likelihood cost value (\ref{eq:costFunction}) and the
@@ -182,7 +83,7 @@ and perform the proper computations. This effectively solves for the
 negative log likelihood cost value and gradient while ultimately eliminating
 loops. 
 
-\section*{Results}
+\section{Results}
 
 As mentioned above, our goal is to estimate a density function of
 a 2D shape using wavelets. This allows us to extract the coefficients

@@ -25,7 +25,7 @@ to form new clusters until all the data is in one large cluster.
 A dendrogram \cite{langfelder2008defining} can be used in both cases to record and visualize the hierarchical nature of the
 clusters and their distance to each other.
 
-\section{Cluster Dissimilarity Measurements}
+\section{Cluster dissimilarity measurements}
 
 % TODO: Revise
 
@@ -37,7 +37,7 @@ centroid linkage. Each of the measurements below refer to ways in
 measuring distances between $k$ number of clusters $c_{i=1\dots k}$
 in relationship with specific points $x_{i=1\dots k}$ in those clusters. Because different linkage patterns will result in different clusters being formed, it is an important parameter to vary in hierarchical clustering.
 
-\subsection{Single Linkage}
+\subsection{Single linkage}
 
 Single linkage takes the distance between the closest observations,
 or minimum distance, in each cluster and merges those with the
@@ -49,7 +49,7 @@ D(c_{1},c_{2})=\underset{x_{1}\in c_{1},x_{2}\in c_{2}}{min}D(x_{1},x_{2})
 
 
 
-\subsection{Complete Linkage}
+\subsection{Complete linkage}
 
 Complete linkage is similar to single linkage. It takes the distance
 between the farthest observations, or the maximum distance, in each
@@ -62,7 +62,7 @@ D(c_{1},c_{2})=\underset{x_{1}\in c_{1},x_{2}\in c_{2}}{max}D(x_{1},x_{2})
 
 
 
-\subsection{Centroid Linkage}
+\subsection{Centroid linkage}
 
 Using centroid linkage involves taking the average of all points in
 a cluster and assigning that value as the mean centroid. Then

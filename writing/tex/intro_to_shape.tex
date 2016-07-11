@@ -10,23 +10,20 @@ The standard general framework for shape retrieval is to consume some shape repr
 
 There has been several developments which make shape analysis both exciting and crucial in recent years. First, the number of available models (2D and 3D shapes) available over the Internet, partly due to ever-decreasing costs of creating such models and partly due to the concerted efforts of researchers to construct domain-specific databases. Second, our understanding of the principles behind computer vision have advanced greatly, due to both the necessity of making sense of enormous amount of data being generated every day \cite{manyika2011big}, and meteoric advances in our ability to solve them \cite{krizhevsky2012imagenet}.
 
-It is interesting to note that, fundamentally, our understanding of images and objects comes directly from our ability to understand their shape. To see this most intuitively, consider the two objects in figure \ref{fig:different_shapes} which we immediately recognize as opposite meanings, and two objects in figure \ref{fig:same_shapes} we recognize immediately as the same. Though the texture, color, scale, and amount of distortion varies tremendously in the two similar objects, shape enables us to tell them apart; on the other hand, all those attributes are constant between the two dissimilar objects but we can tell them apart extremely easily, again due to shape.
+It is interesting to note that, fundamentally, our understanding of images and objects comes directly from our ability to understand their shape. To see this most intuitively, consider the two versions of the same picture in figures \ref{figure:still_life_original} and \ref{figure:still_life_outline} which we immediately recognize as containing the same semantic meaning, despite the stripping away of most attributes in \ref{figure:still_life_outline}. We could change the speed, scale, amount of distortion, and almost any other characteristic parameter and still retain the same meaning.
 
-
-\begin{figure}[!ht]
-  \centering
-    \includegraphics[width=0.2\textwidth]{happy_face}
-    \includegraphics[width=0.2\textwidth]{happy_face_2}
-  \caption{Two happy faces. Notice that despite texture, color, sizing, and distortion changes, we can immediately tell them apart due to shape information. \label{fig:same_shapes}}
+\begin{figure}[H]
+	\centering
+	\includegraphics{still_life_full}
+	\caption{Original photograph of still life\label{figure:still_life_original}}
 \end{figure}
 
-
-\begin{figure}[!ht]
-  \centering
-    \includegraphics[width=0.2\textwidth]{happy_face}
-    \includegraphics[width=0.2\textwidth]{unhappy_face}
-  \caption{A happy and unhappy face. Notice that despite the same texture, color, sizing, and without any distortion, we can immediately tell them apart due to their shape. \label{fig:different_shapes}}
+\begin{figure}[H]
+	\centering
+	\includegraphics{still_life_outline}
+	\caption{Same scene with purely shape information\label{figure:still_life_outline}}
 \end{figure}
+
 
 \section{Applications}
 

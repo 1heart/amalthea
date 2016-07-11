@@ -15,6 +15,7 @@
 \usepackage[a4paper, total={7in, 10in}]{geometry}
 \usepackage{lipsum}
 \usepackage{textcomp}
+\usepackage{subcaption}
 
 \graphicspath{{img/}{../img/}}
 
@@ -25,7 +26,7 @@
 
 \title{Hierarchical Shape Retrieval on the Unit Hypersphere}
 \author{Glizela Taino}
-\affil{Department of Mathematics, Hawaii Pacific University, Honolulu, Hawaii; \href{mailto:glizelataino@gmail.com}{glizelataino@gmail.com}}
+\affil{Department of Computer Science and Engineering, Washington University in St. Louis; \href{mailto:glizelataino@gmail.com}{glizelataino@gmail.com}}
 \author{Yixin Lin}
 
 \affil{Department of Computer Science and Mathematics, Duke University, Durham, North Carolina; \href{mailto:yixin.lin@duke.edu}{yixin.lin@duke.edu}}
@@ -46,9 +47,10 @@ The layout of this paper is as follows:
   \subfile{tex/intro_to_shape}
   \subfile{tex/shape_lit_review}
   \subfile{tex/laplace_beltrami}
-  \subfile{tex/wavelet_density_estimation}
+  
 
 \part{Optimization of wavelet density estimation}
+  \subfile{tex/wavelet_density_estimation}
   \subfile{tex/wavelet_optimization}
 
 \part{Clustering on a sphere}
@@ -77,13 +79,21 @@ The layout of this paper is as follows:
   \subfile{tex/hierarchical_clustering}
   \subfile{tex/hier_algo_analysis}
   \subfile{tex/retrieval_mechanics}
+  \subfile{tex/hierarchical_results}
 
 \part{Shape L'Ane Rouge: sliding wavelets}
   \subfile{tex/sliding_wavelets}
   \subfile{tex/linear_assignment}
+  \subfile{tex/sliding_wavelets_results}
+
+\part{Conclusion}
+  Shape retrieval, comparison, and classification is a significant problem that has far-ranging applications due to the problem's fundamental nature in the field of computer vision. In this paper, we provide a brief exposition of the wavelet density estimation framework, including the theoretical foundation behind wavelets. We then provide several contributions to the framework of wavelet density estimation-based shape retrieval, including a speedup of the density estimation code by two orders of magnitude for 2D shapes in a multiresolution wavelet basis, an improved shape similarity metric using linear assignment and multiresolution wavelets,, hierarchical clustering algorithms on high-dimensional unit hypersphere (with algorithmic time complexity proofs), and experimental validation across multiple datasets, with results competitive with state of the art.
 
 \newpage
 \bibliographystyle{plain}
 \bibliography{tech_report_1.bib}
+
+\part{Appendix}
+  \subfile{tex/sphere_rand_code}
 
 \end{document}
