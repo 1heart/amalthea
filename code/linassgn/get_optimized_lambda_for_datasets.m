@@ -1,7 +1,7 @@
 if ~exist('datasets') error('Datasets does not exist!'); end;
 get_dists_for_datasets;
 
-LAMBDAS = 10.^[-2:0.5:10];
+LAMBDAS = 10.^[-10:0.5:0];
 
 for i = 1:length(datasets)
   ds = datasets{i};
