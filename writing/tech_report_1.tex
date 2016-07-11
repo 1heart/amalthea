@@ -55,7 +55,7 @@ The layout of this paper is as follows:
 
   Traditional clustering is done in Euclidean space, but this fails for a variety of reasons on a manifold. For instance, traditional $k$-means fails on a hypersphere because Euclidean means will inevitably leave the manifold (for example, taking the mean of two vectors at an obtuse angle will result in a mean that exists inside the sphere).
 
-  We thus use differential geometry techniques to investigate clustering on a hypersphere, which is the manifold upon which our feature representations live. First, we investigate ways to generate Gaussian-distributed data on spherical surfaces, using the Von Mises distribution (later generalized to the Von Mises-Fisher distribution for $n$-d spheres). Then we extend $k$-means to hypersphere manifolds, which first requires the investigation of hypersphere distances and means.
+  We thus use differential geometry techniques to investigate clustering on a hypersphere, which is the manifold upon which our feature representations live. First, we investigate ways to generate Gaussian-distributed data on spherical surfaces, using the Von Mises distribution (later generalized to the Von Mises-Fisher distribution for $n$-dimensional spheres). Then we extend $k$-means to hypersphere manifolds, which first requires the investigation of hypersphere distances and means.
 
   \subfile{tex/von_mises}
   \subfile{tex/hypersphere_means}
@@ -65,16 +65,14 @@ The layout of this paper is as follows:
 \part{Hierarchical clustering}
 
   % TODO: revise
-  For our lab, we want to develop the most efficient way to group data
+  We want to develop the most efficient way to group data
   based on a measure of dissimilarity. We explored the topic of
-  hierarchical clustering which is used in data mining and statistics.
-  It is visualized using a dendrogram to show the organization and relationship
-  among clusters. Hierarchical clustering can be implemented in two
+  hierarchical clustering which is used in data mining and statistics.  Hierarchical clustering can be implemented in two
   ways: divisive and agglomerative. We will elaborate on these two variants
   in this paper to compare the its algorithmic complexity, or how much
   resources are needed when computed, and the different types of cluster
   linkage criterion. Further information on cluster analysis can be
-  found in \cite{ClusterAnalysis}.
+  found in  \cite{ClusterAnalysis}.
 
   \subfile{tex/hierarchical_clustering}
   \subfile{tex/hier_algo_analysis}

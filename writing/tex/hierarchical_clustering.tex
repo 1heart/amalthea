@@ -11,7 +11,7 @@ The idea behind hierarchical clustering is to capture the different abstraction 
 
 % TODO: revise
 
-Divisive clustering\cite{schutze2008introduction} is also known as the ``top down'' method. This takes
+Divisive clustering \cite{schutze2008introduction} is also known as the ``top down'' method. This takes
 in a data set as one large cluster. Then as it moves down the hierarchy,
 it recursively splits the data until it reaches the leaves of the tree, i.e. each
 observation is its own singleton cluster.
@@ -22,7 +22,7 @@ a data set and it initially looks at each observation as its own singleton
 cluster. Then, based on its linkage criterion, it will merge recursively
 to form new clusters until all the data is in one large cluster.
 
-A dendrogram\cite{langfelder2008defining} can be used in both cases to record and visualize the hierarchical nature of the
+A dendrogram \cite{langfelder2008defining} can be used in both cases to record and visualize the hierarchical nature of the
 clusters and their distance to each other.
 
 \section{Cluster Dissimilarity Measurements}
@@ -40,7 +40,7 @@ in relationship with specific points $x_{i=1\dots k}$ in those clusters. Because
 \subsection{Single Linkage}
 
 Single linkage takes the distance between the closest observations,
-or minimum distance, in each cluster and merges the those with the
+or minimum distance, in each cluster and merges those with the
 shortest distance. This works well for data sets that desire to cluster
 together long chained data points. Let $D(c_i,c_j)$ be the distance between two centroids for $i,j \in \{1, 2, ... k\}$, and $D(x_i, x_j)$ be the distance between two data points in $i, j \in \{ 1, 2, ... n \}$. Then single linkage defines the following relationship:
 \begin{equation}
@@ -85,8 +85,8 @@ We developed both hierarchical divisive and agglomerative clustering
 functions to explore which approach clustered more effectively and efficiently (i.e. algorithm time complexity).
 In our particular
 application, instead of flat clustering, we had to cluster over the
-curved surface of a sphere. In order to do this, we utilized the SPKmeans
-function \cite{nguyen_spherical_clustering}. We also chose our linkage criterion
+curved surface of a sphere. In order to do this, we utilized the spherical $k$-means
+function  \cite{nguyen_spherical_clustering}. We also chose our linkage criterion
 to be based on centroid linkage.
 
 Essentially, we developed the divisive clustering by following the
@@ -102,12 +102,12 @@ data's average centroid.
 We tested with a relatively small,
 three dimensional data set of 150 points. In both 
 divisive and agglomerative, we input different cluster values into
-SPKmeans which determines how often the function gets called. In the
-divisive method, we asked SPKmeans to return two clusters.
-This means the number of times we call SPKmeans
+spherical $k$-means which determines how often the function gets called. In the
+divisive method, we asked spherical $k$-means to return two clusters.
+This means the number of times we call spherical $k$-means
 is based on how many nodes we have which is $m=2n-1$ where $n$ is
-the number of data points. For the agglomerative case, we asked SPKmeans to
-return the $n/2$ clusters. This means means we had to call SPKmeans
+the number of data points. For the agglomerative case, we asked spherical $k$-means to
+return the $n/2$ clusters. This means means we had to call spherical $k$-means
 at every level which is $l=\lceil\log_{2}n\rceil$.
 
 % TODO: Diagram
@@ -118,6 +118,6 @@ As a benchmark, we also used the MATLAB \texttt{linkage} function to construct a
 
 In $k$-means, there is a choice of initial mean initialization. This affects the initial distribution of means and therefore potentially the number of iterations until convergence, but also may be expensive computationally. For instance, a good setting of the initial means will reduce the likelihood of empty clusters found, which is dealt with by splitting the largest cluster and is therefore computationally expensive.
 
-For the agglomerative algorithm, it makes sense to spend time initializing the means (we chose to maximize the distance between the initial means), since the number of calls to SPKMeans is small and the number of clusters for each call is high. For the divisive algorithm, it doesn't make sense to incur this expense when SPKMeans is called many times with only the branching-factor number of clusters (generally a small constant). This optimization and lack thereof, respectively, reduces the running time for both algorithms substantially.
+For the agglomerative algorithm, it makes sense to spend time initializing the means (we chose to maximize the distance between the initial means), since the number of calls to spherical $k$-means is small and the number of clusters for each call is high. For the divisive algorithm, it doesn't make sense to incur this expense when spherical $k$-means is called many times with only the branching-factor number of clusters (generally a small constant). This optimization and lack thereof, respectively, reduces the running time for both algorithms substantially.
 
 \end{document}

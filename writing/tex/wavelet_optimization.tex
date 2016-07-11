@@ -5,24 +5,14 @@
 
 \section{Introduction to wavelet density estimation}
 
-Wavelet density estimation was a promising technique for shape matching, as explored by Peter and Rangarajan in their 2008 paper\cite{peter2008maximum}. Generally, the goal is to estimate a probability density function over the shape points and use that representation to compare shapes. The density is estimated by expansion into a wavelet basis form, which has a theory with strong mathematical foundations and provides several advantages over competing function bases (e.g. the Fourier basis, or simple histograms). 
+Wavelet density estimation was a promising technique for shape matching, as explored by Peter and Rangarajan in their 2008 paper \cite{peter2008maximum}. Generally, the goal is to estimate a probability density function over the shape points and use that representation to compare shapes. The density is estimated by expansion into a wavelet basis form, which has a theory with strong mathematical foundations and provides several advantages over competing function bases (e.g. the Fourier basis, or simple histograms). 
 
 This wavelet density estimation framework can be applied for any dimensional data (e.g. 1D, 2D, and 3D shapes) by using the tensor product (multidimensional) forms of the 1D wavelet bases. The coefficients of this functional basis (of the probability density function) form our feature representation, and also conveniently map to the unit hypersphere due to constraints we impose during density estimation. This manifold geometry allows us to use a simple, efficient, and well-defined distance metric as our shape dissimilarity measure.
 
-\section{Implementation and our optimization}
-
-The wavelet density estimator code by Peter and Rangarajan accurately constructs the coefficient vectors and thus estimates the densities, but because of the sheer complexity of the procedure, there was significant room to improve the runtime. A full estimation over the standard shape databases can take multiple days even with relatively low resolution.
-For instance, the Brown database\cite{sebastian2004recognition} has 99 shapes, the Swedish Leaf database\cite{soderkvist2001computer} has 1125 shapes, and the MPEG7 database\cite{jeannin1999description, bober2001mpeg} has 1400 shapes, which are quite large already; the Princeton ModelNet database is orders of magnitude larger, at 127,915 shapes. At these scales, the inefficiency of the Peter-Rangarajan code is obvious (i.e. ModelNet estimation becomes intractable). Optimization is thus a primary priority.
-
-THe Peter-Rangarajan follows the full mathematical implementation, which means there exist superfluous calculations. For instance, they loop over every sample point and evaluate every basis function individually. We added an optimization of only calculating the basis functions
-for relevant sample points under specified basis functions with the
-hope to cut computation power (and thus, time required for estimation) considerably.
-
-In this
-report we first provide an exposition of  wavelets and its use in density estimation, delving deeper into the equations which drive the core of the implementation by Peter and Rangarajan. We then provide an explanation of the optimizations, and finally report the extremely promising results from said optimizations. 
 
 
-\section{Wavelet Density Estimation}
+
+\section{Wavelet density estimation}
 
 Our feature representation is formed by estimation of the probability density function of the shape, which we model as sample points from a distribution. 
 
@@ -31,7 +21,7 @@ under this function space, therefore allowing us to use wavelets for
 density estimation using a linear combination of these basis functions. In other words, wavelet density estimation  as a paradigm is built on strong mathematical foundations.
 
 
-The equation for 1D density estimation is 
+The equation for 1D wavelet density estimation is 
 \begin{equation}
 p(x)=\underset{j_{o},k}{\sum}\alpha_{j_{o},k}\phi_{j_{o},k}(x)+\underset{j\geq j_{o},k}{\overset{j_{1}}{\sum}}\beta_{j,k}\psi_{j,k}(x)\label{eq:WDE}
 \end{equation}
@@ -49,7 +39,7 @@ density function
 \begin{equation}
 \sqrt{p(x)}=\underset{j_{o},k}{\sum}\alpha_{j_{o},k}\phi_{j_{o},k}(x)+\underset{j\geq j_{o},k}{\overset{j_{1}}{\sum}}\beta_{j,k}\psi_{j,k}(x)\label{eq:sqrtWDE}
 \end{equation}
-Since we optimized for multi-resolution 2D wavelet density estimation,
+Since we optimized for 2D wavelet density estimation,
 we consider the second dimension with $\mathbf{x}=(x_{1},x_{2})\in\mathbb{R}^{2}$
 and \textbf{$\mathbf{k}=(k_{1},k_{2})\in\mathbb{Z}^{2}$}. We also
 extend the equation to 
@@ -97,6 +87,7 @@ loglikelihood objective function with respect to the coefficients
 \end{equation}
 where $X=\{x_{i}\}_{i=1}^{N}$. To determine the direction
 of the gradient descent, we compute the following expression:
+% TODO: find correct equation
 \begin{equation}
 -2\bigg(\frac{1}{N}\bigg)\sum\frac{\phi_{j_{o},\mathbf{k}}(\mathbf{x})}{\sum\alpha_{j_{o},\mathbf{k}}\phi_{j_{o},\mathbf{k}}(\mathbf{x})}\label{eq:gradient}
 \end{equation}
@@ -111,7 +102,16 @@ properties to signify similarity and dissimilarity between shapes
 in shape retrieval. 
 
 
-\section*{Wavelet Density Estimation Optimization}
+\section{Implementation and our optimization}
+
+The wavelet density estimator code by Peter and Rangarajan accurately constructs the coefficient vectors and thus estimates the densities, but because of the sheer complexity of the procedure, there was significant room to improve the runtime. A full estimation over the standard shape databases can take multiple days even with relatively low resolution.
+For instance, the Brown database \cite{sebastian2004recognition} has 99 shapes, the Swedish Leaf database \cite{soderkvist2001computer} has 1125 shapes, and the MPEG7 database \cite{jeannin1999description, bober2001mpeg} has 1400 shapes, which are quite large already; the Princeton ModelNet database is orders of magnitude larger, at 127,915 shapes. At these scales, the inefficiency of the Peter-Rangarajan code is obvious (i.e. ModelNet estimation becomes intractable). Optimization is thus a primary priority.
+
+The Peter-Rangarajan follows the full mathematical implementation, which means there exist superfluous calculations. For instance, they loop over every sample point and evaluate every basis function individually. We added an optimization of only calculating the basis functions
+for relevant sample points under specified basis functions with the
+hope to cut time required for estimation.
+
+\section{Wavelet density estimation optimization}
 
 Now that we have an overview of wavelet density estimation and the
 equations used, we can delve into our optimization. We focus our efforts on the 2D form of the density estimation on a given point set shape representation.
@@ -140,7 +140,7 @@ shape with basis functions at each translation. Each function has
 a coefficient that needs to be calculated. The bottleneck exists because of the way the code structures the computation: it
 code computes equations (\ref{eq:multiRes2D}) for a \emph{single
 point over all translations} using a Kronecker
-tensor product. \cite{van2000ubiquitous}
+tensor product.  \cite{van2000ubiquitous}
  This means that if we have 1344 translations,
 it would perform 1344 operations for a single point. If a shape is made up of 4007 sample
 points, then it would be performing a total of 5,385,408 operations

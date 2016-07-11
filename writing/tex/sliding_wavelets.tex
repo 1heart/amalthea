@@ -2,15 +2,15 @@
 \graphicspath{{img/}{../img/}}
 \begin{document}
 
-\section{Sliding wavelet coefficients}
+\section{Sliding wavelet coefficients\label{sliding}}
 
-We use a feature representation that incorporates the use of a density estimation using wavelets, which brings us to a $d$-dimensional hypersphere. However, the original density estimation was over the 2- or 3-dimensional space, i.e. each coefficient of represents the amplitude of the wavelet in a region of 2-d or 3-d space. We then compute distances between the probability density functions through use of the angle or arc between the points on the hypersphere; intuitively, this distance metric measures how different the corresponding regions are in amplitude.
+We use a feature representation that incorporates the use of a density estimation using wavelets, which brings us to a $d$-dimensional hypersphere. However, the original density estimation was over the 2- or 3-dimensional space, i.e. each coefficient of represents the amplitude of the wavelet in a region of 2D or 3D space. We then compute distances between the probability density functions through use of the angle or arc between the points on the hypersphere; intuitively, this distance metric measures how different the corresponding regions are in amplitude.
 
-However, if the shapes are not aligned (specifically, if there are non-rigid transformations between them), there may be mistakes in using this distance metric. The goal of sliding the wavelet coefficients, as described in Shape L'Ane Rouge\cite{peter2008shape}, is to reduce non-rigid differences between the densities before taking the distance between them.
+However, if the shapes are not aligned (specifically, if there are non-rigid transformations between them), there may be mistakes in using this distance metric. The goal of sliding the wavelet coefficients, as described in Shape L'Ane Rouge \cite{peter2008shape}, is to reduce non-rigid differences between the densities before taking the distance between them.
 
 \subsection{Review of wavelet density estimation}
 
-Our goal is to compute a robust distance metric between shapes such that the essential information inherent in the shape is captured while the irrelevant information is reduced. This follows the paradigm where similarities between shapes are considered after removing certain classes of transformations\cite{peter2008shape,klein1893comparative}.
+Our goal is to compute a robust distance metric between shapes such that the essential information inherent in the shape is captured while the irrelevant information is reduced. This follows the paradigm where similarities between shapes are considered after removing certain classes of transformations \cite{peter2008shape,klein1893comparative}.
 
 We first take the problem of representing shapes in such a way. Given a 2D or 3D point cloud, we attempt to measure it either directly as a probability density function or after applying certain transformations (e.g. the Laplace-Beltrami operator). We estimate $\sqrt{p(x)}$ and then obtain $p(x) = (\sqrt{p(x)})^2$ in order to sidestep many of the problems associated with estimating probability density functions. 
 
@@ -51,7 +51,7 @@ Let $\bm{c_1}, \bm{c_2}$ be the two coefficient vectors that we are taking the d
 
 \begin{equation} C = -(\bm{c_1} \otimes \bm{c_2}) + \lambda D\end{equation}
 
-where $\bm{c_1} \otimes \bm{c_2}$ is the outer product between the two coefficient vectors, $D$ is distance matrix with $d_{ij}=$ the Euclidean distance between the $i$th and $j$th regions that the coefficients correspond to, and $\lambda$ is some weight value that determines how important distance is to the cost.
+where $\bm{c_1} \otimes \bm{c_2}$ is the outer product between the two coefficient vectors, $D$ is distance matrix with $d_{ij}=$ the Euclidean distance between the $i$th and $j$th locations that the coefficients correspond to, and $\lambda$ is some weight value that determines how important distance is to the cost.
 
 The distance matrix is constructed by reconstructing the 2- or 3-dimensional grid under which the coefficients were formed using MATLAB's \texttt{ndgrid} function, finding the points \texttt{pts}, and then computing the pairwise distance using MATLAB's \texttt{squareform(pdist(pts))}.
 

@@ -236,7 +236,7 @@ We developed both hierarchical divisive and agglomerrative clustering functions
  to test which would organize data the fastest.
  In our particular application, instead of flat clustering, we had to cluster
  over the curved surface of a sphere.
- In order to do this, we utilized the SPKmeans function 
+ In order to do this, we utilized the spherical $k$-means function 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "SphericalKMeans"
@@ -267,13 +267,13 @@ Complexity determines how well the algorithm performs in real time as the
  We tested with a relatively small, three dimensional data set of 150 points.
  This way, we can later expand it to work with large data sets that are
  multidemnsional.
- Since the SPKmeans is the function that takes the longest to perform, it
+ Since the spherical $k$-means is the function that takes the longest to perform, it
  is our leading function to determine complexity.
  In the situtations of divisive and agglomerative, we input different cluster
- values into SPKmeans which determines how often the function gets called.
- In the divisive method, we asked SPKmeans to return two clusters everytime
+ values into spherical $k$-means which determines how often the function gets called.
+ In the divisive method, we asked spherical $k$-means to return two clusters everytime
  it is given a data set.
- This means the number of times we call SPKmeans is based on how many nodes
+ This means the number of times we call spherical $k$-means is based on how many nodes
  we have which is 
 \begin_inset Formula $m=2n-1$
 \end_inset
@@ -283,12 +283,12 @@ Complexity determines how well the algorithm performs in real time as the
 \end_inset
 
  is the number of data points.
- For agglomertive, we asked SPKmeans to return the 
+ For agglomertive, we asked spherical $k$-means to return the 
 \begin_inset Formula $n/2$
 \end_inset
 
  clusters.
- This means means we had to call SPKmeans at every level which is 
+ This means means we had to call spherical $k$-means at every level which is 
 \begin_inset Formula $l=ceiling(log_{2}n)$
 \end_inset
 

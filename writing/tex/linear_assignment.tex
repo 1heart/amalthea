@@ -4,7 +4,15 @@
 
 \section{Linear assignment}
 
-The assignment problem is a classical problem in graph theory and combinatorial optimization\cite{burkard1999linear}. Informally, it deals with finding the most optimal (least-cost) way of assigning tasks to workers. It also has an equivalent graph theory formulation. We call such an assignment problem problem \textit{linear} if there are equal numbers of tasks and workers and the total cost for all tasks is the sum of the individual costs incurred. This is a quite generalized problem that has many applications in resource allocation, including originally in transportation theory.
+The assignment problem is a classical problem in graph theory and combinatorial optimization \cite{burkard1999linear}. Informally, it deals with finding the most optimal (least-cost) way of assigning tasks to workers. It also has an equivalent graph theory formulation. We call such an assignment problem problem \textit{linear} if there are equal numbers of tasks and workers and the total cost for all tasks is the sum of the individual costs incurred. This is a quite generalized problem that has many applications in resource allocation, including originally in transportation theory.
+
+
+\subsection{Motivations}
+
+This problem first arose in transportation theory, where the goal is to assign $n$ mines to $n$ factories which consume the ore that the mines produce. However, the problem arises whenever there is a need to assign tasks to workers with potentially different costs for each potential task-worker pair.
+
+We investigate this problem in order to align the discrete probability distributions of two shapes and then measure the distance between them. This is explained in section \ref{sliding}.
+
 
 \subsection{Formal specification}
 
@@ -22,18 +30,12 @@ $$ C \mid c_{ij} = \text{cost of moving element } i \text{ to } j$$
 
 Equivalently, in graph theoretic terms: given a weighted bipartite graph, find the minimum weight perfect matching.
 
-\subsection{Motivations}
-
-This problem first arose in transportation theory, where the goal is to assign $n$ mines to $n$ factories which consume the ore that the mines produce. However, the problem arises whenever there is a need to assign tasks to workers with potentially different costs for each potential task-worker pair.
-
-We investigate this problem in order to align the discrete probability distributions of two shapes and then measure the distance between them. This is explained in the \textbf{sliding wavelets} section.
-
 \subsection{Algorithms and runtime}
 
 Because this problem can be formulated as a linear program, it can be solved with general linear program solving algorithms (e.g. simplex and variants). However, we can solve this more efficiently by exploiting the structure of the problem.
 
 One famous algorithm is the famous Hungarian algorithm, which was proposed by Kuhn in the 1950s and originally had time complexity of $O(n^4)$, although this was improved by Lawler in 1976 to $O(n^3)$.
 
-We use the Jonker-Volgenant algorithm\cite{jonker1987shortest}\cite{lapjv}, which is notably faster in a practical sense.
+We use the Jonker-Volgenant algorithm \cite{jonker1987shortest} \cite{lapjv}, which is notably faster in a practical sense.
 
 \end{document}
