@@ -27,8 +27,10 @@ lambda = ds.bestLambda;
 
 curr_dist_func = @(x,Y) sphere_dist_linassgn_mtx(x, Y, ds.distMatrices, lambda, ds.multires_i);
 
-% pairwise_dists = squareform(pdist(D, curr_dist_func));
 pairwise_dists = acos(D * D');
-
-bullsEyeScore(pairwise_dists, L, numShapes)
+bs = bullsEyeScore(pairwise_dists, L, numShapes);
+disp(['Benchmark: ' num2str(bs)]);
+pairwise_dists = squareform(pdist(D, curr_dist_func));
+bs_linassgn = bullsEyeScore(pairwise_dists, L, numShapes);
+disp(['Linear assignment: ' num2str(bs_linassgn)]);
 
