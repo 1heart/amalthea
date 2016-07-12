@@ -44,7 +44,7 @@ datasets = getDatasets({'mpeg_7_haar_singleres'}, '~/amalthea/data/new_coeffs/')
 m = 34; n = 34;
 distMatrix = construct_dist_matrix([m n]);
 
-a = 1; b = 2; c = 451;
+a = 1; b = 451; c = 451;
 
 imgs = { ...
   datasets{1}.data(a,:)',
@@ -88,7 +88,7 @@ for i = 1:length(imgs)
       % figure;
       surf(target); shading interp; colormap(curr_colormap); grid off; ; view(viewangles);
       title('Target');
-      sphdist = sphere_dist(curr(:), source(:));
+      sphdist = sphere_dist(curr(:), target(:));
       xlabel(['sphere dist=' num2str(sphdist)]);
     end
 
