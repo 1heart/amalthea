@@ -27,11 +27,7 @@
 %              http://research2.fit.edu/ice/
 % -------------------------------------------------------------------------
 
-function [new_xs] = linassgn_warp(source, target, distMatrix, lambdas)
-
-tmp = target;
-target = source;
-source = tmp;
+function [new_xs] = linassgn_warp(target, source, distMatrix, lambdas)
 
 if ~isequal(size(source), size(target)) error('Two images not equal sizes!'); end;
 if ~isvector(lambdas) error('Lambda not a vector!'); end;
