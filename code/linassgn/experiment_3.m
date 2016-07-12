@@ -1,18 +1,21 @@
 if ~exist('datasets')
-  datasets = getDatasets({
-    % 'mpeg_7_haar_singleres',...
-    % 'mpeg_7_haar_multires',...
-    'mpeg_7_sym4_singleres',...
-    % 'mpeg_7_sym4_multires'...
-  });
-  get_dists_for_datasets;
+  % datasets = getDatasets({
+  %   % 'mpeg_7_haar_singleres',...
+  %   % 'mpeg_7_haar_multires',...
+  %   'mpeg_7_sym4_singleres',...
+  %   % 'mpeg_7_sym4_multires'...
+  % });
+  % get_dists_for_datasets;
+
+  getAdrianCoeffs;
+
   get_optimized_lambda_for_datasets;
 end
 ds = datasets{1};
 
 numShapesPerCat = ds.dimensions(2);
-numCategories = 10;
-numShapes = 10;
+numCategories = 35;
+numShapes = 2;
 
 indices = [];
 for i = 1:numCategories
@@ -23,14 +26,17 @@ end
 
 D = ds.data(indices,:);
 L = ds.labels(indices,:);
-lambda = ds.bestLambda;
-
-curr_dist_func = @(x,Y) sphere_dist_linassgn_mtx(x, Y, ds.distMatrices, lambda, ds.multires_i);
 
 pairwise_dists = acos(D * D');
 bs = bullsEyeScore(pairwise_dists, L, numShapes);
 disp(['Benchmark: ' num2str(bs)]);
-pairwise_dists = squareform(pdist(D, curr_dist_func));
-bs_linassgn = bullsEyeScore(pairwise_dists, L, numShapes);
-disp(['Linear assignment: ' num2str(bs_linassgn)]);
+
+lambdas = [ ds.bestLambda ];
+
+for lambda = lambdas
+  curr_dist_func = @(x,Y) sphere_dist_linassgn_mtx(x, Y, ds.distMatrices, lambda, ds.multires_i);
+  % pairwise_dists = squareform(pdist(D, curr_dist_func));
+  % bs_linassgn = bullsEyeScore(pairwise_dists, L, numShapes);
+  % disp(['Linear assignment: lambda=' num2str(lambda) ', accuracy=' num2str(bs_linassgn)]);
+end
 

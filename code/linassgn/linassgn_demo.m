@@ -17,7 +17,7 @@ DISP = 1; % Display results boolean
 % lambdas = [0 1e-5 1e-3 1e-1 1];
 % lambdas = 10.^[-10:0.5:0];
 % lambdas = [100 100];
-lambdas = [0 1e-3 1];
+lambdas = [1 1e-3 0];
 viewangles = [180 85];
 curr_colormap = pink;
 plot_settings = @(curr) surf(curr);
@@ -44,11 +44,12 @@ datasets = getDatasets({'mpeg_7_haar_singleres'}, '~/amalthea/data/new_coeffs/')
 m = 34; n = 34;
 distMatrix = construct_dist_matrix([m n]);
 
-a = 1; b = 451;
+a = 1; b = 2; c = 451;
 
 imgs = { ...
   datasets{1}.data(a,:)',
   datasets{1}.data(b,:)',
+  % datasets{1}.data(c,:)',
   % apple01, ...
   % apple02, ...
   % bird01, ...
@@ -72,22 +73,22 @@ for i = 1:length(imgs)
         % figure;
         curr = warped_imgs{k};
         curr = reshape(curr, [m n]);
-        surf(curr); shading interp; colormap(curr_colormap); grid off; axis off; view(viewangles);
-        sphdist = sphere_dist(curr(:)/norm(curr(:)), target(:)/norm(target(:)));
+        surf(curr); shading interp; colormap(curr_colormap); grid off; ; view(viewangles);
+        sphdist = sphere_dist(curr(:), source(:));
         title(['Lambda = ' num2str(lambdas(k))]);
-        sphdist = sphere_dist(curr(:), target(:));
+        sphdist = sphere_dist(curr(:), source(:));
         xlabel(['sphere dist=' num2str(sphdist)]);
       end
       subplot(2, k, k + 1);
       % figure;
-      surf(source); shading interp; colormap(curr_colormap); grid off; axis off; view(viewangles);
+      surf(source); shading interp; colormap(curr_colormap); grid off; ; view(viewangles);
       view(viewangles);
       title('Source');
       subplot(2, k, k + 2);
       % figure;
-      surf(target); shading interp; colormap(curr_colormap); grid off; axis off; view(viewangles);
+      surf(target); shading interp; colormap(curr_colormap); grid off; ; view(viewangles);
       title('Target');
-      sphdist = sphere_dist(curr(:), target(:));
+      sphdist = sphere_dist(curr(:), source(:));
       xlabel(['sphere dist=' num2str(sphdist)]);
     end
 
