@@ -13,7 +13,11 @@
 
 DISP = 1; % Display results boolean
 % lambdas = [1e-2 3e-2 5e-2 1e-1 1];
-lambdas = [1 1e-1 5e-2 1e-2 1e-3];
+% lambdas = [1 1e-1 1e-2 1e-3 1e-4 0];
+% lambdas = [0 1e-5 1e-3 1e-1 1];
+% lambdas = 10.^[-10:0.5:0];
+% lambdas = [100 100];
+lambdas = [0 1e-3 1];
 viewangles = [180 85];
 curr_colormap = pink;
 plot_settings = @(curr) surf(curr);
@@ -40,7 +44,7 @@ datasets = getDatasets({'mpeg_7_haar_singleres'}, '~/amalthea/data/new_coeffs/')
 m = 34; n = 34;
 distMatrix = construct_dist_matrix([m n]);
 
-a = 1; b = 21;
+a = 1; b = 451;
 
 imgs = { ...
   datasets{1}.data(a,:)',
@@ -52,8 +56,8 @@ imgs = { ...
 
 for i = 1:length(imgs)
   curr = imgs{i};
-  currMax = max(curr);
-  imgs{i} = reshape(curr, [m n]) / currMax;
+  % currMax = max(curr);
+  imgs{i} = reshape(curr, [m n]);
   imgs{i} = flipud(fliplr(imgs{i}));
 end
 
@@ -71,6 +75,7 @@ for i = 1:length(imgs)
         surf(curr); shading interp; colormap(curr_colormap); grid off; axis off; view(viewangles);
         sphdist = sphere_dist(curr(:)/norm(curr(:)), target(:)/norm(target(:)));
         title(['Lambda = ' num2str(lambdas(k))]);
+        sphdist = sphere_dist(curr(:), target(:));
         xlabel(['sphere dist=' num2str(sphdist)]);
       end
       subplot(2, k, k + 1);
@@ -82,7 +87,7 @@ for i = 1:length(imgs)
       % figure;
       surf(target); shading interp; colormap(curr_colormap); grid off; axis off; view(viewangles);
       title('Target');
-      sphdist = sphere_dist(curr(:)/norm(curr(:)), target(:)/norm(target(:)));
+      sphdist = sphere_dist(curr(:), target(:));
       xlabel(['sphere dist=' num2str(sphdist)]);
     end
 

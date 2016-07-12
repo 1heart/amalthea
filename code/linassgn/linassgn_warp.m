@@ -29,6 +29,10 @@
 
 function [new_xs] = linassgn_warp(source, target, distMatrix, lambdas)
 
+tmp = target;
+target = source;
+source = tmp;
+
 if ~isequal(size(source), size(target)) error('Two images not equal sizes!'); end;
 if ~isvector(lambdas) error('Lambda not a vector!'); end;
 if size(distMatrix,1) ~= size(distMatrix,2) error('Distance matrix not square!'); end;
@@ -41,7 +45,7 @@ for i = 1:k
   lambda = lambdas(i);
   C = -(x * y') + lambda * distMatrix; % Construct cost matrix
   C = process_matrix(C); % Normalize matrix as positive integers for convergence purposes
-  [rowsol] = lapjv_old( C); % Get best linear assignment from x to y
+  [rowsol] = lapjv_old(C); % Get best linear assignment from x to y
   x_new = y(rowsol); % Find reconstructed shape
   if (~isvector(source)) x_new = reshape(x_new, [m n]); end;
   new_xs = [new_xs x_new];
