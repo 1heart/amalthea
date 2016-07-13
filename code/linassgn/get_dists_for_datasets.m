@@ -16,10 +16,6 @@ for i = 1:length(datasets)
   wdeSet = datasets{i}.wdeSet;
   numTranslatesCell = get_numtranslates_per_dataset(datasets{i}.wdeSet);
   datasets{i} = setfield(datasets{i}, 'numTranslatesCell', numTranslatesCell);
-  distMatrices = {};
-  for j = 1:length(numTranslatesCell)
-    distMatrices = [distMatrices construct_dist_matrix(numTranslatesCell{j})];
-  end
   ptr = 1; multires_i = [];
   for j = 1:length(numTranslatesCell)
     inc = prod(numTranslatesCell{j});
@@ -27,5 +23,13 @@ for i = 1:length(datasets)
     ptr = ptr + inc;
   end
   datasets{i} = setfield(datasets{i}, 'multires_i', multires_i);
+  datasets{i} = setfield(datasets{i}, 'coeffsIdx', multires_i);
+  wdeSet.coeffsIdx = multires_i;
+  datasets{i} = setfield(datasets{i}, 'wdeSet', wdeSet);
+   % distMatrices = {};
+  % for j = 1:length(numTranslatesCell)
+  %   distMatrices = [distMatrices construct_dist_matrix(numTranslatesCell{j})];
+  % end
+  distMatrices = euclidDistsBetwCoeffs(wdeSet);
   datasets{i} = setfield(datasets{i}, 'distMatrices', distMatrices);
 end

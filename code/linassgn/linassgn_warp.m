@@ -39,8 +39,10 @@ new_xs = {};
 
 for i = 1:k
   lambda = lambdas(i);
-  C = -(x * y') + lambda * distMatrix; % Construct cost matrix
-  C = process_matrix(C); % Normalize matrix as positive integers for convergence purposes
+  C = -(x * y') ; % Construct cost matrix
+  C = process_matrix(C, x, y);
+  C = C + lambda * distMatrix;
+  C = round(C);
   [rowsol] = lapjv_old(C); % Get best linear assignment from x to y
   x_new = y(rowsol); % Find reconstructed shape
   if (~isvector(source)) x_new = reshape(x_new, [m n]); end;
