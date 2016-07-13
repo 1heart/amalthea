@@ -6,4 +6,17 @@
 
 \section{Hierarchical results}
 
+Our unsupervised clustering algorithm had reasonable but unpromising results. However, using a supervised implementation which guides the clustering using the correct labels produced quite promising results, summarized in table \ref{fig:supervised_hierarchy}.
+
+\begin{figure}[ht]
+\caption{Supervised hierarchy results (accuracy measured in bullseye metric)\label{fig:supervised_hierarchy}}
+\centering
+\begin{tabular}{ l | l c r }
+	 & SHREC11 & MPEG7 & BROWN \\
+	\hline
+	Without hierarchy & 20.7\% & 75.3\% & 51.8\% \\
+	With hierarchy & 99.7\% & 99.3\% & 83.0\% \\
+\end{tabular}
+\end{figure}
+
 \end{document}
