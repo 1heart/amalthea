@@ -4,7 +4,7 @@
 
 \section{Introduction to wavelet density estimation}
 
-Wavelet density estimation was a promising technique for shape matching, as explored by Peter and Rangarajan in their 2008 paper \cite{peter2008maximum}. Generally, the goal is to estimate a probability density function over the shape points and use that representation to compare shapes. The density is estimated by expansion into a wavelet basis form, which has a theory with strong mathematical foundations and provides several advantages over competing function bases (e.g. the Fourier basis, or simple histograms). 
+Wavelet density estimation was a promising technique for shape matching, as explored by Peter and Rangarajan in their 2008 paper \cite{peter2008maximum}. Generally, the goal is to estimate a probability density function over the shape points and use that representation to compare shapes. The density is expanded expansion into a wavelet basis form, which has a theory with strong mathematical foundations and provides several advantages over competing function bases (e.g. the Fourier basis, or simple histograms). 
 
 This wavelet density estimation framework can be applied for any dimensional data (e.g. 1D, 2D, and 3D shapes) by using the tensor product (multidimensional) forms of the 1D wavelet bases. The coefficients of this functional basis (of the probability density function) form our feature representation, and also conveniently map to the unit hypersphere due to constraints we impose during density estimation. This manifold geometry allows us to use a simple, efficient, and well-defined distance metric as our shape dissimilarity measure.
 
@@ -76,7 +76,7 @@ in shape retrieval. In order to initialize coefficients to a reasonable first ap
 \beta_{j_{o},k}=\bigg(\frac{1}{N}\bigg)\underset{i=1}{\overset{N}{\sum}}\frac{\psi_{j,\mathbf{k}(\mathbf{x})}}{\sqrt{p(\mathbf{x})}}\label{eq:waveletCoeff}
 \end{equation}
 
-As we estimate the coefficients of our probability density function,
+As we estimate the coefficients (alpha and beta) of our probability density function,
 we use a loss function to determine whether our coefficients are as
 close to optimal as possible. To do this we try to minimize a negative
 loglikelihood objective function with respect to the coefficients

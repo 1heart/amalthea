@@ -5,7 +5,7 @@
 
 \section{Implementation and our optimization}
 
-The wavelet density estimator code by Peter and Rangarajan accurately constructs the coefficient vectors and thus estimates the densities, but because of the sheer complexity of the procedure, there was significant room to improve the runtime. A full estimation over the standard shape databases can take multiple days even with relatively low resolution.
+The wavelet density estimator code by Peter and Rangarajan accurately constructs the coefficient vectors (the alphas and betas as seen in \ref{WDE}) and thus estimates the densities, but because of the sheer complexity of the procedure, there was significant room to improve the runtime. A full estimation over the standard shape databases can take multiple days even with relatively low resolution.
 For instance, the Brown database \cite{sebastian2004recognition} has 99 shapes, the Swedish Leaf database \cite{soderkvist2001computer} has 1125 shapes, and the MPEG7 database \cite{jeannin1999description, bober2001mpeg} has 1400 shapes, which are quite large already; the Princeton ModelNet database is orders of magnitude larger, at 127,915 shapes. At these scales, the inefficiency of the Peter-Rangarajan code is obvious (i.e. ModelNet estimation becomes intractable). Optimization is thus a primary priority.
 
 The Peter-Rangarajan follows the full mathematical implementation, which means there exist superfluous calculations. For instance, they loop over every sample point and evaluate every basis function individually. We added an optimization of only calculating the basis functions
@@ -19,9 +19,9 @@ equations used, we can delve into our optimization. We focus our efforts on the 
 We then use the coefficients that uniquely characterize the density
 function as our feature vector. 
 
-Originally, for a database such as
-MPEG7, which has 1400 shapes, an estimation process with a domain of {[}-0.5,0.5{]}, resolution
-level 2 to 3, and 1344 translates would take roughly 16.8 hours.
+The resolution levels and domain size controls the number of translations. Originally, for a database such as
+MPEG7, which has 1400 shapes, an estimation process with a domain of {[}-0.5,0.5{]} in the both x and y directions, resolution
+levels 2 to 3, and 1344 translates would take roughly 16.8 hours.
 This is a particularly low resolution, and if raised we would expect
 an even slower runtime. To optimize this code for speed, we focus on the
 bottleneck: the calculation of the initial coefficients and negative
@@ -41,9 +41,9 @@ shape with basis functions at each translation. Each function has
 a coefficient that needs to be calculated. The bottleneck exists because of the way the code structures the computation: it
 code computes equations (\ref{eq:multiRes2D}) for a \emph{single
 point over all translations} using a Kronecker
-tensor product.  \cite{van2000ubiquitous}
+tensor product \cite{van2000ubiquitous}.  
  This means that if we have 1344 translations,
-it would perform 1344 operations for a single point. If a shape is made up of 4007 sample
+it would perform 1344 operations for a single sample point. If a shape is made up of 4007 sample
 points, then it would be performing a total of 5,385,408 operations
 for a single shape. This calls for an excess amount of redundant computations
 since most of the scaling and wavelet basis functions for a single
@@ -54,7 +54,7 @@ of the basis function at specific translations. The solution is to change the st
 Instead of looping through each point and finding which basis functions
 it falls under, we looped through basis functions along the horizontal
 direction, evaluated its basis function value (\ref{eq:multiRes2D})
-based on the points fall under its support, and placed them into a
+based on the points that fall under its support, and placed them into a
 matrix that holds these values. We then store this matrix to be used
 for later optimized computation (for the negative log likelihood cost
 value and gradient). Once we have this matrix of values, we can evaluate the basis function coefficients with the relevant points
@@ -95,17 +95,17 @@ hours to calculate the coefficients. Our optimization yields significant improve
 The original time it took the code to calculate for only the initial
 coefficients was about 1.8 hours. After our optimization, the run
 time to compute the initial coefficients cut all the way down to 0.13
-hours, or about eight minutes. Ultimately, the computation runs 92.8\%
+hours, or about eight minutes. Ultimately, the computation runs about 100 times
 faster. As for calculations for the negative log likelihood cost value
 and gradient, our optimization shaved the lines of code from 54 lines
 to 21 lines, ridding it of loops. We essentially do away with 61\%
 of lines of code. The run time was promising as well. To calculate
-the cost value and gradient for seven iterations, computation time
+the cost value and gradient for seven iterations per shape, computation time
 went from 13.9 hours to 0.089 hours, or around 5 minutes for the entire
-dataset. The optimized computation runs 99\% faster. Overall, to estimate
+dataset. The optimized computation runs 100 times faster. Overall, to estimate
 the wavelet densities of a database of 2D shapes with the optimized
 code under the specified parameters would take 0.3 hours, or 17.8
-minutes, running 98\% faster.
+minutes, running a little under 100 times faster.
 
 With this optimization, we hope that researchers using the wavelet density framework can achieve full estimation of the coefficient values quickly, and spend more
 time in developing new and better methods of shape retrieval.
