@@ -7,4 +7,5 @@ addpath([pkg_dir 'waveletUtils']);
 addpath([code_dir 'hierarchical_clustering/diff_geo']);
 addpath([code_dir 'hierarchical_clustering/metrics']);
 addpath('linassgn_old');
+addpath('sphere_dist_linassgn_old');
 
