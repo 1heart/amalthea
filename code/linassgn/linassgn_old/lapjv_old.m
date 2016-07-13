@@ -7,7 +7,7 @@ outputFileName = 'temp_output';
 
 writeMatrixToBinaryFile(costMatrix,inputFileName);
 
-[status shellText] = unix([PREFIX 'linAssignBinFile ' inputFileName ' ./' outputFileName]);
+[status shellText] = unix([PREFIX 'original_cpp_code/lap_binFile/' 'linAssignBinFile ' inputFileName ' ./' outputFileName]);
 if status ~= 0
   error(shellText);
 end
