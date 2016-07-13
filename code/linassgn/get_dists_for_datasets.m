@@ -26,10 +26,10 @@ for i = 1:length(datasets)
   datasets{i} = setfield(datasets{i}, 'coeffsIdx', multires_i);
   wdeSet.coeffsIdx = multires_i;
   datasets{i} = setfield(datasets{i}, 'wdeSet', wdeSet);
-   % distMatrices = {};
-  % for j = 1:length(numTranslatesCell)
-  %   distMatrices = [distMatrices construct_dist_matrix(numTranslatesCell{j})];
-  % end
-  distMatrices = euclidDistsBetwCoeffs(wdeSet);
+   distMatrices = {};
+  for j = 1:length(numTranslatesCell)
+    distMatrices = [distMatrices construct_dist_matrix(numTranslatesCell{j})];
+  end
+  % distMatrices = euclidDistsBetwCoeffs(wdeSet);
   datasets{i} = setfield(datasets{i}, 'distMatrices', distMatrices);
 end
