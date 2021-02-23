@@ -175,7 +175,6 @@ currNLL = @negativeLogLikelihoodOptTwo;
 stopTime = toc(startTime);
 disp(['Time in negativeLogLikelihood: ' num2str(stopTime)]);% 
 
-% 
 % %%%%%
                                          
 nllTrack     = currCost;
@@ -240,7 +239,3 @@ elseif((sec > 60) & (sec <= 3600))
 else
     disp(['Program execution took: ' num2str(sec/3600) ' hours.'])
 end
-% save currentRunResults;
-% figure;
-% plot(nllTrack);
-% title(['Negative log likelihood'],'Fontsize',14);

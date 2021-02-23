@@ -235,6 +235,7 @@ switch(lower(initType{1}))
             
             % Calculate the father wavelet for all relevant points that fall under current translations
             fatherWav = father_x .* father_y .* father_z;
+            fatherWav = (2^(1.5*startLevel))*fatherWav;
 
             % Save father wavelet values
             newyTranlateIndex = sub2ind(size(scalingBasisGrid), zeros(size(translateIndex)) + i, zeros(size(translateIndex)) + k, translateIndex);
